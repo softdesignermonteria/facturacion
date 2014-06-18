@@ -1,0 +1,222 @@
+<?php
+
+$emp = new Empresa();
+$empresa = $emp->findFirst(" id = '$encabezado->empresa_id' ");
+Session::set("nombre_empresa",$empresa->nombre_empresa);
+Session::set("regimen",$empresa->regimen_id);
+Session::set("nit",$empresa->nit);
+Session::set("consecutivo",$encabezado->prefijo.$encabezado->consecutivo);
+Session::set("direccion",$empresa->direccion);
+Session::set("telefonos",$empresa->telefonos);
+Session::set("celular",$empresa->celular);
+Session::set("web",$empresa->web);
+Session::set("correo",$empresa->correo);
+
+Session::set("razon_social",$cli->razon_social);
+Session::set("direccion_ciente",$dir->direccion);
+Session::set("telefonos_cliente",$encabezado->telefono1. " ".$encabezado->telefono2);
+Session::set("fecha",$encabezado->fecha);
+Session::set("observaciones",$encabezado->observaciones);
+Session::set("mostrar_logo",$tipo_documento->mostrar_logo);
+Session::set("logo",$tipo_documento->logo);
+Session::set("ancho",$tipo_documento->ancho);
+Session::set("alto",$tipo_documento->alto);
+Session::set("font",$tipo_documento->font);
+Session::set("size",$tipo_documento->size);
+Session::set("tipo_letra",$tipo_documento->tipo_letra);
+Session::set("papel",$tipo_documento->papel);
+
+$font = $tipo_documento->font;
+$tipo_letra = $tipo_documento->tipo_letra;
+$papel = $tipo_documento->papel;
+
+class PDF extends FPDF
+{
+
+	 
+	
+   //Cabecera de página
+   function Header()
+   {
+   		
+		
+	    
+		//global $nit;
+	
+	    
+		
+		
+		if(Session::get("mostrar_logo")=='1'){
+			$this->Image($_SERVER['DOCUMENT_ROOT'].core::getInstancePath()."public/img/".Session::get("logo")."",10,5,Session::get("ancho"),Session::get("alto"));
+		}
+		$this->SetTextColor('');
+		//$this->setFont("'".Session::get("font")."'", '', "'".Session::get("size")."'");
+		$size = Session::get("size");
+		$this->setFont("".Session::get("font")."", "".Session::get("tipo_letra")."", "".$size."");
+		
+		if(Session::get("regimen")==1){
+		
+				$this->setX("50");
+				$this->Cell(110, 5, Session::get("direccion")                                         ,'0','0','C');
+				$this->Cell(45,  5, "REMISION NUMERO:"                                                ,'0','1','C');
+				$this->setX("50");
+				$this->Cell(110, 5, "TEL: ".Session::get("telefonos")." CEL: ".Session::get("celular"),'0','0','C');
+				$this->Cell(45,  5, Session::get("consecutivo")                                       ,'0','1','C');
+				$this->setX("50");
+				$w = '';
+				if( Session::get("web") != ''){
+					$w=" WEB: ".Session::get("web");
+				}
+				if( Session::get("web") !=''){
+					$w=" CORREO: ".Session::set("correo");
+				}
+		
+		} //CIERRE ENCABEZADO REGIMEN 1 SIMPLIFICAO
+		
+		
+		if(Session::get("regimen")==2){
+		
+				$this->setX("50");
+				$this->Cell(110, 5, Session::get("nombre_empresa")                         ,'0','0','C');
+				$this->Cell(45,  5, "REMISION NUMERO"                                      ,'0','1','C');
+				$this->setX("50");
+				$this->Cell(110, 5, Session::get("nit")                                    ,'0','0','C');
+				$this->Cell(45,  5,  Session::get("consecutivo")                            ,'0','1','C');
+				$this->setX("50");
+				$this->Cell(110, 5,  Session::get("direccion")                              ,'0','1','C');
+				$this->setX("50");
+				$this->Cell(110, 5, "TEL: ".Session::get("telefonos")." CEL: ".Session::get("celular"),'0','1','C');
+				$this->setX("50");
+				$w = '';
+				if( Session::get("web") != ''){
+					$w=" WEB: ".Session::get("web");
+				}
+				if( Session::get("web") !=''){
+					$w=" CORREO: ".Session::set("correo");
+				}
+		
+		} //CIERRE ENCABEZADO REGIMEN 1 SIMPLIFICAO
+		
+		
+		
+		$this->Cell(110, 5, $w );
+		$this->Ln();
+		
+		$this->SetX("15");
+		$this->Cell(40, 5, "SEÑOR (ES):"        ,'0','0','L');
+		$this->Cell(140, 5, Session::get("razon_social")  ,'0','1','L');
+		$this->SetX("15");
+		$this->Cell(40, 5, "DIRECCION:"         ,'0','0','L');
+		$this->Cell(140, 5, Session::get("direccion_ciente")     ,'0','1','L');
+		$this->SetX("15");
+		$this->Cell(40, 5, "TELEFONOS:"         ,'0','0','L');
+		$this->Cell(60, 5, Session::get("telefonos_cliente") ,'0','0','L');
+		$this->Cell(30, 5, "FECHA:"             ,'0','0','L');
+		$this->Cell(30, 5, Session::get("fecha")     ,'0','1','L');
+		$this->setX("15");
+		
+		$this->Ln();
+
+	  	
+     // $this->Cell(30,10,$tnit,1,0,'C');
+
+   }
+ 
+ 
+	 /*function Footer(){
+		
+		$this->SetY(-10);
+		$this->SetFont('Arial','',8);
+		$this->Cell(0,10,"EYSIL SOFTWARE FECHA DE IMPRESION ".date("Y-m-d")." PAGINA ".$this->PageNo(),0,0,'C');
+		   
+		}
+  */
+   
+}
+$k = new Kardex();
+$pdf = new PDF('P','mm',"$papel");
+//$pdf->AddFont('Courier','','');
+$pdf->addPage();
+//$pdf->setDebug(true);
+//$pdf->setFont('Courier', '', 10);	
+$pdf->setFont("$font", "$tipo_letra", "".Session::get("size")."");
+$pdf->SetDisplayMode('real');
+
+$pdf->SetTextColor('');
+	
+	$pdf->setX("10");
+	
+	
+	/*encabezado de detalle de encabezadoes*/
+	$pdf->Cell(20 ,5, "CODIGO"       ,'1','0','C');
+	$pdf->Cell(100, 5, "DESCRIPCION" ,'1','0','C');
+	$pdf->Cell(15 ,5, "CANT."        ,'1','0','C');
+	$pdf->Cell(20 ,5, "VALOR"        ,'1','0','C');
+	$pdf->Cell(20 ,5, "IVA"          ,'1','0','C');
+	$pdf->Cell(20 ,5, "TOTAL"        ,'1','1','C');
+	//$pdf->Ln();
+	/*fin encabezado de detalle de encabezadoes*/
+	/*$pdf->Cell(50, 10, print_r($dtencabezado));*/
+	$i=0;
+	$a1 = 0;
+	$a2 = 0;
+	$a3 = 0;
+	$s = 0;
+	foreach($detalles as $det):
+		$kardex = $k->findFirst(" id ='$det->kardex_id' ");
+		
+		if($kardex->tipo_kardex_id==1){
+			$pdf->setX("10");
+			$pdf->Cell(20, 5, $kardex->codigo                                  );
+			$pdf->Cell(100, 5, $kardex->nombre_producto                         );
+			$pdf->Cell(15, 5, $det->cantidad                                   ,'0','0','C');
+			$pdf->Cell(20, 5, "$".number_format($det->valor_diario,0,",",".") ,'0','0','R'); 
+			$pdf->Cell(20, 5, "$".number_format($det->iva,0,",",".")          ,'0','0','R');
+			$pdf->Cell(20, 5, "$".number_format($det->total,0,",",".")        ,'0','1','R');
+		}
+		//1- producto
+		//2- servicios
+		
+		if($kardex->tipo_kardex_id==1){
+				$a1 += $det->valor_diario;
+				$a2 += $det->iva;
+				$a3 += $det->total;
+				$s  += 0;
+			}else{
+				$a1 += 0;
+				$a2 += 0;
+				$a3 += 0;
+				$s  += $det->total;
+		}
+		//$pdf->Ln();
+		$i++;
+	endforeach;
+			
+			if($i<=9){
+				for($j=$i;$j<=10;$j++){
+					$pdf->Ln();
+				}
+			}
+			
+		/*$pdf->setX("10");
+		$pdf->Cell(100, 5, " "                                              ,'0','0','R');
+		$pdf->Cell(35, 5, "TOTALES: "                                       ,'1','0','R');
+		$pdf->Cell(20 , 5, "$ ".number_format($a1,0,",",".") ,'1','0','R');
+		$pdf->Cell(20 , 5, "$ ".number_format($a2,0,",",".")          ,'1','0','R');
+		$pdf->Cell(20 , 5, "$ ".number_format($a3,0,",",".")        ,'1','1','R');*/
+		$pdf->setX("10");
+		$pdf->Cell(70, 5, " "                        ,'0','0','R');
+		$pdf->Cell(30, 5, "TRANSPORTE: "                        ,'0','0','R');
+		$pdf->Cell(30 , 5, "$ ".number_format($s,0,",",".") ,'0','0','R');
+		$pdf->Cell(30, 5, "VALOR DIARIO: "                                 ,'0','0','R');
+		$pdf->Cell(30 , 5, "$ ".number_format($a3+$s-$s,0,",",".") ,'0','1','R');
+		$pdf->Cell(40, 5, "OBSERVACIONES:");
+		$pdf->Cell(130, 5, Session::get("observaciones") );
+		
+	
+	
+	/*fin detalle de las encabezadoes*/
+
+$pdf->OutPut();
+?>
+<?php view::getContent(); ?>

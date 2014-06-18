@@ -1,0 +1,71 @@
+<h4>FORMULARIO ASOCIAR PREGUNTAS A LAS ENCUESTA</h4>
+
+<?php echo Tag::formRemote(Router::getController()."/asociar_preguntas_enc", "update: mensajes", "id: fx","name: fx"); ?>
+
+<table width="80%" border="0" align="center">
+  <tr>
+    <td align="right">Encuesta</td>
+    <td colspan="2"><?php echo Tag::textFieldExt("encuesta", "size: 20","maxlength: 20","placeholder: INGRESE ENCUESTA") ?></td>
+  </tr>
+  <tr>
+    <td align="right">Pregunta</td>
+    <td colspan="2"><?php echo Tag::textFieldExt("preguntas", "size: 20","maxlength: 20","placeholder: INGRESE PREGUNTA") ?></td>
+  </tr>
+  <tr>
+    <td  align="right" valign="middle">Tipo Pregunta</td>
+    <td  colspan="3" align="left" valign="middle"><?php $tipo_pregunta=new TipoPregunta(); 
+		echo Tag::select('id_tipo_pregunta',$tipo_pregunta->find('order: id'), 'using: id,descripcion',"onClick: lista_menu()") ?></td>
+  </tr>
+  
+  <tr>
+    <td align="right">Valor</td>
+    <td colspan="2"><input type="text" id="valor" name="valor" size="15" value=""/></td>
+  </tr>
+  <tr>
+     <td colspan="4" align="center"></td>
+  </tr>
+  <tr>
+    <td colspan="4" align="center">
+       <button type="submit" id="guardar" name="guardar">Guardar</button>
+       <button type="button" id="cancelar" name="cancelar" onclick="doccancelar('<?php echo core::getInstancePath(); ?>','<?php echo Router::getController(); ?>');">Cancelar</button>
+       <button type="button" id="siguiente" name="siguiente" onclick="vista_preliminar('encuesta','show');">Vista Preliminar</button>
+    </td>
+   </tr> 
+</table>
+
+<?php echo Tag::endForm() ?>
+
+<div title="Agregar valor a la Lista/Men&uacute;" id="dialogo_agregar_valor">
+	
+    <table width="70%" cellpadding="2" cellspacing="2" align="center">
+        <tr>
+          <td>Ingrese el valor a la lista</td>
+          <td><?php echo Tag::textField("valorlista","size: 20","maxlength: 30"); ?></td>
+        </tr>
+        <tr>
+       	    <td>Ingrese texto para asociarselo al valor</td>
+            <td><?php echo Tag::textField("texto","size: 20","maxlength: 50"); ?></td>
+        </tr>
+    </table>
+
+</div>
+
+<div id="mensajes"></div>
+<br />
+
+<script>
+	
+	jQuery(document).ready(function(e) {
+		
+        jQuery("#id").attr("readOnly","ReadOnly");
+		jQuery("#id_pregunta").attr("readOnly","ReadOnly");
+		jQuery("#encabezado").attr("readOnly","ReadOnly");
+		jQuery("#texto_pregunta").attr("readOnly","ReadOnly");
+	/*	jQuery("#fecha_cierre").attr("readOnly","ReadOnly");
+		jQuery("#estado").prop('disabled', true);*/
+		
+			
+
+    });
+	
+</script>

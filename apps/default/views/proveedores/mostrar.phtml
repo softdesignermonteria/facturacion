@@ -1,0 +1,81 @@
+<h4>DATOS DEL PROVEEDOR</h4>
+
+<table align="center" border="0" cellpadding="2" cellspacing="2">
+  <tr>
+    <td width="26%" align="right" valign="middle">IDENTIFICACION (NIT/CEDULA)</td>
+    <td width="27%" align="left" valign="middle" scope="col"><?php echo $proveedores->nit; ?></td>
+    <td width="22%" align="right" valign="middle" scope="col"></td>
+    <td width="25%" align="left" valign="middle" scope="col">&nbsp;</td>
+  </tr>
+ <tr>
+    <td align="right" valign="middle" >PRIMER NOMBRE</td>
+    <td align="left" valign="middle" ><?php echo $proveedores->nombre1; ?></td>
+    <td align="right" valign="middle">SEGUNDO NOMBRE</td>
+    <td align="left" valign="middle"><?php echo $proveedores->nombre2; ?></td>
+    </tr>
+  <tr>
+    <td align="right" valign="middle" >PRIMER APELLIDO</td>
+    <td align="left" valign="middle" ><?php echo $proveedores->apellido1; ?></td>
+    <td align="right" valign="middle">SEGUNDO APELLIDO</td>
+    <td align="left" valign="middle"><?php echo $proveedores->apellido2; ?></td>
+    </tr>
+  <tr>
+    <td align="right" valign="middle" >RAZ&Oacute;N SOCIAL</td>
+    <td  colspan="3" align="left" valign="middle"><?php echo $proveedores->razon_social; ?></td>
+    </tr>
+  <tr>
+    <td align="right" valign="middle" >DIRECCION CASA</td>
+    <td align="left" valign="middle" ><?php echo $proveedores->direccion_casa; ?></td>
+    <td align="right" valign="middle">
+      
+      TELEFONO FIJO(1)</td>
+    <td align="left" valign="middle"><?php echo $proveedores->telefono1; ?></td>
+    </tr>
+  <tr>
+    <td align="right" valign="middle" >DIRECCION OFICINA</td>
+    <td align="left" valign="middle" ><?php echo $proveedores->direccion_oficina; ?></td>
+    <td align="right" valign="middle">
+    TELEFONO FIJO(2)</td>
+    <td align="left" valign="middle"><?php echo $proveedores->telefono2; ?></td>
+    </tr>
+  <tr>
+    <td align="right" valign="middle" >CELULAR</td>
+    <td align="left" valign="middle" ><?php echo $proveedores->celular; ?></td>
+    <td align="right" valign="middle"></td>
+    <td align="left" valign="middle">&nbsp;</td>
+    </tr>
+ <tr>
+    <td align="right" valign="middle" >DEPARTAMENTOS</td>
+    <td align="left" valign="middle" ><?php echo $departamentos->departamento; ?></td>
+    <td align="right" valign="middle">MUNICIPIOS</td>
+    <td align="left" valign="middle"><?php echo $municipios->municipio; ?></td>
+    </tr>
+  <tr>
+    <td align="right" valign="middle" >EMAIL</td>
+    <td align="left" valign="middle" ><?php echo $proveedores->correo; ?></td>
+    <td align="right" valign="middle"></td>
+    <td align="left" valign="middle">&nbsp;</td>
+    </tr>
+  <tr>
+    <td align="right" valign="middle" >PAGINA WEB</td>
+    <td align="left" valign="middle" ><?php echo $proveedores->web; ?></td>
+    <td align="right" valign="middle"></td>
+    <td align="left" valign="middle">&nbsp;</td>
+  </tr>
+  <tr>
+    <td  colspan="4"></td>    
+  </tr>
+</table>
+
+
+<?php echo View::getContent(); ?>
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />

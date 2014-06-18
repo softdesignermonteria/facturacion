@@ -1,0 +1,17 @@
+<?php foreach($grupos as $gru): ?>
+<table border="0" cellpadding="1">
+    <tr>
+   	 <th colspan="4" scope="col">GRUPO AGREGADO</th>
+    </tr>
+  <tr>
+    <td width="28%" height="30" ><div align="right">REGIMEN</div></td>
+    <td width="9%" scope="col"><?php echo $gru->nombre_grupo; ?></td>
+  </tr>
+  <tr>
+    <td height="30"></td>    
+    <td height="30"><div align="center"><?php echo Tag::linkTo("grupos/modificar/$gru->id", Tag::image("/iconos/editar.png")) ?></div></td>    
+  </tr>
+</table>
+<?php endforeach; ?>
+
+<?php echo View::getContent(); ?>

@@ -1,0 +1,43 @@
+<?php
+$db = DbBase::rawConnect();
+//$responce = new stdClass();
+
+$consulta = str_replace(" ","%",$_REQUEST["term"]);
+if($_REQUEST["term"]!=''){
+$condicion = " and placa like '%$consulta%' ";
+}
+$SQL = "SELECT 
+					p.*, ta.tipo_auto, cv.clase_vehiculo
+				FROM 
+					pedido_clientes p, tipo_auto ta, clase_vehiculo cv  
+					where 
+						1 = 1 
+							and p.tipo_auto_id = ta.id 
+							and p.clase_vehiculo_id = cv.id
+							$condicion group by placa order by placa limit 10"; 
+$result = $db->query( $SQL ); 
+//$responce->sql = $SQL; 
+$i=0; 
+$dtplaca = new Alertas();
+$msg = "";
+while( $row = $db->fetchArray($result) ) { 
+	
+	foreach($dtplaca->find(" placa = '".$row[placa]."' ") as $dt):
+		$msg .= $dt->observacion;
+	endforeach;
+	
+    $responce[$i]["id"]                = $row[id];
+	$responce[$i]["value"]             = $row[placa];
+	$responce[$i]["color"]             = $row[color];
+	$responce[$i]["tipo_auto_id"]      = $row[tipo_auto_id];
+	$responce[$i]["tipo_auto"]      = $row[tipo_auto];
+	$responce[$i]["clase_vehiculo"] = $row[clase_vehiculo];
+	$responce[$i]["clase_vehiculo_id"] = $row[clase_vehiculo_id];
+	$responce[$i]["msg"] = $msg;
+    $i++; 
+} 
+
+
+echo json_encode($responce);
+
+?>

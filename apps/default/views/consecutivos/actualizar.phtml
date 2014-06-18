@@ -1,0 +1,76 @@
+
+
+<table width="100%">
+<thead>
+	<tr class="ui-jqgrid-titlebar ui-widget-header ui-corner-top ui-helper-clearfix">
+    	<th>EMPRESA</th>
+        <th>DESCRIPCION</th>
+        <th>PREFIJO</th>
+        <th>RESOLUCION DIAN</th>
+        <th>FECHA</th>
+        <th>DESDE</th>
+        <th>HASTA</th>
+        <th>ACTIVO</th>
+        <th>DOCUMENTO</th>
+     
+        <th>MODIFICAR</th>
+	</tr>
+</thead>
+<tbody>    
+<?php //$cons = new DetalleConsecutivos(); ?>
+<?php 
+/*
+  id,
+  prefijo,
+  desde,
+  hasta,
+  resolucion_dian,
+  fecha,
+  activo,
+  consecutivos_id,
+  tipo_documento_id
+*/
+$query = new ActiveRecordJoin(array(
+						"entities" => array("DetalleConsecutivos","Empresa","TipoDocumento"),
+						"fields" => array(
+						
+						"{#Empresa}.nombre_empresa",
+						"{#DetalleConsecutivos}.descripcion",
+						"{#DetalleConsecutivos}.id",
+						"{#DetalleConsecutivos}.prefijo",
+						"{#DetalleConsecutivos}.resolucion_dian",
+						"{#DetalleConsecutivos}.fecha",
+						"{#DetalleConsecutivos}.activo",
+						"{#DetalleConsecutivos}.desde",
+						"{#DetalleConsecutivos}.hasta",
+						
+						"{#DetalleConsecutivos}.tipo_documento_id",
+						"{#TipoDocumento}.nombre"
+						),
+						"conditions" => "{#DetalleConsecutivos}.empresa_id = '".Session::get("id_empresa")."'"
+						
+				));
+
+foreach($query->getResultSet() as $cons):	
+				
+?>
+
+	<tr>
+    	<td><?php echo $cons->nombre_empresa; ?></td>
+        <td><?php echo $cons->descripcion; ?></td>
+        <td><?php echo $cons->prefijo; ?></td>
+        <td><?php echo $cons->resolucion_dian; ?></td>
+        <td><?php echo $cons->fecha; ?></td>
+       <td><?php echo $cons->desde; ?></td>
+       <td><?php echo $cons->hasta; ?></td>
+        <td><?php echo $cons->activo; ?></td>
+        <td><?php echo $cons->nombre; ?></td>
+     
+        <td align="center"><?php echo Tag::linkTo("consecutivos/modificar/$cons->id",Tag::image("iconos/editar.png","width: 25px"));?></td>
+	</tr>
+</tbody>    
+<?php endforeach; ?>
+</table>
+
+
+<?php echo View::getContent(); ?>

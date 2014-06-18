@@ -1,0 +1,912 @@
+
+
+<form id="pedidos_clientes" name="pedidos_clientes">
+
+<table width="100%" border="0" align="center" cellpadding="2" cellspacing="4">
+ <tr>
+            <th colspan="6" class="ui-jqgrid-titlebar ui-widget-header ui-corner-top ui-helper-clearfix" align="left">
+           		<?php echo $tipo_documento; echo " - "; echo $tipo_documento_nombre;  ?> <b id="numero"></b>
+                <?php echo Tag::hiddenField("id"); ?> 
+				<?php echo Tag::hiddenField("tipo_documento_id"); ?> 
+                <?php echo Tag::hiddenField("empresa_id"); ?> 
+                <?php echo Tag::hiddenField("prefijo2"); ?> 
+                <?php echo Tag::hiddenField("consecutivo"); ?> 
+                <?php echo Tag::hiddenField("tipo_centro_produccion_id"); ?> 
+                 <?php echo Tag::hiddenField("tipo_habitacion_id"); ?> 
+                <?php echo Tag::hiddenField("liquidado"); ?>
+                <?php echo Tag::hiddenField("fecha"); ?>
+                <?php echo Tag::textField("nombre_empresa","size: 30","readOnly: readOnly","style: background: #cccccc;"); ?>
+            </th>
+        </tr>
+  
+  <tr>
+    <td align="right" valign="top">CENTRO PRODUCCION</td>
+    <td colspan="3">
+		<?php echo Tag::textField("centro_produccion_id","size: 4","readOnly: readOnly","style: background: #cccccc;"); ?>
+		<?php echo Tag::textField("nombre_centro_produccion","size: 50","readOnly: readOnly","style: background: #cccccc;"); ?>
+            <button id="buscar_centro_produccion" type="button">Buscar</button>
+   			<!--<button id="agregar_centro_produccion" type="button">Agregar</button> -->   </td>
+    </tr>
+    <tr>
+    <td align="right" valign="top">BODEGAS</td>
+    <td colspan="3">
+		<?php echo Tag::textField("bodegas_id","size: 4","readOnly: readOnly","style: background: #cccccc;"); ?>
+		<?php echo Tag::textField("nombre_bodegas","size: 50","readOnly: readOnly","style: background: #cccccc;"); ?>
+            <button id="buscar_bodegas" type="button">Buscar</button>
+   			<!--<button id="agregar_bodegas" type="button">Agregar</button>-->    </td>
+    </tr>
+     <tr>
+       <td align="right" valign="top">PLACA</td>
+       <td><input type="text" size="20" id="placa" name="placa"/></td>
+       <td>COLOR</td>
+       <td><input type="text" size="20" id="color" name="color"/></td>
+     </tr>
+     <tr>
+    <td align="right" valign="top">CLASE DE VEHICULO</td>
+    <td>
+		<?php echo Tag::textField("clase_vehiculo_id","size: 4","readOnly: readOnly","style: background: #cccccc;"); ?>
+		<?php echo Tag::textField("nombre_clase_vehiculo","size: 20","readOnly: readOnly","style: background: #cccccc;"); ?>
+            <button id="buscar_clase_vehiculo" type="button">Buscar</button>
+   			<!--<button id="agregar_clase_vehiculo" type="button">Agregar</button> -->   </td>
+    <td>TIPO AUTO</td>
+    <td><?php echo Tag::textField("tipo_auto_id","size: 4","readOnly: readOnly","style: background: #cccccc;"); ?> 
+		<?php echo Tag::textField("nombre_tipo_auto","size: 20","readOnly: readOnly","style: background: #cccccc;"); ?>
+      <button id="buscar_tipo_auto" type="button">Buscar</button>
+      <!--<button id="agregar_tipo_auto" type="button">Agregar</button>--></td>
+    </tr>
+  <tr>
+    <td align="right" valign="top">HORA ENTRADA</td>
+    <td><input type="text" size="20" id="hora_entrada" name="hora_entrada" readonly="readonly" style="background: #cccccc;" />
+      <span class="ui-icon ui-icon-calendar" style="float:left;"></span></td>
+    <td><!--HORA SALIDA--></td>
+    <td align="left" valign="top"><!--<input type="text" size="20" id="hora_salida" name="hora_salida" readonly="readonly" style="background: #cccccc;" />
+      <span class="ui-icon ui-icon-calendar" style="float:left;"></span>--></td>
+    </tr>
+</table>
+<table id="grid_pedidos_clientes"></table>
+<div id="pagpedidos_clientes"></div>
+  
+  <button id="agregar_item" type="button">Agregar</button>
+  <button id="buscar_item" type="button">Buscar</button>
+  <button id="modificar_item" type="button">Modificar</button>
+<button id="borrar_item" type="button">Borrar</button>
+ <br />
+
+<table width="100%" border="0" align="center" cellpadding="0" cellspacing="0" id="f3">
+  <tr>
+    <td width="50%">&nbsp;</td>
+    <th align="right">CANTIDAD TOTAL </th>
+    <td><?php echo Tag::textField("total","size: 12"); ?></td>
+  </tr>
+</table>
+
+	<div align="center">
+    	<button id="guardar" type="button">Guardar</button>
+        <button id="cancelar" type="button">Cancelar</button>
+        <button id="liquidar" type="button">Liquidar</button>
+    </div>
+
+
+<div id="mensajes"></div>
+
+</form>
+
+<div title="Agergar Producto a la Compra" id="dialogo_agregar_item">
+	
+    <table width="70%" cellpadding="2" cellspacing="2" align="center">
+        <tr>
+   	       <td>Referencia</td>
+            <td>
+            <input type="text" readonly="readonly" size="2" id="tmp_kardex_id" name="tmp_kardex_id" /></td>
+            <input type="hidden"  id="tmp_referencia" name="tmp_referencia" />
+            <td><input type="text"  id="tmp_nombre" name="tmp_nombre"/></td>
+        </tr>
+        <tr>
+       	    <td>Cantidad(Und)</td>
+            <td colspan="2"><input type="text"  id="tmp_cantidad" value="1" name="tmp_cantidad"/></td>
+        </tr>
+        <tr>
+       	    <td>Valor</td>
+            <td colspan="2"><input type="text"  id="tmp_valor"  name="tmp_valor" value="0"/></td>
+        </tr>
+    </table>
+
+</div>
+
+<div title="Agergar Producto a la Compra" id="dialogo_liquidar">
+
+</div>
+
+
+
+<div title="Modificar Producto de la Compra" id="dialogo_modificar_item">
+	
+    <table width="70%" cellpadding="2" cellspacing="2" align="center">
+       <tr>
+   	      <td>Id</td>
+           <td colspan="2"><input type="text"  id="tmp_id_mod" name="tmp_id_mod" value="0" size="2" readonly="readonly" style="background: #cccccc" /></td>
+        </tr>
+        <tr>
+   	      <td>Kardex ID</td>
+           <td colspan="2"><input type="text"  id="tmp_kardex_id_mod" name="tmp_kardex_id_mod" value="0" size="2" readonly="readonly" style="background: #cccccc" /></td>
+        </tr>
+     	<tr>
+   	      <td>REFERENCIA</td>
+           <td colspan="2">
+           				<input type="hidden"  id="tmp_codigo_mod" name="tmp_codigo_mod" readonly="readonly" style="background: #cccccc" />
+           				<input type="text"  id="tmp_referencia_mod" name="tmp_referencia_mod" size="50" readonly="readonly" style="background: #cccccc" />
+           </td>
+        </tr>
+        <tr>
+       	    <td>Cantidad(Und)</td>
+            <td colspan="2">
+            <!--<input type="hidden" readonly="readonly" size="2" id="tmp_id_mod" name="tmp_id_mod" />
+            <input type="hidden" readonly="readonly" size="2" id="tmp_kardex_id_mod" name="tmp_kardex_id_mod" />-->
+            <input type="text"  id="tmp_cantidad_mod" value="1" name="tmp_cantidad_mod"/></td>
+        </tr>
+       
+        <tr>
+       	    <td>Valor</td>
+            <td colspan="2"><input type="text"  id="tmp_costo_mod"  name="tmp_costo_mod" value="0"/></td>
+        </tr>
+    </table>
+
+</div>
+
+<?php 
+
+$pd  = new PedidoClientes();
+$emp = new Empresa();
+$cp  = new CentroProduccion();
+$ta  = new TipoAuto();
+$bg  = new Bodegas();
+$cv  = new ClaseVehiculo();
+$dt  = new DetallePedidoClientes();
+$kd  = new Kardex();
+
+$id                         = '';
+$tipo_documento_id          = $tipo_documento;
+$empresa_id                 = Session::get("id_empresa");
+$nombre_empresa             = Session::get("nombre_empresa");
+$fecha                      = date("Y-m-d");
+//Flash::notice("op1 = ".Session::get("id_empresa").Session::get("nombre_empresa").date("Y-m-d"));
+$centro_produccion_id       = '';
+$tipo_centro_produccion_id  = '';
+$tipo_habitacion_id         = '';
+$nombre_centro_produccion   = '';
+$bodegas_id                 = '';
+$nombre_bodegas             = '';
+$clase_vehiculo_id          = '';
+$nombre_clase_vehiculo      = '';
+$tipo_auto_id               = '';
+$nombre_tipo_auto           = '';
+$hora_entrada               = date("Y-m-d H:i:s");
+$hora_salida                = '';
+$prefijo2                   = '';
+$consecutivo                = '';
+$placa                      = '';
+$color                      = '';
+$liquidado                  = '0';
+
+
+	if(isset($_REQUEST["centro_produccion_id"])){ 
+	
+		
+		if($_REQUEST["centro_produccion_id"]!=''){
+			
+			if($pd->count("conditions: anulado = 0 and centro_produccion_id = '".$_REQUEST["centro_produccion_id"]."' and liquidado = 0")>0){
+			
+				$centro_produccion_id = $_REQUEST["centro_produccion_id"];
+				$pdClientes = $pd->findFirst(" centro_produccion_id = '$centro_produccion_id' and liquidado = 0 ");
+				//Flash::notice(print_r($pdClientes));
+				$id                         = $pdClientes->id;
+				$tipo_documento_id          = $pdClientes->tipo_documento_id;
+				$empresa_id                 = $pdClientes->empresa_id;
+				$nombre_empresa             = $emp->findFirst("id = '$empresa_id'")->nombre_empresa;
+				$fecha                      = $pdClientes->fecha;
+				$centro_produccion_id       = $pdClientes->centro_produccion_id;
+				$nombre_centro_produccion   = $cp->findFirst("id = '$centro_produccion_id '")->centro_produccion;
+				$tipo_centro_produccion_id  = $cp->findFirst("id = '$centro_produccion_id '")->tipo_centro_produccion_id;
+				$tipo_habitacion_id         = $cp->findFirst("id = '$centro_produccion_id '")->tipo_habitacion_id;
+				$bodegas_id                 = $pdClientes->bodegas_id;
+				$nombre_bodegas             = $bg->findFirst("id = '$bodegas_id '")->bodega;
+				$clase_vehiculo_id          = $pdClientes->clase_vehiculo_id;
+				$nombre_clase_vehiculo      = $cv->findFirst("id = '$clase_vehiculo_id '")->clase_vehiculo;
+				$tipo_auto_id               = $pdClientes->tipo_auto_id;
+				$nombre_tipo_auto           = $ta->findFirst("id = '$tipo_auto_id '")->tipo_auto;
+				$hora_entrada               = $pdClientes->hora_entrada;
+				$hora_salida                = $pdClientes->hora_salida;
+				$prefijo2                   = $pdClientes->prefijo;
+				$consecutivo                = $pdClientes->consecutivo;
+				$placa                      = $pdClientes->placa;
+				$color                      = $pdClientes->color;
+				$liquidado                  = $pdClientes->liquidado;
+			}else{
+				$centro_produccion_id       = $_REQUEST["centro_produccion_id"];
+				$nombre_centro_produccion   = $cp->findFirst("id = '$centro_produccion_id '")->centro_produccion;
+				$bodegas_id                 = $cp->findFirst("id = '$centro_produccion_id '")->bodegas_id;
+				$tipo_centro_produccion_id  = $cp->findFirst("id = '$centro_produccion_id '")->tipo_centro_produccion_id;
+				$tipo_habitacion_id         = $cp->findFirst("id = '$centro_produccion_id '")->tipo_habitacion_id;
+				$nombre_bodegas             = $bg->findFirst("id = '$bodegas_id '")->bodega;
+				
+			}
+				
+		}
+	
+	
+	}
+?>
+
+<script type="text/javascript">
+
+
+
+jQuery(document).ready(function(){
+
+var detalles = [];
+
+<?php
+if(isset($_REQUEST["centro_produccion_id"])){ 
+		if($_REQUEST["centro_produccion_id"]!=''){ 
+				if($pd->count("conditions: anulado = 0 and centro_produccion_id = '".$_REQUEST["centro_produccion_id"]."' and liquidado = 0")>0){ ?>
+						jQuery("#id").val("<?php echo $id; ?>");	
+						jQuery("#tipo_documento_id").val("<?php echo $tipo_documento_id; ?>");	
+						jQuery("#empresa_id").val("<?php echo $empresa_id; ?>");	
+						jQuery("#nombre_empresa").val("<?php echo $nombre_empresa; ?>");	
+						jQuery("#fecha").val("<?php echo $fecha; ?>");	
+						jQuery("#centro_produccion_id").val("<?php echo $centro_produccion_id; ?>");
+						jQuery("#tipo_centro_produccion_id").val("<?php echo $tipo_centro_produccion_id; ?>");	
+						jQuery("#tipo_habitacion_id").val("<?php echo $tipo_habitacion_id; ?>");	
+						jQuery("#nombre_centro_produccion").val("<?php echo $nombre_centro_produccion; ?>");	
+						jQuery("#bodegas_id").val("<?php echo $bodegas_id; ?>");	
+						jQuery("#nombre_bodegas").val("<?php echo $nombre_bodegas; ?>");	
+						jQuery("#clase_vehiculo_id").val("<?php echo $clase_vehiculo_id; ?>");	
+						jQuery("#nombre_clase_vehiculo").val("<?php echo $nombre_clase_vehiculo; ?>");	
+						jQuery("#tipo_auto_id").val("<?php echo $tipo_auto_id; ?>");	
+						jQuery("#nombre_tipo_auto").val("<?php echo $nombre_tipo_auto; ?>");	
+						jQuery("#hora_entrada").val("<?php echo $hora_entrada; ?>");	
+						jQuery("#hora_salida").val("<?php echo $hora_salida; ?>");	
+						jQuery("#prefijo2").val("<?php echo $prefijo2; ?>");	
+						jQuery("#consecutivo").val("<?php echo $consecutivo; ?>");	
+						jQuery("#placa").val("<?php echo $placa; ?>");	
+						jQuery("#color").val("<?php echo $color; ?>");	
+						jQuery("#liquidado").val("<?php echo $liquidado; ?>");	
+						
+						<?php foreach($dt->find(" pedido_clientes_id = '$id' ") as $dt): ?>
+								detalles.push(
+										{
+											 id:         "<?php echo $dt->id; ?>"     
+											,kardex_id:  "<?php echo $dt->kardex_id; ?>" 
+											,referencia: "<?php echo $kd->findFirst(" id = '$dt->kardex_id' ")->codigo; ?>"
+											,nombre:     "<?php echo $kd->findFirst(" id = '$dt->kardex_id' ")->nombre_producto; ?>" 
+											,cantidad:   "<?php echo $dt->cantidad; ?>" 
+											,valor:      "<?php echo $dt->valor; ?>" 
+											,total:      "<?php echo $dt->total; ?>" 
+											,anulado:    "<?php if($dt->anulado==0){echo "NO";}else{ echo "SI"; } ?>"
+										}
+									);
+						<?php endforeach; ?>
+						reload_grid();
+						
+   <?php 		}else{ ?>
+   
+   						jQuery("#tipo_documento_id").val("<?php echo $tipo_documento_id; ?>");	
+						jQuery("#empresa_id").val("<?php echo $empresa_id; ?>");	
+						jQuery("#nombre_empresa").val("<?php echo $nombre_empresa; ?>");	
+						jQuery("#centro_produccion_id").val("<?php echo $centro_produccion_id; ?>");	
+						jQuery("#tipo_centro_produccion_id").val("<?php echo $tipo_centro_produccion_id; ?>");	
+						jQuery("#nombre_centro_produccion").val("<?php echo $nombre_centro_produccion; ?>");	
+						jQuery("#bodegas_id").val("<?php echo $bodegas_id; ?>");	
+						jQuery("#nombre_bodegas").val("<?php echo $nombre_bodegas; ?>");	
+						jQuery("#fecha").val("<?php echo $fecha; ?>");	
+						jQuery("#hora_entrada").val("<?php echo $hora_entrada; ?>");	
+						jQuery("#liquidado").val("<?php echo $liquidado; ?>");	
+						jQuery("#centro_produccion_id").val("<?php echo $centro_produccion_id; ?>");	
+						jQuery("#tipo_habitacion_id").val("<?php echo $tipo_habitacion_id; ?>");	
+						jQuery("#buscar_centro_produccion").attr("disabled","disabled");
+						jQuery("#buscar_bodegas").attr("disabled","disabled");
+						
+   
+   		<?php	}
+ 	  }
+}else{ ?>
+						jQuery("#tipo_documento_id").val("<?php echo $tipo_documento_id; ?>");	
+						jQuery("#empresa_id").val("<?php echo $empresa_id; ?>");	
+						jQuery("#nombre_empresa").val("<?php echo $nombre_empresa; ?>");	
+						jQuery("#fecha").val("<?php echo $fecha; ?>");	
+						jQuery("#hora_entrada").val("<?php echo $hora_entrada; ?>");	
+<?php
+}		
+?>
+
+
+
+/*-----------------------------------------------Guardar Pedido---------------------------------------------------------------*/
+
+	
+	jQuery("#guardar").click(function(){
+		guardar_pedido();
+	});
+	
+	function guardar_pedido(){
+			var datos = "";
+			//creating a json object
+			var jObject={};
+			for(i in detalles)
+			{
+				jObject[i] = detalles[i];
+			}
+		
+			var srv = JSON.stringify(detalles);
+			jQuery( "#progressbar" ).progressbar({ value: 50 });	
+			jQuery("#guardar").attr("disabled","disabled");
+			
+				//$('#resumen').html('Cargando....');
+				
+				var jqXHR = jQuery.ajax({
+					type: "POST",
+					url: "<?php echo core::getInstancePath(); ?>pedido_clientes/add",
+					data: {
+							id:                   jQuery("#id").val(),
+							tipo_documento_id:    jQuery("#tipo_documento_id").val(),
+							centro_produccion_id: jQuery("#centro_produccion_id").val(),
+							bodegas_id:           jQuery("#bodegas_id").val(),
+							clase_vehiculo_id:    jQuery("#clase_vehiculo_id").val(),
+							tipo_auto_id:         jQuery("#tipo_auto_id").val(),
+							empresa_id:           jQuery("#empresa_id").val(),
+							fecha:                jQuery("#fecha").val(),
+							hora_entrada:         jQuery("#hora_entrada").val(),
+							hora_salida:          jQuery("#hora_salida").val(),
+							prefijo:              jQuery("#prefijo2").val(),
+							consecutivo:          jQuery("#consecutivo").val(),
+							placa:                jQuery("#placa").val(),
+							color:                jQuery("#color").val(),
+							liquidada:         	  jQuery("#liquidado").val(),
+							
+							detalles: srv
+					},
+					success: function(data) {
+						jQuery( '#mensajes' ).html("");
+						jQuery( "#progressbar" ).progressbar({ value: 90 });
+						jQuery( '#mensajes' ).html(data);
+					},
+					error: function(data) {
+						jQuery('#dialogo_mensajes').html("Error Enviando parametros.....");
+						jQuery( "#progressbar" ).progressbar({ value: 0 });
+						jQuery('#dialogo_mensajes').dialog("open");
+						
+					}
+				});
+				
+				 jqXHR.done(function(data){
+					jQuery( "#progressbar" ).progressbar({ value: 0 });
+				});
+		
+		}
+
+/*-----------------------------------------------------Agregar Item--------------------------------------------------------------------------------*/
+	
+	
+var grid = jQuery("#grid_pedidos_clientes"),
+		delSettings = {
+			afterShowForm: function (jQueryform) {
+				// delete button: "#dData", cancel button: "#eData"
+				jQuery("#dData", jQueryform.parent()).click();
+			},
+			// because I use "local" data I don't want to send the changes to the server
+			// so I use "processing:true" setting and delete the row manually in onclickSubmit
+			onclickSubmit: function (options) {
+				var gridId = grid[0].id,
+					gridP = grid[0].p,
+					newPage = gridP.page,
+					rowids = gridP.multiselect ? gridP.selarrrow : [gridP.selrow];
+
+				// reset the value of processing option to true
+				// because the value can be changed by jqGrid
+				options.processing = true;
+
+				// delete the row
+				jQuery.each(rowids, function () {
+					grid.jqGrid('delRowData', this);
+					
+				});
+				jQuery.jgrid.hideModal("#delmod" + gridId,
+									{ gb: "#gbox_" + gridId,
+										jqm: options.jqModal,
+										onClose: options.onClose });
+
+				if (gridP.lastpage > 1) {// on the multipage grid reload the grid
+					if (gridP.reccount === 0 && newPage === gridP.lastpage) {
+						// if after deliting there are no rows on the current page
+						// which is the last page of the grid
+						newPage -= 1; // go to the previous page
+					}
+					// reload grid to make the row from the next page visable.
+					grid.trigger("reloadGrid", [{ page: newPage}]);
+				}
+
+				return true;
+			},
+			processing: true
+		};
+
+	
+	
+	
+	jQuery("#dialogo_agregar_item").dialog(
+		{ 
+			autoOpen:false
+			, width:450 
+			, heigth:200 
+			,modal: true
+			,buttons:[
+				{
+					text:  "Escoger"
+					,click: function(){
+							
+							var datos;
+							var jqXHR = jQuery.ajax({
+									url:"<?php echo core::getInstancePath(); ?>pedido_clientes/agregar_item/",
+									type:"POST",
+									dataType:"json",
+									data:{
+											tmp_kardex_id    :  jQuery("#tmp_kardex_id").val(),
+											tmp_referencia   :  jQuery("#tmp_referencia").val(),
+											tmp_nombre       :  jQuery("#tmp_nombre").val(),
+											tmp_cantidad     :  jQuery("#tmp_cantidad").val(),
+											tmp_valor        :  jQuery("#tmp_valor").val(),
+											liquidar:             "0"
+										}
+										,
+										fail:function(){
+											alert("error");
+										},
+										error:function(jqXHR,textStatus,errorThrown){
+											alert("error "+textStatus+"\n"+jqXHR+"\n"+errorThrown);
+										}
+							});
+							
+							 jqXHR.done(function(data){
+								agregar_item(data);
+								
+							});
+							jQuery("#tmp_kardex_id").val("");
+							jQuery("#tmp_referencia").val("");
+							jQuery("#tmp_nombre").val("");
+							jQuery("#tmp_cantidad").val("1");
+							jQuery("#tmp_valor").val("");
+							jQuery(this).dialog("close"); 
+							
+						}	
+				}
+			]
+		});
+		
+		
+		
+ jQuery("#agregar_item").click(function(){
+		 	jQuery("#dialogo_agregar_item").dialog("open");
+		 });		
+		
+//agregar un item al vector json de items
+function agregar_item(data){
+
+	detalles.push(
+		{
+			id:             data["id"]
+			,kardex_id:     data["kardex_id"]
+			,referencia:    data["referencia"]
+			,nombre:        data["nombre"]
+			,cantidad:      data["cantidad"]
+			,valor:         data["valor"]
+			,total:         data["total"]
+			,anulado:       data["anulado"]
+			
+		}
+	);
+	reload_grid();
+
+}
+
+
+//autocomplete con json	
+jQuery( "#tmp_nombre" ).autocomplete({
+	source: "<?php echo core::getInstancePath(); ?>kardex/autocompletejson",
+	minLength: 1,
+	select: function( event, ui ) {
+		 //alert("Has seleccionado: " + ui.item.value);
+		 jQuery("#tmp_nombre").val(ui.item.value)
+		 jQuery("#tmp_kardex_id").val(ui.item.id);
+		 jQuery("#tmp_referencia").val(ui.item.codigo);
+		 jQuery("#tmp_valor").val(ui.item.valor_venta);
+	}
+});
+
+
+
+
+
+/*----------------------------------------------Liquidar Pedido-----------------------------------------------------------------------------------*/		
+		
+	jQuery("#dialogo_liquidar").dialog(
+	{ 
+		autoOpen:false
+		, width:450 
+		, heigth:200 
+		,modal: true
+		,buttons:[
+			{
+				text:  "Cobro Habitacion"
+				,click: function(){
+						if(jQuery("#tipo_centro_produccion_id").val()==1){
+							var datos;
+							var jqXHR = jQuery.ajax({
+									url:"<?php echo core::getInstancePath(); ?>pedido_clientes/agregar_item/",
+									type:"POST",
+									dataType:"json",
+									data:{
+											tmp_kardex_id    :  jQuery("#tmp_kardex_id2").val(),
+											tmp_referencia   :  jQuery("#tmp_referencia2").val(),
+											tmp_nombre       :  jQuery("#tmp_nombre2").val(),
+											tmp_cantidad     :  jQuery("#tmp_cantidad2").val(),
+											tmp_valor        :  jQuery("#tmp_valor2").val(),
+											centro_produccion:  jQuery("#centro_produccion_id").val(),
+											tipo_centro_produccion_id:  jQuery("#tipo_centro_produccion_id").val(),
+											tipo_habitacion:    jQuery("#tipo_habitacion_id").val(),
+											liquidar:             "1"
+										}
+										,
+										fail:function(){
+											alert("error");
+										},
+										error:function(jqXHR,textStatus,errorThrown){
+											alert("error "+textStatus+"\n"+jqXHR+"\n"+errorThrown);
+										}
+							});
+							
+							 jqXHR.done(function(data){
+								agregar_item(data);
+								jQuery("#liquidar").attr("disabled","disabled");
+								jQuery("#liquidado").val("1");
+								
+							});
+						}else{
+								jQuery("#liquidar").attr("disabled","disabled");
+								jQuery("#liquidado").val("1");
+						}
+						//guardar_pedido();
+						
+						jQuery(this).dialog("close"); 		
+						
+					}	
+			},
+			{
+				text: "Cancelar",
+				click: function(){
+					jQuery("#liquidar").removeAttr("disabled","disabled");
+					jQuery("#hora_salida").val("");
+					jQuery(this).dialog("close"); 
+				}
+					
+			}
+		]
+	});
+	 
+	
+	 
+	
+		 
+jQuery("#liquidar").click(function(){
+
+	jQuery("#dialogo_liquidar").html("");
+		var datos = "";
+		jQuery.ajax({
+			type:"POST"
+			,url:"<?php echo core::getInstancePath(); ?>pedido_clientes/liquidar/?tipo_centro_produccion_id=" + jQuery("#tipo_centro_produccion_id").val()
+			,async:true
+			,data:datos
+			,success: function(data){
+					
+					jQuery("#dialogo_liquidar").html(data);
+							var jqXHR = jQuery.ajax({
+							type: "POST",
+							url: "<?php echo core::getInstancePath(); ?>pedido_clientes/calc_fechas",
+							data: {
+									hora_entrada:         jQuery("#hora_entrada").val(),
+									hora_salida:          jQuery("#hora_salida").val(),
+									valor:         		  jQuery("#tmp_valor2").val(),
+									centro_produccion:    jQuery("#centro_produccion_id").val(),
+									tipo_habitacion:    jQuery("#tipo_habitacion_id").val(),
+									liquidar:             "1"
+							},
+							success: function(data) {
+								jQuery( '#mensajes' ).html("");
+								jQuery( "#progressbar" ).progressbar({ value: 90 });
+								jQuery( '#mensajes' ).html(data);
+							},
+							error: function(data) {
+								jQuery('#dialogo_mensajes').html("Error Enviando parametros.....");
+								jQuery( "#progressbar" ).progressbar({ value: 0 });
+								jQuery('#dialogo_mensajes').dialog("open");
+							}
+						});
+						
+						 jqXHR.done(function(data){
+							jQuery( "#progressbar" ).progressbar({ value: 0 });
+						});
+		
+					jQuery("#dialogo_liquidar").dialog("open");
+					
+				}
+			,error: function(data){
+					jQuery("#dialogo_liquidar").html("Error Cargando este Elemento" + data);
+					jQuery("#dialogo_liquidar").dialog({open:true});
+				}	
+		});		
+		
+	});
+	
+	
+	
+	
+/*-----------------------------------------------------Borrar Item-----------------------------------------------------------------------------------*/
+	
+//cuadro de dialogo de agregar item...	 
+jQuery("#borrar_item").click(function(){
+	//jQuery("#dialogo_agregar_item").dialog("open");
+	if(confirm("Realmente Desea Borrar o Anular el Registro")){
+		//var gr = jQuery("#grid_compras").jqGrid('getGridParam','selrow');
+		//jQuery("#grid_compras").find("#"+gr).remove();
+		toDelete = jQuery("#grid_pedidos_clientes").jqGrid('getGridParam','selrow');
+		var sw = 0;
+		
+		for(i=0;i<detalles.length;i++){
+			if(detalles[i].id==toDelete){
+				//alert("Lo Encontre: "+detalles[i].id + " SUBSTRING TEMP " + detalles[i].id.substring(0,4));
+				if( detalles[i].id.substring(0,4) == 'temp' ){
+					//alert("linea temporarl borrar");
+					sw=0;
+				}else{
+					//alert("liena guardada en la base de datos anular");
+					sw=1;
+					detalles[i].anulado = "SI";
+						
+					}
+			}
+		}
+	
+		//alert(detalles["id"][toDelete]);
+      	//jQuery("#grid_compras").jqGrid('delGridRow',toDelete,myDelOptions);
+		if(sw==0){
+			
+			if( toDelete != null ) {
+				if(jQuery("#grid_pedidos_clientes").delGridRow(toDelete,delSettings)){
+					detalles = jQuery.grep(
+								detalles, 
+								function (item,index) { 
+								  return item.id !=  toDelete; 
+								});
+	
+				}else{
+						alert("no borro nada");
+					}
+				//getSelectedRow();
+			}else{ alert("Por favor seleccione una fila para borrar!"); }
+		}else{
+				//alert("anular");
+				reload_grid();
+			}
+		//reload_grid();
+	}
+});
+
+
+/*------------------------------------------------Modificar Item-----------------------------------------------------------------*/	 
+
+
+//agregar un item al vector json de items
+function modificar_item(data,mod_id){
+	for(i=0;i<detalles.length;i++){
+			if(detalles[i].id==mod_id){
+				detalles[i].id          = data["id"];
+				detalles[i].kardex_id   = data["kardex_id"];
+				detalles[i].referencia  = data["referencia"];
+				detalles[i].nombre      = data["nombre"];
+				detalles[i].cantidad    = data["cantidad"];
+				detalles[i].valor       = data["valor"];
+				detalles[i].total       = data["total"];
+				detalles[i].anulado     = data["anulado"];
+			}
+	}
+	reload_grid();
+
+}
+
+
+//cuadro de dialogo de agregar item...	 
+jQuery("#modificar_item").click(function(){
+		
+		toMod = jQuery("#grid_pedidos_clientes").jqGrid('getGridParam','selrow');
+		var sw = 0;
+		
+		for(i=0;i<detalles.length;i++){
+			if(detalles[i].id==toMod){
+				//alert("Lo Encontre: "+detalles[i].id + " SUBSTRING TEMP " + detalles[i].id.substring(0,4));
+				if( detalles[i].anulado == "SI" ){
+					alert("Elemento Anulado no se Puede Modificar");
+					sw=1;
+				}else{
+					//alert("liena guardada en la base de datos anular");
+					jQuery("#tmp_id_mod").val(detalles[i].id);
+					jQuery("#tmp_kardex_id_mod").val(detalles[i].kardex_id);
+					jQuery("#tmp_codigo_mod").val(detalles[i].referencia);
+					jQuery("#tmp_referencia_mod").val(detalles[i].referencia);
+					
+					jQuery("#tmp_cantidad_mod").val(detalles[i].cantidad);
+					jQuery("#tmp_costo_mod").val(detalles[i].valor);
+					sw=0;
+						
+					}
+			}
+		}
+		
+		if(sw==0){
+			jQuery("#dialogo_modificar_item").dialog("open");
+		}
+	//reload_grid();
+});
+
+
+jQuery("#dialogo_modificar_item").dialog(
+{ 
+	autoOpen:false
+	, width:600 
+	, heigth:400 
+	,modal: true
+	,buttons:[
+		{
+			text:  "Escoger"
+			,click: function(){
+					var mod_id =         jQuery("#tmp_id_mod").val();
+					//alert(mod_id);
+					var jqXHR = jQuery.ajax({
+							url:"<?php echo core::getInstancePath(); ?>pedido_clientes/agregar_item/",
+							type:"POST",
+							dataType:"json",
+							data:{
+									inlcuye_iva:    jQuery("#incluye_iva").val(),
+									tmp_id:         jQuery("#tmp_id_mod").val(),
+									tmp_kardex_id:  jQuery("#tmp_kardex_id_mod").val(),
+									tmp_referencia:  jQuery("#tmp_referencia_mod").val(),
+									tmp_codigo:     jQuery("#tmp_codigo_mod").val(),
+									tmp_cantidad:   jQuery("#tmp_cantidad_mod").val(),
+									tmp_descuento:  jQuery("#tmp_descuento_mod").val(),
+									tmp_valor:      jQuery("#tmp_costo_mod").val()
+								}
+								,
+								fail:function(){
+									alert("error");
+								},
+								error:function(jqXHR,textStatus,errorThrown){
+									alert("error "+textStatus+"\n"+jqXHR+"\n"+errorThrown);
+								}
+					});
+					
+					 jqXHR.done(function(data){
+						modificar_item(data,mod_id);
+					});
+					
+					jQuery(this).dialog("close"); 
+					
+				}	
+		}
+	]
+});
+
+
+/*-----------------------------------------------------Buscar Item----------------------------------------------------------------*/	 
+	 
+jQuery("#buscar_item").click(function(){
+			jQuery("#dialogo_agregar_item").dialog("open");
+			reload_grid();
+	 });	 
+
+	 
+
+/*---------------------------------------------Configura Autocomplete para Color y Placa-------------------------------------------------*/
+		
+
+//detalles.push({id:1,referencia:123,nombre:"prueba",costo:10000,tarifaiva:16,iva:16000,descuento:20000,porc_desc:20,total:80000});
+function reload_grid(){
+		jQuery("#grid_pedidos_clientes").jqGrid('setGridParam',
+			{ 	datatype: 'local',
+				data:detalles
+			}).trigger("reloadGrid");
+}
+
+jQuery( "#color" ).autocomplete({
+	source: "<?php echo core::getInstancePath(); ?>pedido_clientes/colorautocomplete",
+	minLength: 1,
+	select: function( event, ui ) {
+		 //alert("Has seleccionado: " + ui.item.value);
+		 jQuery("#color").val(ui.item.color)
+	}
+});
+
+jQuery( "#placa" ).keyup(function(){
+	this.value = this.value.match(/^[a-zA-Z0-9]+/,''); 
+});
+	
+jQuery( "#placa" ).autocomplete({
+	source: "<?php echo core::getInstancePath(); ?>pedido_clientes/placaautocomplete",
+	minLength: 1,
+	select: function( event, ui ) {
+		 //alert("Has seleccionado: " + ui.item.value);
+		 jQuery("#placa").val(ui.item.value)
+		 jQuery("#color").val(ui.item.color);
+		 jQuery("#tipo_auto_id").val(ui.item.tipo_auto_id);
+		 jQuery("#clase_vehiculo_id").val(ui.item.clase_vehiculo_id);
+		 jQuery("#nombre_tipo_auto").val(ui.item.tipo_auto);
+		 jQuery("#nombre_clase_vehiculo").val(ui.item.clase_vehiculo);
+		 
+		 if(ui.item.msg!=''){
+			 	jQuery("#dialogo_mensajes").html("");
+				jQuery("#dialogo_mensajes").html(ui.item.msg);
+				jQuery("#dialogo_mensajes").dialog("open");
+			 }
+		 
+		 jQuery("#buscar_clase_vehiculo").attr("disabled","disabled");
+		 jQuery("#buscar_tipo_auto").attr("disabled","disabled");
+		 
+	}
+});
+
+
+/*---------------------------------------------Configurar Grilla Pedidos Clientes---------------------------------------------------------*/
+
+/*grib maestros de clientes*/
+function config_gridpedidos_clientes(){
+	grid_fndpedidos_clientes = jQuery("#grid_pedidos_clientes").jqGrid({
+			datatype:"local",
+			data: detalles,
+			height:200,
+			rowNum:25,
+			autowidth:true,
+			pager:"#pagpedidos_clientes",
+			
+			colNames:['Id',"Kardex id",'Referencia','Nombre','Cantidad','Valor','Total','Anulado'],
+			colModel:[
+			{   name:'id',          index:'id',          sorttype:'text'                        },
+			{	name:'kardex_id',	index:'kardex_id',	 sorttype:'text'	                    },
+			{	name:'referencia',	index:'referencia',	 sorttype:'text'	                    },
+			{	name:'nombre',		index:'nombre',		 sorttype:'text',   width: 300          },
+			{	name:'cantidad',    index:'cantidad',    sorttype:'integer', formatter:"number" },
+			{	name:'valor',		index:'valor',       sorttype:'double',	 formatter:"number" },
+			{	name:'total',		index:'total',    	 sorttype:'double',	 formatter:"number" },
+			{	name:'anulado',		index:'anulado',  	 sorttype:'text'                        }
+			],
+			multiselect:false,
+			caption:"Detalle Pedidos Clientes",
+			sortname: 'id', 
+			viewrecords: true, 
+			sortorder: "id",
+			
+			ondblClickRow:function(rowid,iRow,iCol,e){
+				
+				/*var fila = $(this).jqGrid('getRowData',rowid);
+				
+				$("#cod_medico").val(fila['codigo'])
+				$("#desc_medico").val(fila['nombres']+" "+fila['apellidos'])
+				
+				diag_fndMedicos.dialog("close")*/
+			}
+	});
+}
+
+config_gridpedidos_clientes();
+
+	
+});
+</script>
+
+

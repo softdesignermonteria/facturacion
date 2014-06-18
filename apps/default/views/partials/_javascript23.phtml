@@ -1,0 +1,1149 @@
+<script type="text/javascript">
+
+
+
+
+
+	
+
+/*jQuery(document).ready(function(){*/
+
+
+
+	
+
+	
+
+	
+
+	jQuery( "#dialogo_mensajes"    ).dialog({ autoOpen: false });
+
+	
+
+	jQuery( "#dialogo_clientes"                ).dialog({ autoOpen: false, width: 600, height: 450, title: "Clientes"      });
+	
+	jQuery( "#dialogo_encuesta"                ).dialog({ autoOpen: false, width: 600, height: 450, title: "Encuesta"      });
+	
+	jQuery( "#dialogo_preguntas"                ).dialog({ autoOpen: false, width: 600, height: 450, title: "Pregunta"      });
+
+	jQuery( "#dialogo_proveedores"             ).dialog({ autoOpen: false, width: 800, height: 450, title: "Proveedores" });
+
+	jQuery( "#dialogo_empleados"               ).dialog({ autoOpen: false, width: 800, height: 450, title: "Empleados" });
+
+	jQuery( "#dialogo_departamentos"           ).dialog({ autoOpen: false, width: 600, height: 450, title: "Departamentos" });
+
+	jQuery( "#dialogo_municipios"              ).dialog({ autoOpen: false, width: 600, height: 450, title: "Muncipios"     });
+
+	jQuery( "#dialogo_bodegas"                 ).dialog({ autoOpen: false, width: 600, height: 450, title: "Bodegas"     });
+
+	jQuery( "#dialogo_desde_bodegas"                 ).dialog({ autoOpen: false, width: 600, height: 450, title: "Bodegas Desde"     });
+
+	jQuery( "#dialogo_hasta_bodegas"                 ).dialog({ autoOpen: false, width: 600, height: 450, title: "Bodegas Hasta"     });
+
+	jQuery( "#dialogo_centro_produccion"       ).dialog({ autoOpen: false, width: 600, height: 450, title: "Centro Produccion"     });
+
+	jQuery( "#dialogo_tipo_auto"               ).dialog({ autoOpen: false, width: 600, height: 450, title: "Tipo de Autos"     });
+
+	jQuery( "#dialogo_clase_vehiculo"          ).dialog({ autoOpen: false, width: 600, height: 450, title: "Clase de Vehiculos"     });
+
+	jQuery( "#dialogo_bancos"                  ).dialog({ autoOpen: false, width: 600, height: 450, title: "Bancos"     });
+
+	jQuery( "#dialogo_cxp"                     ).dialog({ autoOpen: false, width: 600, height: 450, title: "Cuentas por Pagar"     });
+
+	jQuery( "#dialogo_cxc"                     ).dialog({ autoOpen: false, width: 600, height: 450, title: "Cuentas por Cobrar"     });
+
+	jQuery( "#dialogo_turnos"                  ).dialog({ autoOpen: false, width: 600, height: 450, title: "Turnos"     });
+
+	
+
+	jQuery( "#progressbar" ).progressbar({ disable: true });
+
+	jQuery( "#progressbarWrapper" ).resizable();
+
+	
+
+	if( jQuery( "#fecha_cierre"             ) ){ jQuery( "#fecha_cierre"             ).datepicker({showButtonPanel: true, dateFormat: "yy-mm-dd"}); 	}
+	
+	if( jQuery( "#fecha_cierre"             ) ){ jQuery( "#fecha_cierre"             ).datepicker({showButtonPanel: true, dateFormat: "yy-mm-dd"}); 	}
+	
+	if( jQuery( "#fecha_ingreso"             ) ){ jQuery( "#fecha_ingreso"             ).datepicker({showButtonPanel: true, dateFormat: "yy-mm-dd"}); 	}
+
+	if( jQuery( "#fecha_vencimiento"             ) ){ jQuery( "#fecha_vencimiento"             ).datepicker({showButtonPanel: true, dateFormat: "yy-mm-dd"}); 	}
+	
+	if( jQuery( "#vencimiento"       ) ){ jQuery( "#vencimiento"       ).datepicker({showButtonPanel: true, dateFormat: "yy-mm-dd"});   }
+
+	<?php //if(Session::get("role")=="superadministrador" || Session::get("role")=="administrador"){ ?>
+
+	//if( jQuery( "#hora_entrada"      ) ){ jQuery( "#hora_entrada"      ).datetimepicker({ dateFormat: "yy-mm-dd" });   }
+
+	//if( jQuery( "#hora_salida"       ) ){ jQuery( "#hora_salida"       ).datetimepicker({ dateFormat: "yy-mm-dd" });   }
+
+	<?php //} ?>
+
+	
+
+	
+
+	//if( jQuery( "#desde"      ) ){ jQuery( "#desde"      ).datetimepicker({ dateFormat: "yy-mm-dd" });   }
+
+	//if( jQuery( "#hasta"       ) ){ jQuery( "#hasta"       ).datetimepicker({ dateFormat: "yy-mm-dd" });   }
+
+	
+
+	<?php //if(Session::get("role")=="superadministrador" || Session::get("role")=="administrador"){ ?>
+
+		//if( jQuery( "#fecha_apertura"     ) ){ jQuery( "#fecha_apertura"     ).datetimepicker({ dateFormat: "yy-mm-dd" });   }
+
+		//if( jQuery( "#fecha_cierre"       ) ){ jQuery( "#fecha_cierre"       ).datetimepicker({ dateFormat: "yy-mm-dd" });   }
+
+	<?php //} ?>
+
+	
+
+	
+
+	//if( jQuery( "#fecha_inicio"       ) ){ jQuery( "#fecha_inicio"     ).datetimepicker({ dateFormat: "yy-mm-dd" });   }
+
+	//if( jQuery( "#fecha_fin"          ) ){ jQuery( "#fecha_fin"       ).datetimepicker({ dateFormat: "yy-mm-dd" });   }
+
+	
+
+	//if( jQuery( "#hora_inicio"       ) ){ jQuery( "#hora_inicio"     ).timepicker({ timeformat: "H:m:s" });   }
+
+	//if( jQuery( "#hora_fin"          ) ){ jQuery( "#hora_fin"       ).timepicker({ timeformat: "H:m:s" });   }
+
+	
+
+	
+
+	if( jQuery( ".boton"  ) ){ jQuery( ".boton"  ).button({ icons: {primary:'ui-icon ui-icon-search'     ,secondary:'ui-icon ui-icon-newwin'} });   }
+
+	
+
+	if( jQuery( "#buscar_proveedor"  ) ){ jQuery( "#buscar_proveedor"  ).button({ icons: {primary:'ui-icon ui-icon-search'     ,secondary:'ui-icon ui-icon-newwin'} });   }
+	
+	if( jQuery( "#siguiente"  ) ){ jQuery( "#siguiente"  ).button({ icons: {primary:'ui-icon ui-icon-circle-plus'     ,secondary:'ui-icon ui-icon-newwin'} });   }
+	
+	if( jQuery( "#delete_item"  ) ){ jQuery( "#delete_item"  ).button({ icons: {primary:'ui-icon ui-icon-circle-plus'     ,secondary:'ui-icon ui-icon-newwin'} });   }
+
+	if( jQuery( "#agregar_proveedor" ) ){ jQuery( "#agregar_proveedor" ).button({ icons: {primary:'ui-icon ui-icon-circle-plus',secondary:'ui-icon ui-icon-newwin'} });   }
+
+	if( jQuery( "#buscar_encuesta" ) ){ jQuery( "#buscar_encuesta" ).button({ icons: {primary:'ui-icon ui-icon-circle-plus',secondary:'ui-icon ui-icon-newwin'} });   }
+	
+	if( jQuery( "#buscar_encuesta" ) ){ jQuery( "#buscar_pregunta" ).button({ icons: {primary:'ui-icon ui-icon-circle-plus',secondary:'ui-icon ui-icon-newwin'} });   }
+
+	if( jQuery( "#buscar_clientes"  ) ){ jQuery( "#buscar_clientes"  ).button({ icons: {primary:'ui-icon ui-icon-search'     ,secondary:'ui-icon ui-icon-newwin'} });   }
+
+	if( jQuery( "#agregar_clientes" ) ){ jQuery( "#agregar_clientes" ).button({ icons: {primary:'ui-icon ui-icon-circle-plus',secondary:'ui-icon ui-icon-newwin'} });   }
+	
+	if( jQuery( "#g_valor" ) ){ jQuery( "#g_valor" ).button({ icons: {primary:'ui-icon ui-icon-circle-plus',secondary:'ui-icon ui-icon-newwin'} });   }
+
+	
+	if( jQuery( "#buscar_empleados"  ) ){ jQuery( "#buscar_empleados"  ).button({ icons: {primary:'ui-icon ui-icon-search'     ,secondary:'ui-icon ui-icon-newwin'} });   }
+
+	if( jQuery( "#agregar_empleados" ) ){ jQuery( "#agregar_empleados" ).button({ icons: {primary:'ui-icon ui-icon-circle-plus',secondary:'ui-icon ui-icon-newwin'} });   }
+
+	
+
+	if( jQuery( "#buscar_bancos"     ) ){ jQuery( "#buscar_bancos"  ).button({ icons: {primary:'ui-icon ui-icon-search'     ,secondary:'ui-icon ui-icon-newwin'} });   }
+
+	if( jQuery( "#agregar_bancos"    ) ){ jQuery( "#agregar_bancos" ).button({ icons: {primary:'ui-icon ui-icon-circle-plus',secondary:'ui-icon ui-icon-newwin'} });   }
+
+	
+
+	if( jQuery( "#buscar_desde_bodegas"    ) ){ jQuery( "#buscar_desde_bodegas"    ).button({ icons: {primary:'ui-icon ui-icon-search'     ,secondary:'ui-icon ui-icon-newwin'} });   }
+
+	if( jQuery( "#buscar_hasta_bodegas"    ) ){ jQuery( "#buscar_hasta_bodegas"    ).button({ icons: {primary:'ui-icon ui-icon-search'     ,secondary:'ui-icon ui-icon-newwin'} });   }
+
+	
+
+	if( jQuery( "#buscar_bodegas"    ) ){ jQuery( "#buscar_bodegas"    ).button({ icons: {primary:'ui-icon ui-icon-search'     ,secondary:'ui-icon ui-icon-newwin'} });   }
+
+	if( jQuery( "#agregar_bodegas"   ) ){ jQuery( "#agregar_bodegas"   ).button({ icons: {primary:'ui-icon ui-icon-circle-plus',secondary:'ui-icon ui-icon-newwin'} });   }
+
+
+
+	if( jQuery( "#buscar_dpto"       ) ){ jQuery( "#buscar_dpto"       ).button({ icons: {primary:'ui-icon ui-icon-search'     ,secondary:'ui-icon ui-icon-newwin'} });   }
+
+	if( jQuery( "#buscar_mun"        ) ){ jQuery( "#buscar_mun"        ).button({ icons: {primary:'ui-icon ui-icon-search'     ,secondary:'ui-icon ui-icon-newwin'} });   }
+
+	
+
+	if( jQuery( "#buscar_cxp"        ) ){ jQuery( "#buscar_cxp"        ).button({ icons: {primary:'ui-icon ui-icon-search'     ,secondary:'ui-icon ui-icon-newwin'} });   }
+
+	if( jQuery( "#buscar_cxc"        ) ){ jQuery( "#buscar_cxc"        ).button({ icons: {primary:'ui-icon ui-icon-search'     ,secondary:'ui-icon ui-icon-newwin'} });   }
+
+	if( jQuery( "#buscar_turnos"        ) ){ jQuery( "#buscar_turnos"        ).button({ icons: {primary:'ui-icon ui-icon-search'     ,secondary:'ui-icon ui-icon-newwin'} });   }
+
+
+
+	if( jQuery( "#buscar_cliente"    ) ){ jQuery( "#buscar_cliente"    ).button({ icons: {primary:'ui-icon ui-icon-search'       ,secondary:'ui-icon ui-icon-newwin'} });   }
+
+	if( jQuery( "#agregar_cliente"   ) ){ jQuery( "#agregar_cliente"   ).button({ icons: {primary:'ui-icon ui-icon-circle-plus'  ,secondary:'ui-icon ui-icon-newwin'} });   }
+
+	
+
+	if( jQuery( "#buscar_centro_produccion"    ) ){ jQuery( "#buscar_centro_produccion"    ).button({ icons: {primary:'ui-icon ui-icon-search'       ,secondary:'ui-icon ui-icon-newwin'} });   }
+
+	if( jQuery( "#agregar_centro_produccion"   ) ){ jQuery( "#agregar_centro_produccion"   ).button({ icons: {primary:'ui-icon ui-icon-circle-plus'  ,secondary:'ui-icon ui-icon-newwin'} });   }
+
+	
+
+	if( jQuery( "#buscar_clase_vehiculo"    ) ){ jQuery( "#buscar_clase_vehiculo"    ).button({ icons: {primary:'ui-icon ui-icon-search'       ,secondary:'ui-icon ui-icon-newwin'} });   }
+
+	if( jQuery( "#agregar_clase_vehiculo"   ) ){ jQuery( "#agregar_clase_vehiculo"   ).button({ icons: {primary:'ui-icon ui-icon-circle-plus'  ,secondary:'ui-icon ui-icon-newwin'} });   }
+
+	
+
+	if( jQuery( "#buscar_tipo_auto"    ) ){ jQuery( "#buscar_tipo_auto"    ).button({ icons: {primary:'ui-icon ui-icon-search'       ,secondary:'ui-icon ui-icon-newwin'} });   }
+
+	if( jQuery( "#agregar_tipo_auto"   ) ){ jQuery( "#agregar_tipo_auto"   ).button({ icons: {primary:'ui-icon ui-icon-circle-plus'  ,secondary:'ui-icon ui-icon-newwin'} });   }
+
+	
+
+	if( jQuery( "#enviar"            ) ){ jQuery( "#enviar"           ).button({ icons: {primary:'ui-icon ui-icon-circle-check' ,secondary:'ui-icon-triangle-1-s'}       });   }
+
+	if( jQuery( "#guardar"           ) ){ jQuery( "#guardar"           ).button({ icons: {primary:'ui-icon ui-icon-circle-check' ,secondary:'ui-icon-triangle-1-s'}       });   }
+
+	if( jQuery( "#cancelar"          ) ){ jQuery( "#cancelar"          ).button({ icons: {primary:'ui-icon ui-icon-circle-minus' ,secondary:'ui-icon ui-icon-closethick'} });   }
+
+	
+
+	if( jQuery( "#generar"            ) ){ jQuery( "#generar"           ).button({ icons: {primary:'ui-icon ui-icon-circle-check' ,secondary:'ui-icon-triangle-1-s'}       });   }
+
+	if( jQuery( "#copiar"           ) ){ jQuery( "#copiar"           ).button({ icons: {primary:'ui-icon ui-icon-circle-check' ,secondary:'ui-icon-triangle-1-s'}       });   }
+
+	if( jQuery( "#buscar"           ) ){ jQuery( "#buscar"           ).button({ icons: {primary:'ui-icon ui-icon-circle-check' ,secondary:'ui-icon-triangle-1-s'}       });   }
+
+
+
+	
+
+		
+
+	if( jQuery( "#agregar_item"      ) ){ jQuery( "#agregar_item"      ).button({ icons: {primary:'ui-icon ui-icon-circle-plus'  ,secondary:'ui-icon-cart'} }); }
+
+	if( jQuery( "#buscar_item"       ) ){ jQuery( "#buscar_item"       ).button({ icons: {primary:'ui-icon ui-icon-search'       ,secondary:'ui-icon ui-icon-refresh'} }); }
+
+	if( jQuery( "#modificar_item"    ) ){ jQuery( "#modificar_item"    ).button({ icons: {primary:'ui-icon ui-icon-pencil'       ,secondary:'ui-icon ui-icon-refresh'} }); }
+
+	if( jQuery( "#borrar_item"       ) ){ jQuery( "#borrar_item"       ).button({ icons: {primary:'ui-icon ui-icon-circle-minus' ,secondary:'ui-icon ui-icon-trash'} }); }
+
+	
+
+	if( jQuery( "#inicio"            ) ){ jQuery( "#inicio"           ).button({ icons: {primary:'ui-icon ui-icon-person' ,secondary:'ui-icon ui-icon-power'}       });   }
+
+	
+
+	if( jQuery( "#liquidar"           ) ){ jQuery( "#liquidar"           ).button({ icons: {primary:'ui-icon ui-icon-circle-check' ,secondary:'ui-icon-triangle-1-s'}       });   }
+
+	
+
+	//si hay un boton para llamar a dpto
+
+	if(jQuery("#buscar_dpto")){
+
+		jQuery("#buscar_dpto").click(function(){
+
+				jQuery("#dialogo_departamentos").html("");
+
+				var datos = "";
+
+				jQuery.ajax({
+
+					type:"POST"
+
+					,url:"<?php //echo core::getInstancePath(); ?>departamentos/find_buscar"
+
+					,async:true
+
+					,data:datos
+
+					,success: function(data){
+
+							jQuery("#dialogo_departamentos").html(data);
+
+							jQuery("#dialogo_departamentos").dialog("open");
+
+						}
+
+					,error: function(data){
+
+							jQuery("#dialogo_departamentos").html("Error Cargando este Elemento" + data);
+
+							jQuery("#dialogo_departamentos").dialog({open:true});
+
+						}	
+
+				});		
+
+			});
+
+	}
+
+	//si hay un boton para llamar a municipios
+
+	if(jQuery("#buscar_mun")){
+
+		jQuery("#buscar_mun").click(function(){
+
+				jQuery("#dialogo_municipios").html("");
+
+				var datos = "";
+
+				jQuery.ajax({
+
+					type:"POST"
+
+					,url:"<?php //echo core::getInstancePath(); ?>municipios/find_buscar"
+
+					,async:true
+
+					,data:datos
+
+					,success: function(data){
+
+							jQuery("#dialogo_municipios").html(data);
+
+							jQuery("#dialogo_municipios").dialog("open");
+
+						}
+
+					,error: function(data){
+
+							jQuery("#dialogo_municipios").html("Error Cargando este Elemento" + data);
+
+							jQuery("#dialogo_municipios").dialog({open:true});
+
+						}	
+
+				});		
+
+			});
+
+	}
+
+	
+
+	
+
+			//si hay un boton para llamar a proveedores
+
+	if(jQuery("#buscar_proveedor")){
+
+		jQuery("#buscar_proveedor").click(function(){
+
+				jQuery("#dialogo_proveedores").html("");
+
+				var datos = "";
+
+				jQuery.ajax({
+
+					type:"POST"
+
+					,url:"<?php //echo core::getInstancePath(); ?>proveedores/find_buscar"
+
+					,async:true
+
+					,data:datos
+
+					,success: function(data){
+
+							jQuery("#dialogo_proveedores").html(data);
+
+							jQuery("#dialogo_proveedores").dialog("open");
+
+						}
+
+					,error: function(data){
+
+							jQuery("#dialogo_proveedores").html("Error Cargando este Elemento" + data);
+
+							jQuery("#dialogo_proveedores").dialog({open:true});
+
+						}	
+
+				});		
+
+			});
+
+	}
+	
+	
+		//si hay un boton para llamar a bodegas
+
+	if(jQuery("#buscar_bodegas")){
+
+		jQuery("#buscar_bodegas").click(function(){
+
+				jQuery("#dialogo_bodegas").html("");
+
+				var datos = "";
+
+				jQuery.ajax({
+
+					type:"POST"
+
+					,url:"<?php //echo core::getInstancePath(); ?>bodegas/find_buscar"
+
+					,async:true
+
+					,data:datos
+
+					,success: function(data){
+
+							jQuery("#dialogo_bodegas").html(data);
+
+							jQuery("#dialogo_bodegas").dialog("open");
+
+						}
+
+					,error: function(data){
+
+							jQuery("#dialogo_bodegas").html("Error Cargando este Elemento" + data);
+
+							jQuery("#dialogo_bodegas").dialog({open:true});
+
+						}	
+
+				});		
+
+			});
+
+	}
+
+	
+
+		//si hay un boton para llamar a bodegas
+
+	if(jQuery("#buscar_desde_bodegas")){
+
+		jQuery("#buscar_desde_bodegas").click(function(){
+
+				jQuery("#dialogo_desde_bodegas").html("");
+
+				var datos = "";
+
+				jQuery.ajax({
+
+					type:"POST"
+
+					,url:"<?php //echo core::getInstancePath(); ?>bodegas/find_desde_buscar"
+
+					,async:true
+
+					,data:datos
+
+					,success: function(data){
+
+							jQuery("#dialogo_desde_bodegas").html(data);
+
+							jQuery("#dialogo_desde_bodegas").dialog("open");
+
+						}
+
+					,error: function(data){
+
+							jQuery("#dialogo_desde_bodegas").html("Error Cargando este Elemento" + data);
+
+							jQuery("#dialogo_desde_bodegas").dialog({open:true});
+
+						}	
+
+				});		
+
+			});
+
+	}
+
+	
+
+		//si hay un boton para llamar a bodegas
+
+	if(jQuery("#buscar_hasta_bodegas")){
+
+		jQuery("#buscar_hasta_bodegas").click(function(){
+
+				jQuery("#dialogo_hasta_bodegas").html("");
+
+				var datos = "";
+
+				jQuery.ajax({
+
+					type:"POST"
+
+					,url:"<?php //echo core::getInstancePath(); ?>bodegas/find_hasta_buscar"
+
+					,async:true
+
+					,data:datos
+
+					,success: function(data){
+
+							jQuery("#dialogo_hasta_bodegas").html(data);
+
+							jQuery("#dialogo_hasta_bodegas").dialog("open");
+
+						}
+
+					,error: function(data){
+
+							jQuery("#dialogo_hasta_bodegas").html("Error Cargando este Elemento" + data);
+
+							jQuery("#dialogo_hasta_bodegas").dialog({open:true});
+
+						}	
+
+				});		
+
+			});
+
+	}
+
+	
+
+		//si hay un boton para llamar a centro de produccion
+
+	if(jQuery("#buscar_centro_produccion")){
+
+		jQuery("#buscar_centro_produccion").click(function(){
+
+				jQuery("#dialogo_centro_produccion").html("");
+
+				var datos = "";
+
+				jQuery.ajax({
+
+					type:"POST"
+
+					,url:"<?php //echo core::getInstancePath(); ?>centro_produccion/find_buscar"
+
+					,async:true
+
+					,data:datos
+
+					,success: function(data){
+
+							jQuery("#dialogo_centro_produccion").html(data);
+
+							jQuery("#dialogo_centro_produccion").dialog("open");
+
+						}
+
+					,error: function(data){
+
+							jQuery("#dialogo_centro_produccion").html("Error Cargando este Elemento" + data);
+
+							jQuery("#dialogo_centro_produccion").dialog({open:true});
+
+						}	
+
+				});		
+
+			});
+
+	}
+
+	
+
+			//si hay un boton para llamar a centro de produccion
+
+		if(jQuery("#buscar_clase_vehiculo")){
+
+			jQuery("#buscar_clase_vehiculo").click(function(){
+
+					jQuery("#dialogo_clase_vehiculo").html("");
+
+					var datos = "";
+
+					jQuery.ajax({
+
+						type:"POST"
+
+						,url:"<?php //echo core::getInstancePath(); ?>clase_vehiculo/find_buscar"
+
+						,async:true
+
+						,data:datos
+
+						,success: function(data){
+
+								jQuery("#dialogo_clase_vehiculo").html(data);
+
+								jQuery("#dialogo_clase_vehiculo").dialog("open");
+
+							}
+
+						,error: function(data){
+
+								jQuery("#dialogo_clase_vehiculo").html("Error Cargando este Elemento" + data);
+
+								jQuery("#dialogo_clase_vehiculo").dialog({open:true});
+
+							}	
+
+					});		
+
+				});
+
+		}
+
+		
+
+			//si hay un boton para llamar a centro de produccion
+
+		if(jQuery("#buscar_tipo_auto")){
+
+			jQuery("#buscar_tipo_auto").click(function(){
+
+					jQuery("#dialogo_tipo_auto").html("");
+
+					var datos = "";
+
+					jQuery.ajax({
+
+						type:"POST"
+
+						,url:"<?php //echo core::getInstancePath(); ?>tipo_auto/find_buscar"
+
+						,async:true
+
+						,data:datos
+
+						,success: function(data){
+
+								jQuery("#dialogo_tipo_auto").html(data);
+
+								jQuery("#dialogo_tipo_auto").dialog("open");
+
+							}
+
+						,error: function(data){
+
+								jQuery("#dialogo_tipo_auto").html("Error Cargando este Elemento" + data);
+
+								jQuery("#dialogo_tipo_auto").dialog({open:true});
+
+							}	
+
+					});		
+
+				});
+
+		}
+
+		
+
+		if(jQuery("#buscar_bancos")){
+
+			jQuery("#buscar_bancos").click(function(){
+
+					jQuery("#dialogo_bancos").html("");
+
+					var datos = "";
+
+					jQuery.ajax({
+
+						type:"POST"
+
+						,url:"<?php //echo core::getInstancePath(); ?>bancos/find_buscar"
+
+						,async:true
+
+						,data:datos
+
+						,success: function(data){
+
+								jQuery("#dialogo_bancos").html(data);
+
+								jQuery("#dialogo_bancos").dialog("open");
+
+							}
+
+						,error: function(data){
+
+								jQuery("#dialogo_bancos").html("Error Cargando este Elemento" + data);
+
+								jQuery("#dialogo_bancos").dialog({open:true});
+
+							}	
+
+					});		
+
+				});
+
+		}
+
+		
+
+if(jQuery("#buscar_cxp")){
+
+	jQuery("#buscar_cxp").click(function(){
+
+			jQuery("#dialogo_cxp").html("");
+
+			
+
+				if(jQuery("#proveedores_id").val()!=""){
+
+					var datos = "";
+
+					jQuery.ajax({
+
+						type:"POST"
+
+						,url:"<?php //echo core::getInstancePath(); ?>cxp/find_buscar"
+
+						,async:true
+
+						,data:datos
+
+						,success: function(data){
+
+								jQuery("#dialogo_cxp").html(data);
+
+								jQuery("#dialogo_cxp").dialog("open");
+
+							}
+
+						,error: function(data){
+
+								jQuery("#dialogo_cxp").html("Error Cargando este Elemento" + data);
+
+								jQuery("#dialogo_cxp").dialog({open:true});
+
+							}	
+
+					});		
+
+			
+
+				}else{
+
+								//jQuery("#dialogo_mensajes").html("");
+
+								//jQuery("#dialogo_mensajes").html("Escoja un Proveedor");
+
+								//jQuery("#dialogo_mensajes").dialog({open:true});
+
+								alert("escoja un proveedor");
+
+				}
+
+		});
+
+
+	     jQuery("#<?php //echo $cuadros->div_id; ?>_id").blur(function() {
+					 if(jQuery("#<?php //echo $cuadros->valor; ?>").val()!=''){
+					 	validar('<?php //echo $cuadros->controlador; ?>','<?php //echo $cuadros->opcion; ?>',jQuery("#<?php //echo $cuadros->valor; ?>").val());
+					 }else{
+						 	jQuery("#dialogo_mensajes").html(""); 
+							jQuery("#dialogo_mensajes").html("Ojo Escribar un Valor"); 
+							jQuery("#dialogo_mensajes").dialog("open");	
+						 }
+		}); 
+}
+
+
+
+	
+
+
+
+		
+
+if(jQuery("#buscar_cxc")){
+
+	jQuery("#buscar_cxc").click(function(){
+
+			jQuery("#dialogo_cxc").html("");
+
+			
+
+				if(jQuery("#clientes_id").val()!=""){
+
+					var datos = "";
+
+					jQuery.ajax({
+
+						type:"POST"
+
+						,url:"<?php //echo core::getInstancePath(); ?>cxc/find_buscar"
+
+						,async:true
+
+						,data:datos
+
+						,success: function(data){
+
+								jQuery("#dialogo_cxc").html(data);
+
+								jQuery("#dialogo_cxc").dialog("open");
+
+							}
+
+						,error: function(data){
+
+								jQuery("#dialogo_cxc").html("Error Cargando este Elemento" + data);
+
+								jQuery("#dialogo_cxc").dialog({open:true});
+
+							}	
+
+					});		
+
+			
+
+				}else{
+
+								//jQuery("#dialogo_mensajes").html("");
+
+								//jQuery("#dialogo_mensajes").html("Escoja un Proveedor");
+
+								//jQuery("#dialogo_mensajes").dialog({open:true});
+
+								alert("escoja un cliente");
+
+				}
+
+		});
+
+}
+
+
+
+	
+
+
+
+
+
+		
+
+if(jQuery("#buscar_clientes")){
+
+jQuery("#buscar_clientes").click(function(){
+
+	jQuery("#dialogo_clientes").html("");
+
+			jQuery.ajax({
+
+				type:"POST"
+
+				,url:"<?php //echo core::getInstancePath(); ?>clientes/find_buscar"
+
+				,async:true
+
+				,data:datos
+
+				,success: function(data){
+
+						jQuery("#dialogo_clientes").html(data);
+
+						jQuery("#dialogo_clientes").dialog("open");
+
+					}
+
+				,error: function(data){
+
+						jQuery("#dialogo_clientes").html("Error Cargando este Elemento" + data);
+
+						jQuery("#dialogo_clientes").dialog({open:true});
+
+					}	
+
+			});		
+
+	});
+
+}
+
+
+
+	
+
+
+
+
+
+		
+
+if(jQuery("#buscar_empleados")){
+
+jQuery("#buscar_empleados").click(function(){
+
+	jQuery("#dialogo_empleados").html("");
+
+			jQuery.ajax({
+
+				type:"POST"
+
+				,url:"<?php //echo core::getInstancePath(); ?>empleados/find_buscar"
+
+				,async:true
+
+	
+
+				,success: function(data){
+
+						jQuery("#dialogo_empleados").html(data);
+
+						jQuery("#dialogo_empleados").dialog("open");
+
+					}
+
+				,error: function(data){
+
+						jQuery("#dialogo_empleados").html("Error Cargando este Elemento" + data);
+
+						jQuery("#dialogo_empleados").dialog({open:true});
+
+					}	
+
+			});		
+
+	});
+
+}
+
+
+
+
+
+
+
+if(jQuery("#buscar_turnos")){
+
+	
+
+jQuery("#buscar_turnos").click(function(){
+
+	jQuery("#dialogo_turnos").html("");
+
+			
+
+			jQuery.ajax({
+
+				type:"POST"
+
+				,url:"<?php //echo core::getInstancePath(); ?>turnos/find_buscar/?empleado_id="+jQuery("#empleado_id").val()
+
+				,async:true
+
+	
+
+				,success: function(data){
+
+						jQuery("#dialogo_turnos").html(data);
+
+						jQuery("#dialogo_turnos").dialog("open");
+
+					}
+
+				,error: function(data){
+
+						jQuery("#dialogo_turnos").html("Error Cargando este Elemento" + data);
+
+						jQuery("#dialogo_turnos").dialog({open:true});
+
+					}	
+
+			});		
+
+			
+
+	});
+
+}
+
+
+	if(jQuery("#buscar_pregunta")){
+
+		jQuery("#buscar_pregunta").click(function(){
+
+				jQuery("#dialogo_preguntas").html("");
+
+				var datos = "";
+
+				jQuery.ajax({
+
+					type:"POST"
+
+					,url:"<?php //echo core::getInstancePath(); ?>preguntas/find_buscar"
+
+					,async:true
+
+					,data:datos
+
+					,success: function(data){
+
+							jQuery("#dialogo_preguntas").html(data);
+
+							jQuery("#dialogo_preguntas").dialog("open");
+
+						}
+
+					,error: function(data){
+
+							jQuery("#dialogo_preguntas").html("Error Cargando este Elemento" + data);
+
+							jQuery("#dialogo_preguntas").dialog({open:true});
+
+						}	
+
+				});		
+
+			});
+
+	}
+	
+	<?php //if(Router::getAction()!='agregar'){ ?>
+					 if( jQuery("#departamentos_id").length ){ 
+						
+							 if( jQuery("#departamentos_id").val()!='' ){
+								 validar('departamentos','departamentos_id',jQuery("#departamentos_id").val());
+							 }
+						
+					 }
+			 	 <?php //} ?>	
+		
+				 jQuery("#departamentos_id").blur(function() {
+					 if(jQuery("#departamentos_id").val()!=''){
+					 	validar('departamentos','departamento',jQuery("#departamentos_id").val());
+					 }else{
+						 	jQuery("#dialogo_mensajes").html(""); 
+							jQuery("#dialogo_mensajes").html("Ojo Escribar un Valor"); 
+							jQuery("#dialogo_mensajes").dialog("open");	
+						 }
+				 }); 
+
+				
+	
+
+
+
+
+jQuery(document).ready(function(){
+
+	/*cuadros*/
+	
+<?php 
+$cuadros = new CuadroDialogo(); 
+foreach($cuadros->find() as $cuadros): 
+?>
+	jQuery("body").append('<div id="dialogo_<?php echo $cuadros->div_id; ?>"></div>');
+	
+	jQuery("#dialogo_<?php echo $cuadros->div_id; ?>").dialog(
+			{ autoOpen: false 
+			 <?php if($cuadros->ancho!=0){ 
+					echo ", width: $cuadros->ancho"; 
+					}
+				  if($cuadros->alto!=0){ 
+				  		echo ", height: $cuadros->alto"; 
+					} ?>
+				,title: " <?php echo $cuadros->tittle; ?>" 
+	 });
+	 
+	<?php if($cuadros->controlador!=''){ ?>
+	
+	 if( jQuery( "#buscar_<?php echo $cuadros->div_id; ?>"     ) ){     
+	       
+	  jQuery( "#buscar_<?php echo $cuadros->div_id; ?>"        ).button({ icons: {primary:'ui-icon ui-icon-circle-check' ,secondary:'ui-icon-triangle-1-s'}       });  
+			if(jQuery("#buscar_<?php echo $cuadros->div_id; ?>")){ 
+				jQuery("#buscar_<?php echo $cuadros->div_id; ?>").click(function(){ 
+						sw=0;
+						opc = "<?php echo $cuadros->div_id; ?>";
+						valor = "0";
+						
+						<?php if( $cuadros->opcion_validar != "" ){ ?>
+						if(jQuery("#<?php echo $cuadros->opcion_validar;  ?>").val()==''){ 
+							sw=1;
+							
+						}else{
+							opc   = "<?php echo $cuadros->opcion_validar;  ?>";
+							valor = jQuery("#<?php echo $cuadros->opcion_validar;  ?>").val();
+						}
+						
+						<?php } ?> 
+						
+						if(sw==0){
+							buscar_dialogo("<?php echo $cuadros->controlador; ?>",opc,valor); 
+						}else{ 
+							jQuery("#dialogo_mensajes").html(""); 
+							jQuery("#dialogo_mensajes").html("<?php echo $cuadros->mensaje_error; ?>"); 
+							jQuery("#dialogo_mensajes").dialog("open");	
+						}
+				}); 
+						
+				<?php //if(Router::getAction()!='agregar'){ ?>
+					 if( jQuery("#<?php echo $cuadros->controlador; ?>_id").length ){ 
+						
+							 if( jQuery("#<?php echo $cuadros->controlador; ?>_id").val()!='' ){
+								 validar('<?php echo $cuadros->controlador; ?>','<?php echo $cuadros->opcion; ?>',jQuery("#<?php echo $cuadros->valor; ?>").val());
+							 }
+						
+					 }
+			 	 <?php //} ?>	
+		
+				 jQuery("#<?php echo $cuadros->div_id; ?>_id").blur(function() {
+					 if(jQuery("#<?php echo $cuadros->valor; ?>").val()!=''){
+					 	validar('<?php echo $cuadros->controlador; ?>','<?php echo $cuadros->opcion; ?>',jQuery("#<?php echo $cuadros->valor; ?>").val());
+					 }else{
+						 	jQuery("#dialogo_mensajes").html(""); 
+							jQuery("#dialogo_mensajes").html("Ojo Escribar un Valor"); 
+							jQuery("#dialogo_mensajes").dialog("open");	
+						 }
+				 }); 
+
+			} 
+		
+	 }  
+	
+<?php 
+	}
+endforeach;
+
+?>
+	
+		
+	/*desabilita progressbar*/
+	jQuery( "#progressbar" ).progressbar({ disable: true });
+	jQuery( "#progressbarWrapper" ).resizable();
+
+	/*Date Picker utilizados en el sistema*/
+	if( jQuery( "#fecha"      ) ){ jQuery( "#fecha"      ).datepicker({ dateFormat: "yy-mm-dd"}); 	}
+		
+	/*Botones Utilizados en el sistema*/
+	if( jQuery( ".boton"  ) ){ jQuery( ".boton"  ).button({ icons: {primary:'ui-icon ui-icon-search'     ,secondary:'ui-icon ui-icon-newwin'} });   }
+	/*Proyecto investigacion dialogo objetivo_socioeconomico*/
+	
+	if( jQuery( "#buscar"     ) ){ jQuery( "#buscar"        ).button({ icons: {primary:'ui-icon ui-icon-circle-check' ,secondary:'ui-icon-triangle-1-s'}       });   }
+	if( jQuery( "#enviar"     ) ){ jQuery( "#enviar"        ).button({ icons: {primary:'ui-icon ui-icon-circle-check' ,secondary:'ui-icon-triangle-1-s'}       });   }
+	if( jQuery( "#guardar"    ) ){ jQuery( "#guardar"       ).button({ icons: {primary:'ui-icon ui-icon-circle-check' ,secondary:'ui-icon-triangle-1-s'}       });   }
+	if( jQuery( "#cancelar"   ) ){ jQuery( "#cancelar"      ).button({ icons: {primary:'ui-icon ui-icon-circle-minus' ,secondary:'ui-icon ui-icon-closethick'} });   }
+
+	if( jQuery( "#generar"        ) ){ jQuery( "#generar"        ).button({ icons: {primary:'ui-icon ui-icon-circle-check' ,secondary:'ui-icon-triangle-1-s'}       });   }
+	if( jQuery( "#copiar"         ) ){ jQuery( "#copiar"         ).button({ icons: {primary:'ui-icon ui-icon-circle-check' ,secondary:'ui-icon-triangle-1-s'}       });   }
+
+	if( jQuery( "#camara"        ) ){ jQuery( "#camara"        ).button({ icons: {primary:'ui-icon ui-icon-circle-check' ,secondary:'ui-icon-triangle-1-s'}       });   }	
+	if( jQuery( "#huella"        ) ){ jQuery( "#huella"        ).button({ icons: {primary:'ui-icon ui-icon-circle-check' ,secondary:'ui-icon-triangle-1-s'}       });   }	
+	if( jQuery( "#inicio"         ) ){ jQuery( "#inicio"         ).button({ icons: {primary:'ui-icon ui-icon-person' ,secondary:'ui-icon ui-icon-power'}       });   }
+	
+		
+		
+		/*Proyecto de Investigacion Roles*/
+		if(jQuery("#buscar_roles")){
+				jQuery("#buscar_roles").click(function(){
+						buscar_dialogo("roles_de_usuario","true","true");
+				});
+		}
+
+	
+		
+
+		
+
+});
+
+
+</script>

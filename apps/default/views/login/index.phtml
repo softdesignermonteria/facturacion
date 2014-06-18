@@ -1,0 +1,6 @@
+<?php echo View::getContent(); ?>
+<?php
+foreach(View::getValidationMessages() as $message){
+	Flash::error($message->getMessage());
+}
+?>    

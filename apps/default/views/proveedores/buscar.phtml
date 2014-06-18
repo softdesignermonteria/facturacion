@@ -1,0 +1,69 @@
+
+<?php echo Tag::formRemote("proveedores/detalle_buscar", "update: mensajes", "id: clientes_find","name: clientes_find"); ?>
+<br />
+<table border="0" cellpadding="0" id="bclientes" width="100%" class="ui-corner-all">
+  <thead>
+  <tr>
+    <th colspan="6" class="ui-jqgrid-titlebar ui-widget-header ui-corner-top ui-helper-clearfix">BUSCAR PROVEEDORES</th>
+  </tr>
+ </thead>
+ <tbody> 
+  <tr>
+    <td width="13%">&nbsp;</td>
+    <td width="13%">Nit</td>
+    <td width="26%"><?php echo Tag::textField("nit","size: 25"); ?></td>
+    <td width="15%">&nbsp;</td>
+    <td width="29%">&nbsp;</td>
+    <td width="4%">&nbsp;</td>
+  </tr>
+  <!--<tr>
+    <td>&nbsp;</td>
+    <td>Primer Nombre</td>
+    <td><?php echo Tag::textField("nom1","size: 20"); ?></td>
+    <td>Segundo Nombre</td>
+    <td><?php echo Tag::textField("nom2","size: 20"); ?></td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>&nbsp;</td>
+    <td>Primer Apellido</td>
+    <td><?php echo Tag::textField("ape1","size: 20"); ?></td>
+    <td>Segundo Apellido</td>
+    <td><?php echo Tag::textField("ape2","size: 20"); ?></td>
+    <td>&nbsp;</td>
+  </tr>-->
+   <tr>
+    <td>&nbsp;</td>
+    <td>Razon Social</td>
+    <td colspan="3"><?php echo Tag::textField("razon_social","size: 50"); ?></td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>&nbsp;</td>
+    <td>Ordernar por</td>
+    <td><?php echo Tag::selectStatic('ordenar', 
+					array(
+					'id' => 'POR DEFECTO',
+					'nit' => 'NIT',
+					//'nombre1' => 'PRIMER NOMBRE',
+					//'nombre2' => 'SEGUNDO NOMBRE',
+					//'apellido1' => 'PRIMER APELLIDO',
+					//'apellido2' => 'SEGUNDO APELLIDO',
+					'razon_social' => 'RAZON_SOCIAL'
+					)
+					); ?></td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td colspan="6" align="center"><button id="enviar" name="enviar">Enviar Consulta</button></td>
+  </tr>
+  </tbody>
+</table>
+
+
+<div id="mensajes" style="min-height:400px;"></div>
+
+<?php echo Tag::endForm(); ?>
+

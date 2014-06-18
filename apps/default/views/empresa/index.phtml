@@ -1,0 +1,51 @@
+<?php echo View::getContent(); ?>
+<h1>LISTADO DE EMPRESAS </h1>
+
+<?php foreach($detalles as $det): ?>
+
+<table width="100%" border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <th colspan="4" align="center"><strong>LISTADO DE EMPRESAS </strong></th>
+  </tr>
+  <tr>
+    <th width="16%" align="right">CODIGO</th>
+    <td width="24%"><?php echo $det->id; ?></td>
+    <td width="18%" align="right">&nbsp;</td>
+    <td width="42%">&nbsp;</td>
+  </tr>
+  <tr>
+    <th align="right">NIT</th>
+    <td><?php echo $det->nit; ?></td>
+    <th align="right">NOMBRE EMPRESA</th>
+    <td><?php echo $det->nombre_empresa; ?></td>
+  </tr>
+  <tr>
+    <th align="right">DIRECCION EMPRESA</th>
+    <td><?php echo $det->direccion; ?></td>
+    <th align="right">TELEFONOS</th>
+    <td><?php echo $det->telefonos; ?></td>
+  </tr>
+  <tr>
+    <th align="right">CELULAR</th>
+    <td><?php echo $det->celular; ?></td>
+    <th align="right">&nbsp;</th>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <th align="right">PAGINA WEB</th>
+    <td><?php echo $det->web; ?></td>
+    <th align="right">&nbsp;</th>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <th align="right">CORREO</th>
+    <td><?php echo $det->correo; ?></td>
+    <th align="right">&nbsp;</th>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <th colspan="4" align="center"><?php echo Tag::linkTo("empresa/modificar/$det->id", Tag::image("64x64/Edit.png","width: 32")) ?></th>
+  </tr>
+</table>
+<?php endforeach; ?>
+<?php echo View::getContent(); ?>

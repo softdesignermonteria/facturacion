@@ -1,0 +1,54 @@
+<h4>INFORMACIÓN DETALLADA DEL EMPLEADO</h4>
+
+<table width="100%" border="0" align="center" cellpadding="2" cellspacing="2">
+  <tr>
+    <td width="26%" align="right" valign="middle">IDENTIFICACION (NIT/C&Eacute;DULA):</td>
+    <td width="27%" align="left" valign="middle" scope="col">&nbsp;<?php echo $empleado->cedula; ?></td>
+    <td width="27%" align="right" valign="middle" scope="col"></td>
+    <td width="20%" align="left" valign="middle" scope="col">&nbsp;</td>
+  </tr>
+ <tr>
+    <td align="right" valign="middle" >NOMBRES Y APELLIDOS:</td>
+    <td align="left" valign="middle" >&nbsp;<?php echo $empleado->nombre_completo; ?></td>
+    <td align="right" valign="middle">DIRECCION:</td>
+    <td align="left" valign="middle">&nbsp;<?php echo $empleado->direccion; ?></td>
+    </tr>
+  <tr>
+    <td align="right" valign="middle" >E-MAIL:</td>
+    <td align="left" valign="middle" >&nbsp;<?php echo $empleado->email; ?></td>
+    <td align="right" valign="middle">TELEFONO:</td>
+    <td align="left" valign="middle">&nbsp;<?php echo $empleado->telefono; ?></td>
+    </tr>
+  <tr>
+    <td align="right" valign="middle" >CELULAR:</td>
+    <td align="left" valign="middle" >&nbsp;<?php echo $empleado->celular; ?></td>
+    <td align="right" valign="middle">WEB:</td>
+    <td align="left" valign="middle">&nbsp;<?php echo $empleado->web; ?></td>
+    </tr>
+  <tr>
+    <td align="right" valign="middle" >FECHA INGRESO:</td>
+    <td align="left" valign="middle" >&nbsp;<?php echo $empleado->fecha_ingreso; ?></td>
+    <td align="right" valign="middle">FECHA VENC. CONTRATO:</td>
+    <td align="left" valign="middle">&nbsp;<?php echo $empleado->fecha_vencimiento; ?></td>
+    </tr>
+  <tr>
+    <td align="right" valign="middle" >SALARIO:</td>
+    <td colspan="3" align="left" valign="middle" >&nbsp;<?php echo $empleado->salario; ?>&nbsp;&nbsp;</td>
+  </tr>
+  <tr>
+    <td  colspan="4"></td>    
+  </tr>
+</table>
+
+
+<?php echo View::getContent(); ?>
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />

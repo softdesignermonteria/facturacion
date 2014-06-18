@@ -1,0 +1,252 @@
+<h1>INVENTARIO DETALLADO POR REFERENCIA</h1>
+<?php 
+ $grupos = new Grupos();
+ $alq = new SaldoRemisiones();
+ $alq2 = new SaldoRemisiones();
+ $direccion = new Direccion();
+ 
+ $alquilados = $alq->sum("cantidad-devueltos","conditions: kardex_id = '$inventario->id' and anulado = '0' and cantidad-devueltos <> 0 "); 
+
+?>
+<table border="0" cellpadding="1" id="inventario" width="100%">
+	<tr>
+	  <th colspan="4">INVENTARIO DETALLADO POR CLIENTE</th>
+    </tr>
+	<tr>
+	  <td width="15%" height="22" align="right">CODIGO</td>
+      <td width="35%" align="left"><?php echo $cliente->id; ?></td>
+      <td width="15%" align="right">CEDULA</td>
+      <td width="35%" align="left"><?php echo $cliente->nit; ?></td>
+  </tr>
+	<tr>
+	  <td align="right">NOMBRE</td>
+	  <td align="left"><?php echo utf8_encode($cliente->razon_social); ?></td>
+	  <td align="right">TELEFONOS</td>
+	  <td align="left"><?php echo $cliente->telefono1." - ".$cliente->telefono2; ?></td>
+  </tr>
+	<tr>
+	  <td align="right">CELULAR</td>
+      <td align="left"><?php echo $cliente->celular; ?></td>
+      <td align="right">&nbsp;</td>
+      <td align="left">&nbsp;</td>
+  </tr>
+</table>
+<br />
+
+
+<?php foreach($empresas as $emp): ?>
+
+<table border="0" cellpadding="1" id="remisiones" width="100%" style="background-color:#009900;">
+   <tr>
+	  <th align="right" width="30%" style="background-color:#009900;">NOMBRE EMPRESA</th>
+      <th align="left" style="background-color:#009900;"><?php echo $emp->nombre_empresa; ?></th>
+  </tr>
+</table>
+
+<br />
+
+<?php 
+//direcciones activas por empresa
+
+$i=0;	
+//Flash::error($idt);
+
+$query = new ActiveRecordJoin(array(
+		"entities" => array("SaldoRemisiones","Clientes","Empresa","Remisiones","Direccion"),
+		"groupFields" => array("{#Direccion}.id","{#Direccion}.direccion"),
+		
+		"conditions"=>("
+						{#SaldoRemisiones}.anulado = '0' 
+						and {#SaldoRemisiones}.empresa_id = '$emp->id' 
+						and {#Clientes}.id = '$cliente->id'
+						and {#SaldoRemisiones}.cantidad-{#SaldoRemisiones}.devueltos <> 0
+						")
+));
+
+$t_empresa_cons = 0;
+$t_valor_empresa_cons = 0;
+
+//Flash::notice($query->getSqlQuery());	
+foreach($query->getResultSet() as $dir):		
+
+?>  
+
+<table border="0" cellpadding="1" id="remisiones" width="100%" style="background-color:#009966;">
+   <tr >
+	  <th align="right" width="30%" style="background-color:#009966;">DIRECCION</th>
+      <th align="left" style="background-color:#009966;"><?php echo utf8_encode($dir->direccion); ?></th>
+  </tr>
+</table>
+<table border="0" cellpadding="1" id="remisiones" width="100%">
+   <tr>
+    <!--<th width="10%">REMISION</th>-->
+    <!--<th width="10%">FECHA</th>-->
+    <th width="10%">CODIGO</th>
+    <th width="40%">NOMBRE</th>
+    <th width="10%">VALOR <br />DIARIO</th>
+    <th width="10%">ALQ</th>
+    <th width="10%">TOTAL</th>
+    <th width="10%">VER</th>
+	<th width="10%">FECHA</th>
+  </tr>
+        <?php 
+		 $i=0;	
+		 
+		 //listado de clientes 
+//		 Flash::error($idt);
+			$query = new ActiveRecordJoin(array(
+						"entities" => array("SaldoRemisiones","Clientes","Empresa","Remisiones","Direccion","Kardex"),
+						//"groupFields" => array("{#SaldoRemisiones}.clientes_id"),
+						"groupFields"=>array(
+										"{#Kardex}.nombre_producto",
+										"{#Clientes}.razon_social",
+										"{#Kardex}.codigo",
+										"{#SaldoRemisiones}.kardex_id",
+										"{#Clientes}.nit",
+										"{#SaldoRemisiones}.clientes_id"
+										,"{#SaldoRemisiones}.valor_diario"
+										,"{#SaldoRemisiones}.iva"
+										),
+						"sumatory" => array("{#SaldoRemisiones}.cantidad","{#SaldoRemisiones}.devueltos"),
+					 	"minimum" =>array("{#Remisiones}.fecha"),
+						/*"fields"=>array(
+										"{#Clientes}.razon_social",
+										"{#SaldoRemisiones}.id",
+										"{#Remisiones}.prefijo",
+										"{#Remisiones}.consecutivo",
+										"{#Remisiones}.direccion_id",
+										"{#Remisiones}.fecha",
+										"{#Kardex}.nombre_producto",
+										"{#Kardex}.codigo",
+										"{#SaldoRemisiones}.kardex_id",
+										"{#SaldoRemisiones}.cantidad",
+										"{#SaldoRemisiones}.devueltos",
+										"{#SaldoRemisiones}.iva",
+										"{#SaldoRemisiones}.valor_diario",
+										"{#Clientes}.nit",
+										"{#SaldoRemisiones}.clientes_id"
+										),*/
+						"conditions"=>("
+								{#SaldoRemisiones}.anulado = '0' 
+								and {#SaldoRemisiones}.empresa_id = '$emp->id' 
+								and {#Direccion}.id = '$dir->id' 
+								and {#Kardex}.tipo_kardex_id = '1' 
+								and {#Clientes}.id = '$cliente->id'
+								and {#SaldoRemisiones}.cantidad-{#SaldoRemisiones}.devueltos <> 0")
+				));
+		
+		//Flash::notice($query->getSqlQuery());		
+		$t_empresa = 0;
+		$t_valor_empresa = 0;
+		foreach($query->getResultSet() as $detalles):		
+		 
+		 ?>  
+         
+          <tr>
+           <!-- <td><?php //echo $detalles->prefijo.$detalles->consecutivo; ?></td> -->
+           <!-- <td><?php //echo $detalles->fecha;  ?></td> -->
+            <td><?php echo $detalles->codigo;  ?></td>
+            <td>
+            	<a href="javascript:void(0);" style="cursor:hand; text-decoration:none; color:#000000;" onclick="movimiento(<?php echo $detalles->kardex_id; ?>,<?php echo $dir->id; ?>,<?php echo $cliente->id; ?>,<?php echo $emp->id; ?>);" ><?php echo $detalles->nombre_producto;  ?></a></td>
+            <td>$<?php echo number_format($detalles->valor_diario,0);  ?></td>
+            <td><?php echo $detalles->cantidad-$detalles->devueltos; $t_empresa += ($detalles->cantidad-$detalles->devueltos); ?></td>
+            <td>$<?php echo number_format(($detalles->cantidad-$detalles->devueltos)*($detalles->valor_diario),0); $t_valor_empresa += ( ($detalles->cantidad-$detalles->devueltos)*$detalles->valor_diario); ?></td>
+            <td><?php echo Tag::linkTo("inventario/inventario_kardex/$detalles->kardex_id",Tag::image("64x64/Folder.png",'width: 20px'),"target: _blank");  ?></td>
+            <td><?php echo $detalles->fecha;  ?>
+				<?php //echo Tag::Button("name: id: btn$i","id: btn$i","value: Ver Remisiones");  ?>
+                <script>
+                /*	new Event.observe("btn<?php //echo $i; ?>", "click", function(){
+								 parametros = '';
+								 parametros += "clientes_id=<?php //echo $cliente->id; ?>";
+								 parametros += "&direccion_id=<?php //echo $dir->id; ?>";
+								 parametros += "&empresa_id=<?php //echo $emp->id; ?>";
+								 parametros += "&kardex_id=<?php //echo $detalles->kardex_id; ?>";
+										
+								 Dialog.alert(
+									{
+										url: "<?php //echo core::getInstancePath(); ?>inventario/inventario_cliente_detalles/?"+parametros, 
+										options: {method: 'get'
+										, evalScripts: true}
+									}, 
+									{
+										className: "mac_os_x", width:900,height:600,
+										okLabel: "Click Aqui Para Cerrar Esta Ventana"}
+									);
+						 });*/
+                </script>            </td>
+          </tr>
+        <?php $i++;  endforeach; ?> 
+          <tr>
+            <th colspan="3">TOTALES</th>
+            <th><?php //echo number_format($alq2->sum("valor_diario","conditions: anulado = 0  and empresa_id = '$emp->id' and direccion_id = '$dir->id' and clientes_id = '$cliente->id' and cantidad - devueltos <> 0"),0); ?></th>
+            <th><?php //echo number_format($t_empresa,0);  //echo number_format($alq2->sum("cantidad - devueltos","conditions: anulado = 0  and empresa_id = '$emp->id' and direccion_id = '$dir->id' and clientes_id = '$cliente->id' and cantidad - devueltos <> 0"),0); ?>
+            $<?php echo number_format($t_valor_empresa,0); //echo number_format($alq2->sum("(cantidad-devueltos)*(valor_diario)","conditions: anulado = 0  and empresa_id = '$emp->id' and direccion_id = '$dir->id' and clientes_id = '$cliente->id' and cantidad - devueltos <> 0"),0); ?></th>
+            <th>&nbsp;</th>
+            <th></th>
+          </tr>
+ </table>
+<br />
+
+<div id="movimiento_referencia"></div>
+
+<?php endforeach; //listado de empresas ?>
+
+<?php
+$t_empresa_cons += $t_empresa;
+$t_valor_empresa_cons += $t_valor_empresa;
+?>
+
+<?php endforeach; //listado de direcciones ?>
+
+<table width="100%">
+
+  <tr>
+    <th colspan="3" width="60%">TOTAL GENERAL CONSOLIDADO</th>
+    <th width="10%"><?php //echo number_format($t_empresa_cons,0); //echo number_format($alq2->sum("cantidad - devueltos","conditions: anulado = 0  and clientes_id = '$cliente->id' and cantidad - devueltos <> 0"),0); ?></th>
+    <th width="10%">$<?php echo number_format($t_valor_empresa_cons,0); //echo number_format($alq2->sum("(cantidad-devueltos)*(valor_diario + iva)","conditions: anulado = 0 and clientes_id = '$cliente->id' and cantidad - devueltos <> 0"),0); ?></th>
+    <th width="10%">&nbsp;</th>
+    <th width="10%">&nbsp;</th>
+  </tr>
+</table>
+<div align="center">
+  <table border="0" cellpadding="2" id="remisiones2"  cellspacing="2">
+    <tr>
+      <td align="center"><?php echo Tag::linkTo("#", Tag::image("64x64/Back.png",'width: 32px'),"onClick: window.close();") ?></td>
+      <td align="center"><?php echo Tag::linkTo("menu/", Tag::image("iconos/inicio.png",'width: 32px')); ?></td>
+      <!-- <td align="center"><?php //echo Tag::linkTo("print/remisiones/$rem->id", Tag::image("iconos/pdf.png",'width: 32px'),"target: _blank");s ?></td> -->
+    </tr>
+    <tr>
+      <td align="center">Regresar</td>
+      <td align="center">Inicio</td>
+      <!--<td align="center">Pdf</td>-->
+    </tr>
+  </table>
+</div>
+<p>&nbsp;</p>
+
+
+<script>
+
+function movimiento(kardex_id,direccion_id,clientes_id,empresa_id){
+
+ parametros = '';
+ parametros += "clientes_id="+clientes_id;
+ parametros += "&direccion_id="+direccion_id;
+ parametros += "&empresa_id="+empresa_id;
+ parametros += "&kardex_id="+kardex_id;
+		
+ Dialog.alert(
+	{
+		url: "<?php echo core::getInstancePath(); ?>inventario/inventario_cliente_historico/?"+parametros, 
+		options: {method: 'get'
+		, evalScripts: true}
+	}, 
+	{
+		className: "mac_os_x", width:900,height:600,
+		okLabel: "Click Aqui Para Cerrar Esta Ventana"}
+	);
+
+                
+}
+
+</script>

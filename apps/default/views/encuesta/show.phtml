@@ -1,0 +1,59 @@
+<?php echo Tag::formRemote(Router::getController()."/add_resultados_encuestas", "update: mensajes", "id: fx","name: fx"); ?>
+
+<input type="hidden" name="id_encuesta[]" id="id_encuesta" value="<?php echo $encuesta->id; ?>"/>
+<table width="80%" border="1">
+	     <tr>
+         <td colspan="2">ENCUESTA N°: <?php echo $encuesta->id; ?><br /><div align="center" ><font face="Arial, Helvetica, sans-serif" size="+1"><?php echo $encuesta->encabezado; ?></font></div><br /></td>
+         </tr>
+         <?php foreach($formulario_encuesta as $formulario_encuesta): ?>
+         <input type="hidden" name="preguntas[]" id="id_pregunta" value="<?php echo $formulario_encuesta->id_pregunta; ?>"/> 
+         <input type="hidden" name="tipo_pregunta[]" id="id_tipo_pregunta" value="<?php echo $formulario_encuesta->id_tipo_pregunta; ?>"/>  
+   	     <tr>
+   	       <td align="left">
+           <?php $preg = new Preguntas(); echo $preg->findFirst("id_pregunta = '$formulario_encuesta->id_pregunta'")->texto_pregunta; ?>
+           </td>
+   	       <td align="left">
+		   <?php 
+		   
+		   $db = DbBase::rawConnect();
+		   
+		   $result = $db->query("select texto,valor from lista_menu where id_encuesta='".$formulario_encuesta->id_encuesta."'");
+		   //Preguntamos si el tipo de etiqueta de respuesta es lista/menú
+		   if($formulario_encuesta->id_tipo_pregunta=='5'){
+			    
+				print_r($formulario_encuesta->etiqueta_html);
+		     
+			 while($row = $db->fetchArray($result)){
+				 
+				print_r("<option value='".$row['valor']."'>".$row['texto']."</option>");
+				
+		     }
+		   
+		        print_r("</select>");
+		   
+		   }else{
+			   
+			   echo $formulario_encuesta->etiqueta_html; 
+			   
+		   }
+		   ?>
+           </td>
+  </tr>
+   <?php endforeach; ?>
+   	    <tr>
+   	      <td colspan="4" align="center" >&nbsp;</td>
+  </tr>
+   	    <tr>
+         <td colspan="4" align="center" >
+                <button type="submit" id="guardar" name="guardar">Guardar</button>
+                <button type="button" id="cancelar" name="cancelar" onclick="doccancelar('<?php echo core::getInstancePath(); ?>','<?php echo Router::getController(); ?>');">Cancelar</button>
+         </td>
+        </tr>
+        
+</table>
+
+<?php echo Tag::endForm() ?>
+
+<div id="mensajes"></div>
+
+<?php echo View::getContent(); ?></p>

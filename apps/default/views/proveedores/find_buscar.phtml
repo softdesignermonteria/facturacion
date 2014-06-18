@@ -1,0 +1,58 @@
+<table id="tableproveedor"></table>
+<div id="pagerproveedor"></div>
+<script>
+jQuery(document).ready(function(){
+
+		
+		jQuery("#tableproveedor").jqGrid(
+		{ 
+			ajaxGridOptions : {type:"POST"},
+			url:'<?php echo core::getInstancePath(); ?>proveedores/find_detalle_buscar', 
+			datatype: "json", 
+			colNames:['Id','Nit','Razon Social','Nombre1','Nombre2','Apellido1','Apellido2','Municipio'], 
+			colModel:[ 
+				{ name:'id'           ,index:'id'           , width:10}, 
+				{ name:'nit'          ,index:'nit'          , width:50}, 
+				{ name:'razon_social' ,index:'razon_social' , width:150},
+				{ name:'nombre1'      ,index:'nombre1'      , width:50}, 
+				{ name:'nombre2'      ,index:'nombre2'      , width:50}, 
+				{ name:'apellido1'    ,index:'apellido1'    , width:50}, 
+				{ name:'apellido2'    ,index:'apellido2'    , width:50},
+				{ name:'municipio'    ,index:'municipio'    , width:50}
+			], 
+			autoWidth:true,
+			width: 750,
+			height: 250,
+			rowNum:10, 
+			rowList:[10,20,30,40,50], 
+			pager: '#pagerproveedor', 
+			sortname: 'razon_social', 
+			/*shrinkToFit :false,*/
+			viewrecords: true, 
+			sortorder: "asc", 
+			caption:"listado de Proveedores",
+			ondblClickRow:function(rowid,iRow,iCol,e){
+				
+				var fila = jQuery(this).jqGrid('getRowData',rowid);
+					
+					
+					jQuery("#proveedores_id").val("");
+					jQuery("#proveedores").val("");
+					
+										
+					jQuery("#proveedores_id").val(fila['id']);
+					jQuery("#proveedores").val(fila['razon_social']);
+					
+					jQuery("#dialogo_<?php echo Router::getController(); ?>").dialog("close");
+       		 }
+		}); 
+		jQuery("#tableproveedor").jqGrid('navGrid','#pagerproveedor',{edit:false,add:false,del:false}); 
+		jQuery("#tableproveedor").jqGrid('navButtonAdd','#pagerproveedor',{
+		caption: "Columnas",
+		title: "Reordena Columnas",
+		onClickButton : function (){
+			jQuery("#tableproveedor").jqGrid('columnChooser');
+		}
+	});
+});
+</script>

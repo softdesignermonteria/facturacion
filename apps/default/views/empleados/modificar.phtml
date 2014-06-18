@@ -1,0 +1,70 @@
+<h4>FORMULARIO MODIFICAR INFORMACIÓN DEL EMPLEADO</h4>
+
+<?php echo Tag::formRemote("empleados/update", "update: mensajes", "id: fx","name: fx"); ?>
+<table border="0" align="center" cellpadding="2" cellspacing="2" width="100%">
+ <tr>
+    <td width="210" height="0" align="right" valign="middle" >IDENTIFICACION</td>
+    <td width="201" height="0" align="left" valign="middle" scope="col"><?php echo Tag::hiddenField("empresa_id","value: ".Session::get("id_empresa")); ?>
+	<?php echo Tag::textField("cedula", "size: 20","maxlength: 12") ?></td>
+    <td width="43" align="right" scope="col">&nbsp;</td>
+   
+  <tr>
+    <td height="0" align="right" valign="middle">NOMBRES COMPLETOS</td>
+    <td height="0" align="left" valign="middle"><?php echo Tag::textUpperField("nombre_completo", "size: 50","maxlength: 200") ?></td>
+    <td align="right">&nbsp;</td>
+  </tr>
+  <tr>
+    <td height="0" align="right" valign="middle">DIRECCION </td>
+    <td height="0" align="left" valign="middle"><?php echo Tag::textUpperField("direccion", "size: 50","maxlength: 200") ?></td>
+    <td align="right"></td>
+    </tr>
+  <tr>
+    <td height="0" align="right" valign="middle">TELEFONO FIJO</td>
+    <td height="0" align="left" valign="middle"><?php echo Tag::numericField("telefono", "size: 15","maxlength: 20") ?></td>
+    <td align="right">&nbsp;</td>
+  </tr>
+  <tr>
+    <td height="0" align="right" valign="middle">CELULAR</td>
+    <td height="0" align="left" valign="middle"><?php echo Tag::numericField("celular", "size: 15","maxlength: 15") ?></td>
+    <td align="right">&nbsp;</td>
+    </tr>
+  <tr>
+    <td height="0" align="right" valign="middle">EMAIL</td>
+    <td height="0" align="left" valign="middle"><?php echo Tag::textUpperField("email", "size: 50","maxlength: 100") ?></td>
+    <td align="right">&nbsp;</td>
+  </tr>
+  	<tr>
+    <td height="0" align="right" valign="middle">PAGINA WEB</td>
+    <td height="0" align="left" valign="middle"><?php echo Tag::textUpperField("web", "size: 50","maxlength: 50") ?></td>
+    <td align="right">&nbsp;</td>
+    </tr>
+    	<tr>
+    <td height="0" align="right" valign="middle">FECHA INGRESO</td>
+    <td height="0" align="left" valign="middle"><?php echo Tag::textUpperField("fecha_ingreso", "size: 50","maxlength: 50") ?></td>
+    <td align="right">&nbsp;</td>
+    </tr>
+    	<tr>
+    <td height="0" align="right" valign="middle">FECHA VENCIMIENTO CONTRATO</td>
+    <td height="0" align="left" valign="middle"><?php echo Tag::textUpperField("fecha_vencimiento", "size: 50","maxlength: 50") ?></td>
+    <td align="right">&nbsp;</td>
+    </tr>
+    	<tr>
+    <td height="0" align="right" valign="middle">SALARIO</td>
+    <td height="0" align="left" valign="middle"><?php echo Tag::textUpperField("salario", "size: 10","maxlength: 20") ?></td>
+    <td align="right">&nbsp;</td>
+    </tr>
+     <tr>
+    <td height="0" align="right" valign="middle">ACTIVO</td>
+    <td height="0" align="left" valign="middle"><select id="activo" name="activo"><option value="0">Activo</option><option value="1">Inactivo</option></select></td>
+    <td align="right">&nbsp;</td>
+    </tr>
+</table>
+<br />
+	<div align="center">
+    	<button id="guardar" type="submit">Guardar</button>
+        <button id="cancelar" type="button">Cancelar</button>
+    </div>
+
+<div id="mensajes"></div>
+<?php echo Tag::endForm() ?>
+<br />

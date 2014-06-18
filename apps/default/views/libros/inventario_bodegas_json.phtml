@@ -1,0 +1,149 @@
+<?php 
+$db = DbBase::rawConnect();
+$condicion = '';
+/*$consulta = str_replace(" ","%",$_REQUEST["term"]);
+if($_REQUEST["term"]!=''){
+    $condicion .= " and color like '%$consulta%' ";
+}*/
+if($_REQUEST["fecha"]!=''){
+    $condicion .= " and movimientos_inventario.fecha <= '".$_REQUEST["fecha"]."' ";
+}
+if($_REQUEST["bodegas_id"]!=''){
+    $condicion .= " and movimientos_inventario.bodegas_id = '".$_REQUEST["bodegas_id"]."' ";
+}
+
+
+
+
+$page = $_REQUEST['page']; 
+// get the requested page 
+$limit = $_REQUEST['rows']; 
+// get how many rows we want to have into the grid 
+$sidx = $_REQUEST['sidx']; 
+// get index row - i.e. user click to sort 
+$sord = $_REQUEST['sord']; 
+// get the direction if(!$sidx) 
+//$sidx =1; 
+if(!$sidx) $sidx =1;
+
+$wh = "";
+$searchOn = Strip($_REQUEST['_search']);
+if($searchOn=='true') {
+    $searchOper = $_REQUEST["searchOper"];
+    $searchField = $_REQUEST["searchField"];
+    $searchString = $_REQUEST["searchString"];
+    
+        switch ($searchOper) {
+            case 'eq': $wh = " and $searchField = '$searchString' "; break;
+        }
+    
+}
+
+// connect to the database 
+//$db = mysql_connect($dbhost, $dbuser, $dbpassword) or die("Connection Error: " . mysql_error()); 
+//mysql_select_db($database) or die("Error conecting to db."); 
+
+$db = DbBase::rawConnect();
+$result = $db->query("SELECT COUNT(*) AS count 
+							FROM 
+								kardex, 
+								movimientos_inventario, 
+								empresa 
+							WHERE 
+								kardex.id = movimientos_inventario.kardex_id 
+								AND empresa.id = movimientos_inventario.empresa_id 
+								AND movimientos_inventario.anulado = '0' 
+								and kardex.tipo_kardex_id = 1
+                            $condicion
+                            ".$wr."
+								group by kardex.id, kardex.codigo, kardex.nombre_producto, kardex.valor
+							"); 
+
+$row = $db->fetchArray($result); 
+$count = $row['count']; 
+if( $count >0 ) { 
+        $total_pages = ceil($count/$limit); 
+    } else { 
+        $total_pages = 0; 
+} 
+
+if ($page > $total_pages) $page=$total_pages; 
+$start = $limit*$page - $limit;  // do not put 	$limit*($page - 1) 
+$responce = new stdClass();
+$SQL = "SELECT 
+					kardex.id, kardex.codigo, kardex.nombre_producto, 
+					calcular_costo(kardex.id,'".$_REQUEST["fecha"]."','0',empresa.tipo_costeo) as costo, 
+					SUM(multiplica*movimientos_inventario.cantidad) AS cantidad ,
+					(calcular_costo(kardex.id,'".$_REQUEST["fecha"]."','0',empresa.tipo_costeo)*SUM(multiplica*movimientos_inventario.cantidad) )as total
+				FROM 
+					kardex, movimientos_inventario, empresa 
+				WHERE 
+					kardex.id = movimientos_inventario.kardex_id 
+					AND empresa.id = movimientos_inventario.empresa_id 
+					AND movimientos_inventario.anulado = '0' 
+					and kardex.tipo_kardex_id = 1
+                    $condicion
+                     ".$wh." 
+					 group by  kardex.id, kardex.codigo, kardex.nombre_producto, kardex.valor
+         ORDER BY $sidx $sord 
+        LIMIT $start , $limit"; 
+$result = $db->query( $SQL ); 
+$responce->page = $page ;
+$responce->sql = $SQL; 
+$responce->total = $total_pages; 
+$responce->records = $count; 
+$total = 0;
+$cantidad = 0;
+$i=0; 
+while( $row = $db->fetchArray($result) ) { 
+	$total += $row[total];
+	$cantidad += $row[cantidad];
+    $responce->rows[$i]['id']=$row[id]; 
+    $responce->rows[$i]['cell']=array($row[id],$row[codigo],$row[nombre_producto],$row[costo],$row[cantidad],$row[total]); 
+    $i++; 
+} 
+
+//$responce->userdata['amount']  = $amttot; 
+//$responce->userdata['tax']     = $taxtot; 
+$responce->userdata['nombre']             = 'Totales:';
+$responce->userdata['total']              = $total; 
+$responce->userdata['cantidad']           = $cantidad; 
+
+
+echo json_encode($responce);
+
+		
+function Strip($value)
+{
+	if(get_magic_quotes_gpc() != 0)
+  	{
+    	if(is_array($value))  
+			if ( array_is_associative($value) )
+			{
+				foreach( $value as $k=>$v)
+					$tmp_val[$k] = stripslashes($v);
+				$value = $tmp_val; 
+			}				
+			else  
+				for($j = 0; $j < sizeof($value); $j++)
+        			$value[$j] = stripslashes($value[$j]);
+		else
+			$value = stripslashes($value);
+	}
+	return $value;
+}
+
+function array_is_associative ($array)
+{
+    if ( is_array($array) && ! empty($array) )
+    {
+        for ( $iterator = count($array) - 1; $iterator; $iterator-- )
+        {
+            if ( ! array_key_exists($iterator, $array) ) { return true; }
+        }
+        return ! array_key_exists(0, $array);
+    }
+    return false;
+}
+?>
+    

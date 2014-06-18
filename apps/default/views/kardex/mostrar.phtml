@@ -1,0 +1,69 @@
+<h1>PRODUCTO AGREGADO</h1>
+<?php foreach($kardex as $kar): ?>
+<table width="100%" border="0" cellpadding="0" cellspacing="0">
+    <tr>
+   	 <th colspan="2" scope="col">PRODUCTO AGREGADO</th>
+    </tr>
+  <tr>
+    <th width="33%" height="0" align="right" ><div align="right">CODIGO</div></th>
+    <td width="67%" align="left" scope="col"><?php echo $kar->codigo; ?></td>
+  </tr>
+  <tr>
+    <th  align="right"><div align="right"><strong>NOMBRE LARGO</strong></div></th>
+    <td  align="left"><?php echo $kar->nombre_producto; ?></td>
+    </tr>
+  <tr>
+    <th  align="right"><div align="right"><strong>NOMBRE CORTO</strong></div></th>
+    <td  align="left"><?php echo $kar->nombre_corto; ?></td>
+  </tr>
+  <tr>
+    <th  align="right"><div align="right"><strong>GRUPOS</strong></div></th>
+    <td  align="left"><?php echo $kar->grupos_id; ?></td>
+    </tr>
+  <tr>
+    <th  align="right"><div align="right"><strong>COSTO</strong></div></th>
+    <td  align="left"><?php echo number_format($kar->costo,2); ?></td>
+  </tr>
+  <tr>
+    <th  align="right"><div align="right"><strong>VALOR DIARIO</strong></div></th>
+    <td  align="left"><?php echo number_format($kar->valor_diario,2); ?></td>
+  </tr>
+  <tr>
+    <th  align="right"><div align="right"><strong>VALOR HORA</strong></div></th>
+    <td  align="left"><?php echo number_format($kar->valor_hora,2); ?></td>
+  </tr>
+  <!--<tr>
+    <th  align="right"><div align="right"><strong>STOCK MINIMO</strong></div></th>
+    <td  align="left"><?php echo $kar->stock_minimo; ?></td>
+    </tr>
+  <tr>
+    <th  align="right"><div align="right"><strong>STOCK MAXIMO</strong></div></th>
+    <td  align="left"><?php echo $kar->stock_maximo; ?></td>
+  </tr>-->
+  <tr>
+    <th  align="right"><div align="right"><strong>REFERENCIA BASE</strong></div></th>
+    <td  align="left"><?php echo $kar->referencia_base; ?></td>
+  </tr>
+</table>
+<p>
+  <?php endforeach; ?>
+  
+  <?php echo View::getContent(); ?></p>
+<div align="center">
+  <table border="0" cellpadding="2" id="remisiones"  cellspacing="2">
+    <tr>
+      <td align="center"><?php echo Tag::linkTo("#", Tag::image("64x64/Back.png",'width: 32px'),"onClick: window.close();") ?></td>
+      <td align="center"><?php echo Tag::linkTo("menu/", Tag::image("iconos/inicio.png",'width: 32px')); ?></td>
+      <td align="center"><?php echo Tag::linkTo("kardex/show/$kar->id", Tag::image("64x64/Search.png",'width: 32px')); ?></td>
+      <td align="center"><?php echo Tag::linkTo("kardex/modificar/$kar->id", Tag::image("64x64/Edit.png",'width: 32px')); ?></td>
+      <!--<td align="center"><?php //echo Tag::linkTo("print/remisiones/$rem->id", Tag::image("iconos/pdf.png",'width: 32px'),"target: _blank"); ?></td>-->
+    </tr>
+    <tr>
+      <td align="center">Regresar</td>
+      <td align="center">Inicio</td>
+      <td align="center">Mostrar</td>
+      <td align="center">Modificar</td>
+      <!--  <td align="center">Pdf</td> -->
+    </tr>
+  </table>
+</div>

@@ -1,0 +1,133 @@
+<table id="tablacxc"></table>
+<div id="pagercxc"></div>
+<script>
+//jQuery(document).ready(function(){
+
+		
+		jQuery("#tablacxc").jqGrid(
+		{ 
+			ajaxGridOptions : {	
+					type:"POST"
+					},
+			url:'<?php echo core::getInstancePath(); ?>cxc/ccfind_detalle_buscar/?fecha_cierre=<?php echo $_REQUEST["fecha_cierre"]; ?>', 
+			datatype: "json", 
+			colNames:['Id','Prefijo','Consecutivo','Hora Salida','Total'], 
+			colModel:[ 
+				
+				{ name:'id',index:'id', width:20}, 
+				{ name:'prefijo',index:'prefijo', width:90},
+				{ name:'consecutivo',index:'consecutivo', width:90},
+				{ name:'hora_salida',index:'fecha', width:90},
+				{ name:'total',index:'total', width:90}
+			], 
+			autoWidth:true,
+			width: 550,
+			height: 250,
+			rowNum:10, 
+			multiselect: true,
+			rowList:[10,20,30,40,50], 
+			pager: '#pagercxc', 
+			sortname: 'consecutivo', 
+			/*shrinkToFit :false,*/
+			viewrecords: true, 
+			sortorder: "asc", 
+			caption:"listado de Pedidos Liquidados",
+			onSelectAll : function(aSel,selected) { 
+				if(selected){ 
+						var value =0; 
+						for(var i=0;i < aSel.length;i++){ 
+							var data = jQuery("#tablacxc").jqGrid('getRowData',aSel[i]); 
+							//value += parseFloat(data.total); 
+							var jqXHR = jQuery.ajax({
+									url:"<?php echo core::getInstancePath(); ?>cuadre_caja/agregar_item/",
+									type:"POST",
+									dataType:"json",
+									data:{
+											cxc_id 			 :  data.id,
+											prefijo          :  data.prefijo,
+											consecutivo      :  data.consecutivo,
+											hora_salida      :  data.hora_salida,
+											valor            :  data.total,
+											anulado          : "NO"
+										}
+										,
+										fail:function(){
+											alert("error");
+										},
+										error:function(jqXHR,textStatus,errorThrown){
+											alert("error "+textStatus+"\n"+jqXHR+"\n"+errorThrown);
+										}
+							});
+							
+							 jqXHR.done(function(data){
+								agregar_item(data);
+							});
+							
+							//agregar_item(data);
+						} 
+							//jQuery("#totamt").html(value.toFixed(2)); 
+						} else { 
+							//jQuery("#totamt").html('0.00'); 
+						} 
+					}, 
+			onSelectRow : 
+				function(rowid, selected){ 
+					var data = jQuery("#tablacxc").jqGrid('getRowData',rowid); 
+					var value = parseFloat(jQuery.trim(jQuery("#totamt").html())); 
+					if(selected) { 
+						value += parseFloat(data.total); 
+						} else { 
+							value -= parseFloat(data.total); 
+							} 
+							jQuery("#totamt").html(value.toFixed(2)); 
+			},
+			ondblClickRow:function(rowid,iRow,iCol,e){
+				
+				var fila = jQuery(this).jqGrid('getRowData',rowid);
+				/*var datos;
+				var jqXHR = jQuery.ajax({
+						url:"<?php //echo core::getInstancePath(); ?>pedido_clientes/agregar_item/",
+						type:"POST",
+						dataType:"json",
+						data:{
+								tmp_kardex_id    :  fila['idtemp'],
+								tmp_referencia   :  jQuery("#tmp_referencia").val(),
+								tmp_nombre       :  jQuery("#tmp_nombre").val(),
+								tmp_cantidad     :  jQuery("#tmp_cantidad").val(),
+								tmp_valor        :  jQuery("#tmp_valor").val(),
+								liquidar:             "0"
+							}
+							,
+							fail:function(){
+								alert("error");
+							},
+							error:function(jqXHR,textStatus,errorThrown){
+								alert("error "+textStatus+"\n"+jqXHR+"\n"+errorThrown);
+							}
+				});
+				
+				 jqXHR.done(function(data){
+					agregar_item(data);
+				});
+				jQuery(this).dialog("close"); 
+				
+					if( jQuery("#tmp_idtemp")  ){jQuery("#tmp_idtemp").val(fila['idtemp']);}
+					if( jQuery("#tmp_cxp_id")  ){jQuery("#tmp_cxp_id").val(fila['id']);}
+					if( jQuery("#tmp_factura") ){jQuery("#tmp_factura").val(fila['factura']);}
+					if( jQuery("#tmp_valor") ){jQuery("#tmp_valor").val( fila['total'] );}
+					if( jQuery("#tmp_concepto") ){jQuery("#tmp_concepto").val( fila['concepto'] );}
+					//jQuery("#nombre_banco").val(fila['bancos']);
+					jQuery("#dialogo_cxp").dialog("close");*/
+		
+       		 }
+		}); 
+		jQuery("#tablacxc").jqGrid('navGrid','#pagercxc',{edit:false,add:false,del:false}); 
+		jQuery("#tablacxc").jqGrid('navButtonAdd','#pagercxc',{
+		caption: "Columnas",
+		title: "Reordena Columnas",
+		onClickButton : function (){
+			jQuery("#tablacxc").jqGrid('columnChooser');
+		}
+	});
+//});
+</script>

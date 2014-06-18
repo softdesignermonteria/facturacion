@@ -1,0 +1,415 @@
+<form id="egresos" name="egresos">
+<table width="100%" border="0" align="center" cellpadding="2" cellspacing="4">
+  <thead >
+	<tr>
+    	<th colspan="5" class="ui-jqgrid-titlebar ui-widget-header ui-corner-top ui-helper-clearfix" align="left"><?php echo $tipo_documento; echo " - "; echo $tipo_documento_nombre;  ?></th>
+  	</tr>
+</thead>
+
+  <tr>
+    <td width="18%" align="right"><div align="right">EMPRESA</div></td>
+    <td colspan="4">
+        <?php echo Tag::hiddenField("id"); ?> 
+		<?php echo Tag::hiddenField("tipo_documento_id"); ?> 
+        <?php echo Tag::hiddenField("empresa_id"); ?> 
+        <?php echo Tag::hiddenField("prefijo2"); ?> 
+        <?php echo Tag::hiddenField("consecutivo"); ?> 
+        <?php echo Tag::hiddenField("anulado"); ?> 
+		<?php echo Tag::textField("nombre_empresa","size: 30","readOnly: readOnly","style: background: #cccccc;"); ?>       </td>
+  </tr>
+  
+   <tr>
+    <td align="right"><div align="right">PROVEEDOR:</div></td>
+    <td width="39%" align="left" valign="middle" id="aclientes">
+	<?php echo Tag::textField("proveedores_id","size: 4","readOnly: readOnly","style: background: #cccccc;"); ?><?php echo Tag::textField("nombre_proveedores","size: 50","readOnly: readOnly","style: background: #cccccc;"); ?>
+    <td colspan="3" align="left" valign="middle" id="aclientes">    
+    <button id="buscar_proveedor" type="button">Buscar</button>
+    <!--<button id="agregar_proveedor" type="button">Agregar Proveedor</button>-->    </tr>
+  <tr>
+     <td align="right" valign="top">BANCO</td>
+     <td><?php echo Tag::textField("bancos_id","size: 4","readOnly: readOnly","style: background: #cccccc;"); ?><?php echo Tag::textField("nombre_banco","size: 50","readOnly: readOnly","style: background: #cccccc;"); ?></td>
+     <td colspan="3"><button id="buscar_bancos" type="button">Buscar</button>
+	     <!--<button id="agregar_bodegas" type="button">Agregar Bodega</button>--></td>
+  </tr>
+  <tr>
+    <td align="right" valign="top">FECHA</td>
+    <td><div align="left">
+      <input type="text" size="10" id="fecha" name="fecha" />
+      <span class="ui-icon ui-icon-calendar" style="float:left;"></span> </div></td>
+    <td width="10%">HORA</td>
+    <td width="18%" align="right"><div align="left">
+      <input type="text" size="10" id="hora" name="hora" />
+      <span class="ui-icon ui-icon-calendar" style="float:left;"></span></div></td>
+    <td width="15%">&nbsp;</td>
+  </tr>
+  <tr>
+    <td align="right" valign="top">FORMA DE PAGO</td>
+    <td colspan="4">
+    	<select id="forma_pago_id">
+    <?php 
+		$fp = new FormaPago();
+		foreach($fp->find() as $fp):
+	?>
+    	<option value="<?php echo $fp->id; ?>"><?php echo $fp->forma_pago; ?></option>
+     <?php endforeach; ?>   
+     </select>
+    </td>
+    </tr>
+  <tr>
+    <td align="right" valign="top">CHEQUE</td>
+    <td><?php echo Tag::textField("chuque","size: 50"); ?></td>
+    <td>&nbsp;</td>
+    <td align="right" valign="top">&nbsp;</td>
+    <td>&nbsp;</td>
+  </tr>
+</table>
+<table id="grid_egresos"></table>
+<div id="pagegresos"></div>
+  
+  <button id="agregar_item" type="button">Agregar</button>
+  <button id="buscar_item" type="button">Buscar</button>
+  <button id="modificar_item" type="button">Modificar</button>
+<button id="borrar_item" type="button">Borrar</button>
+ <br />
+
+<table width="100%" border="0" align="center" cellpadding="0" cellspacing="0" id="f3">
+  <tr>
+    <td width="50%">&nbsp;</td>
+    <th align="right">CANTIDAD TOTAL </th>
+    <td><?php echo Tag::textField("total","size: 12"); ?></td>
+  </tr>
+</table>
+
+	<div align="center">
+    	<button id="guardar" type="button">Guardar</button>
+        <button id="cancelar" type="button">Cancelar</button>
+    </div>
+
+<p>&nbsp;</p>
+
+<div id="mensajes"></div>
+
+</form>
+
+<div title="Agergar Producto a la Compra" id="dialogo_agregar_item">
+	
+ <table width="90%" cellpadding="2" cellspacing="2" align="center">
+        
+        <tr>
+   	       <td>Compra Mercancia</td>
+            <td>
+            	<input type="hidden" readonly="readonly" size="2" id="tmp_idtemp" name="tmp_idtemp" />
+                <input type="text" readonly="readonly" size="2" id="tmp_cxp_id" name="tmp_cxp_id" />
+            </td>
+            <td><input type="text"  id="tmp_factura" name="tmp_factura"/> <button id="buscar_cxp" type="button">Buscar</button></td>
+        </tr>
+        <tr>
+       	    <td>Concepto</td>
+            <td colspan="2"><input type="text"  id="tmp_concepto"  name="tmp_concepto" size="40"/></td>
+        </tr>
+        <tr>
+   	      <td>Valor</td>
+           <td colspan="2"><input type="text"  id="tmp_valor" name="tmp_valor" value="0" size="10" /></td>
+        </tr>
+        <tr>
+       	    <td>Suma/Resta</td>
+            <td colspan="2">
+            	<select id="tmp_multiplica">
+                	<option value="1">SUMA</option>
+                    <option value="-1">RESTA</option>
+                </select>
+            </td>
+        </tr>
+    </table>
+    
+</div>
+
+
+
+<?php
+
+$eg  = new Egresos();
+$emp = new Empresa();
+$dt  = new DetalleEgresos();
+$pro  = new Proveedores();
+$ban = new Bancos();
+
+
+$id                 = '';
+$tipo_documento_id  = $tipo_documento;
+$empresa_id         = Session::get("id_empresa");
+$nombre_empresa     = Session::get("nombre_empresa");
+$prefijo2           = '';
+$consecutivo        = '';
+$fecha              = date("Y-m-d");
+$hora               = date("H:m:s");
+$proveedores_id     = '';
+$nombre_proveedor   = '';
+$bancos_id          = '';
+$cheque             = '';
+$nombre_bancos      = '';
+$forma_pago_id      = 'EF';
+$anulado            = 0;
+
+
+	if(isset($_REQUEST["id"])){ 
+	
+		
+		if($_REQUEST["id"]!=''){
+			
+			
+			
+				$id = $_REQUEST["id"];
+				$encabezado = $eg->findFirst(" id = '$id' and anulado = 0 ");
+				//Flash::notice(print_r($pdClientes));
+				$id                         = $encabezado->id;
+				$tipo_documento_id          = $encabezado->tipo_documento_id;
+				$prefijo2                   = $encabezado->prefijo;
+				$consecutivo                = $encabezado->consecutivo;
+				$empresa_id                 = $encabezado->empresa_id;
+				$nombre_empresa             = $emp->findFirst("id = '$empresa_id'")->nombre_empresa;
+				$fecha                      = $encabezado->fecha;
+				$hora                		= $encabezado->hora;
+				$proveedores_id             = $encabezado->proveedores_id;
+				$nombre_proveedor           = $pro->findFirst("id = '$proveedores_id '")->razon_social;
+				$bancos_id                  = $encabezado->bancos_id;
+				$forma_pago_id              = $encabezado->forma_pago_id;
+				$nombre_bancos              = $ban->findFirst("id = '$bancos_id '")->banco;
+			
+			
+		}
+	
+	
+	}
+
+
+ ?>
+
+
+
+<script type="text/javascript">
+
+
+
+jQuery(document).ready(function(){
+
+var detalles = [];
+
+<?php
+if(isset($_REQUEST["id"])){ 
+		if($_REQUEST["id"]!=''){ 
+?>
+						jQuery("#id").val("<?php echo $id; ?>");	
+						jQuery("#tipo_documento_id").val("<?php echo $tipo_documento_id; ?>");	
+						jQuery("#empresa_id").val("<?php echo $empresa_id; ?>");	
+						jQuery("#nombre_empresa").val("<?php echo $nombre_empresa; ?>");	
+						jQuery("#prefijo2").val("<?php echo $prefijo2; ?>");
+						jQuery("#consecutivo").val("<?php echo $consecutivo; ?>");	
+												
+						jQuery("#fecha").val("<?php echo $fecha; ?>");	
+						jQuery("#hora").val("<?php echo $hora; ?>");	
+						
+						jQuery("#bancos_id").val("<?php echo $bancos_id; ?>");	
+						jQuery("#nombre_banco").val("<?php echo $nombre_bancos; ?>");	
+						
+						//jQuery("#<?php //echo $forma_pago_id; ?>").attr("checked","checked");	
+						jQuery("#forma_pago_id").val("<?php echo $forma_pago_id; ?>");	
+						
+						jQuery("#proveedores_id").val("<?php echo $proveedores_id; ?>");	
+						jQuery("#nombre_proveedores").val("<?php echo $nombre_proveedor; ?>");	
+						jQuery("#anulado").val("<?php echo $anulado; ?>");	
+							
+						//checked
+						<?php 
+							foreach($dt->find(" egresos_id = '$id' ") as $dt): 
+								$fact = explode(":",$dt->concepto);
+						?>
+
+								detalles.push(
+										{
+											 id:         "<?php echo $dt->id; ?>"     
+											,cxp_id:  "<?php echo $dt->cxp_id; ?>" 
+											,factura: "<?php echo trim($fact[1]); ?>"
+											,concepto:   "<?php echo $dt->concepto; ?>"  
+											,valor:      "<?php echo $dt->total; ?>" 
+											,multiplica:      "<?php if($dt->multiplica==1){ echo "SUMA"; }else{ echo "RESTA"; } ?>"
+											,anulado:      "<?php if($dt->anulado==0){ echo "NO"; }else{ echo "SI"; } ?>" 
+
+		
+										}
+									);
+						<?php endforeach; ?>
+						reload_grid();
+						
+   <?php 		}  ?>
+   
+   
+   		<?php	
+ 
+}else{ ?>
+						jQuery("#tipo_documento_id").val("<?php echo $tipo_documento_id; ?>");	
+						jQuery("#empresa_id").val("<?php echo $empresa_id; ?>");	
+						jQuery("#nombre_empresa").val("<?php echo $nombre_empresa; ?>");	
+						jQuery("#fecha").val("<?php echo $fecha; ?>");	
+						jQuery("#hora").val("<?php echo $hora; ?>");	
+						//jQuery("#<?php //echo $forma_pago_id; ?>").attr("checked","checked");	
+						jQuery("#forma_pago_id").val("<?php echo $forma_pago_id; ?>");	
+						jQuery("#anulado").val("<?php echo $anulado; ?>");	
+<?php
+}		
+?>
+
+/*---------------------------------------------Guardar Egresos-------------------------------------------------------------------------*/
+
+jQuery("#guardar").click(function(){
+	guardar_egreso();
+	
+});
+
+function guardar_egreso(){
+		
+	var srv = JSON.stringify(detalles);
+		//	alert(jQuery("#forma_pago_id").val());
+		jQuery( "#progressbar" ).progressbar({ value: 50 });	
+		var jqXHR = jQuery.ajax({
+			type: "POST",
+			url: "<?php echo core::getInstancePath(); ?>egresos/add",
+			data: {
+					id:                jQuery("#id").val(),
+					tipo_documento_id: jQuery("#tipo_documento_id").val(),
+					prefijo:           jQuery("#prefijo2").val(),
+					consecutivo:       jQuery("#consecutivo").val(),
+					proveedores_id:    jQuery("#proveedores_id").val(),
+					bancos_id:         jQuery("#bancos_id").val(),
+					empresa_id:        jQuery("#empresa_id").val(),
+					fecha:             jQuery("#fecha").val(),
+					hora:              jQuery("#hora").val(),
+					anulado:           jQuery("#anulado").val(),
+					forma_pago_id:     jQuery("#forma_pago_id").val(),
+					detalles: srv
+			},
+
+			success: function(data) {
+				
+				jQuery( '#mensajes' ).html("");
+				jQuery( "#progressbar" ).progressbar({ value: 90 });
+				jQuery( '#mensajes' ).html(data);
+				
+			},
+			error: function(data) {
+				jQuery('#dialogo_mensajes').html("Error Enviando parametros.....");
+				jQuery( "#progressbar" ).progressbar({ value: 0 });
+				jQuery('#dialogo_mensajes').dialog("open");
+			}
+		});
+		
+		 jqXHR.done(function(data){
+			jQuery( "#progressbar" ).progressbar({ value: 0 });
+		});
+	
+	}
+
+
+/*------------------------------------------Agregar Item--------------------------------------------------------*/
+
+
+	
+jQuery("#dialogo_agregar_item").dialog(
+	{ 
+		autoOpen:false
+		, width:700 
+		, heigth:400 
+		,modal: true
+		,buttons:[
+			{
+				text:  "Escoger"
+				,click: function(){
+						//agregar_item(data);
+						
+						if(jQuery("#tmp_multiplica").val()==1){ suma = "SUMA"; }else{ suma="RESTA"; }
+						detalles.push(
+							{
+								 id:            jQuery("#tmp_idtemp").val()
+								,cxp_id:        jQuery("#tmp_cxp_id").val()
+								,factura:       jQuery("#tmp_factura").val()
+								,concepto:      jQuery("#tmp_concepto").val()
+								,valor:         jQuery("#tmp_valor").val()
+								,anulado:       "NO"
+								,multiplica:    suma
+								
+							}
+						);
+						reload_grid();
+						
+						jQuery(this).dialog("close"); 
+					}	
+			}
+		]
+	});
+//var srv = JSON.stringify(detalle_servicios)
+
+jQuery("#agregar_item").click(function(){
+	jQuery("#dialogo_agregar_item").dialog("open");
+});
+
+
+		
+
+//detalles.push({id:1,referencia:123,nombre:"prueba",costo:10000,tarifaiva:16,iva:16000,descuento:20000,porc_desc:20,total:80000});
+function reload_grid(){
+		jQuery("#grid_egresos").jqGrid('setGridParam',
+			{ 	datatype: 'local',
+				data:detalles
+			}).trigger("reloadGrid");
+}
+
+
+
+
+
+/*------------------------------------------------Configuracion Grilla----------------------------------------------------------*/
+/*grib maestros de clientes*/
+function config_gridCompras(){
+		grid_fndCompras = jQuery("#grid_egresos").jqGrid({
+							datatype:"local",
+							data: detalles,
+							height:200,
+							rowNum:25,
+							autowidth:true,
+							pager:"#pagegresos",
+							
+							colNames:['Id','Cxp Id','Factura','Concepto','Valor','Anulado','Naturaleza'],
+							colModel:[
+							{   name:'id',          index:'id',          sorttype:'text'                        },
+							{	name:'cxp_id',	    index:'cxp_id',	 sorttype:'integer'	                    },
+							{	name:'factura',		index:'factura',	 sorttype:'text' },
+							{	name:'concepto',    index:'concepto',    sorttype:'text',  width: 300 },
+							{	name:'valor',		index:'valor',       sorttype:'double',	 formatter:"number" },
+							{	name:'anulado',		index:'anulado',     sorttype:'text', },
+							{	name:'multiplica',	index:'multiplica',     sorttype:'text', }
+							],
+							multiselect:false,
+							caption:"Detalle Egresos",
+							sortname: 'id', 
+							viewrecords: true, 
+							sortorder: "desc",
+							
+							ondblClickRow:function(rowid,iRow,iCol,e){
+								
+								/*var fila = $(this).jqGrid('getRowData',rowid);
+								
+								$("#cod_medico").val(fila['codigo'])
+								$("#desc_medico").val(fila['nombres']+" "+fila['apellidos'])
+								
+								diag_fndMedicos.dialog("close")*/
+							}
+		});
+	}
+
+config_gridCompras();
+
+
+});
+</script>
+
+

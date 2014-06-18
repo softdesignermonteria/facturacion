@@ -1,0 +1,82 @@
+
+<?php 
+ 	foreach(Flash::getMessages() as $message){
+		Flash::message($message['message'], $message['type']);
+	}
+	//print_r(Extensions::getLoadedExtensions());	
+	
+	$role = new Role();
+?>
+<?php echo View::getContent(); ?>
+
+<br />
+<table width="55%" align="center" cellpadding="2" cellspacing="2">
+ <tr>
+    <th colspan="3" class="ui-jqgrid-titlebar ui-widget-header ui-corner-top ui-helper-clearfix" align="left">
+        Ver Permisos por Perfil
+   </th>
+</tr>
+<tr>
+	<td>Perfil</td>
+    <td colspan="2">
+    	<select id="role">
+        	<?php foreach($role->find(" role != 'superadministrador' and role != 'administrador' and role != 'public' ") as $role): ?>
+        	<option value="<?php echo $role->role; ?>"><?php echo $role->role; ?></option>
+            <?php endforeach; ?>
+        </select>
+    </td>
+</tr>
+
+</table>
+<br />
+<div align="center"><button id="guardar">Consultar</button></div>
+
+
+<div id="mensajes"></div>
+<div id="ver_permisos"></div>
+
+
+<script>
+
+jQuery(document).ready(function(){
+
+
+jQuery("#progressbar").attr('style','display:none;');
+jQuery("#progressbarWrapper").attr('style','display:none;');
+
+jQuery("#guardar").click(function(){
+	guardar();
+});
+
+function guardar(){
+var datos = "";
+jQuery( '#mensajes' ).html("");
+	
+var jqXHR = jQuery.ajax({
+	type: "POST",
+	url: "<?php echo core::getInstancePath(); ?>administrador/ver_permisos",
+	data: {
+			role:    jQuery("#role").val(),
+	},
+	success: function(data) {
+		jQuery( '#ver_permisos' ).html("");
+		jQuery( '#ver_permisos' ).html(data);
+	},
+	error: function(data) {
+		jQuery('#dialogo_mensajes').html("Error Enviando parametros.....");
+		jQuery('#dialogo_mensajes').dialog("open");
+	}
+});
+
+ jqXHR.done(function(data){
+	//jQuery( "#progressbar" ).progressbar({ value: 0 });
+});
+
+}
+
+
+});
+
+
+</script>
+

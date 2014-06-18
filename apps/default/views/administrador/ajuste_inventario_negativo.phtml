@@ -1,0 +1,165 @@
+<?php echo view::getContent(); ?>
+<script>
+jQuery(function() {
+	jQuery("#progressbar").attr('style','display:none;');
+	jQuery("#progressbarWrapper").attr('style','display:none;');
+});
+</script>
+<table width="100%" cellpadding="2" cellspacing="2">
+<tr>
+	<th>Id</th>
+    <th>Codigo</th>
+    <th>Nombre Producto</th>
+    <th>Bodega</th>
+    <th>Costo</th>
+    <th>Cantidad</th>
+    <th>Total</th>
+    <th>Ajuste</th>
+    <th></th>
+</tr>
+<?php 
+
+$kardex = new Kardex();
+		$SQL = "SELECT 
+					kardex.id, 
+					kardex.codigo,
+					kardex.nombre_producto,
+					bodegas.bodega, 
+					calcular_costo(kardex.id,'".$_REQUEST["fecha"]."','0',empresa.tipo_costeo) as costo, 
+					SUM(multiplica*movimientos_inventario.cantidad) AS cantidad ,
+					(calcular_costo(kardex.id,'".$_REQUEST["fecha"]."','0',empresa.tipo_costeo)*SUM(multiplica*movimientos_inventario.cantidad) )as total
+				FROM 
+					kardex, movimientos_inventario, empresa , bodegas
+				WHERE 
+					kardex.id = movimientos_inventario.kardex_id 
+					AND empresa.id = movimientos_inventario.empresa_id 
+					AND movimientos_inventario.anulado = '0' 
+					and kardex.tipo_kardex_id = 1
+					and bodegas.id = movimientos_inventario.bodegas_id
+				group by  kardex.id,movimientos_inventario.bodegas_id
+				HAVING SUM(multiplica*movimientos_inventario.cantidad) < 0
+					 
+			"; 
+			
+$query = new ActiveRecordJoin(array(
+	"entities" => array("Kardex","MovimientosInventario","Empresa","Bodegas"),
+	//"maximum"=>array("calcular_costo(kardex.id,'".$_REQUEST["fecha"]."','0',empresa.tipo_costeo)"),
+	"groupFields" => array(
+							"{#MovimientosInventario}.bodegas_id"
+							,"{#Bodegas}.bodega"
+							,"{#Kardex}.id"
+							,"{#Kardex}.codigo"
+							,"{#Kardex}.nombre_producto"
+							,"{#Empresa}.tipo_costeo"
+							,"{#Empresa}.id as empresa_id"
+							),
+	"sumatory"=> array("multiplica*{#MovimientosInventario}.cantidad"),						
+	"conditions"=>("{#MovimientosInventario}.anulado = '0'")
+));
+
+
+Flash::success($query->getSqlQuery());		
+	//foreach($kardex->findAllBySql($SQL) as $detalles):
+$db = DbBase::rawConnect();		
+$consecutivos = new TipoDocumento();
+
+$detalle_consecutivos = new DetalleConsecutivos();
+foreach($query->getResultSet() as $detalles):			
+$costo = $db->fetchOne("SELECT ifnull(calcular_costo($detalles->id,'".date("Y-m-d")."','0','$detalles->tipo_costeo'),0) as costo ");
+//Flash::success("SELECT ifnull(calcular_costo($detalles->id,'".date("Y-m-d")."','0','$detalles->tipo_costeo'),0) as costo ");
+//$total = $db->fetchOne("SELECT (calcular_costo($detalles->id,'".date("Y-m-d")."','0','$detalles->tipo_costeo')*SUM(multiplica*movimientos_inventario.cantidad) )as total");
+if($detalles->cantidad<0){
+?>
+<tr>
+	<td><?php echo $detalles->id; ?></td>
+    <td><?php echo $detalles->codigo; ?></td>
+    <td><?php echo $detalles->nombre_producto; ?></td>
+    <td><?php echo $detalles->bodega; ?></td>
+    <td align="right"><?php echo $costo["costo"]; ?></td>
+    <td align="right"><?php echo $detalles->cantidad; ?></td>
+    <td align="right"><?php echo $costo["costo"]*$detalles->cantidad; ?></td>
+    <td align="right"><?php echo $detalles->cantidad*(-1); ?></td>
+    <td align="right">
+    	<?php 
+			/*Entradas Especiales*/
+			try{
+					$transaction = TransactionManager::getUserTransaction(); 
+					$consecutivos->setTransaction($transaction); 
+					$detalle_consecutivos->setTransaction($transaction); 
+					$consecutivos->findFirst(" nombre = 'ENTRADAS_ESPECIALES'  ");
+					
+					$cons = $detalle_consecutivos->findFirst("activo = '0' and tipo_documento_id = '$consecutivos->id'");
+						
+					$id = $cons->id;
+					$prefijo = $cons->prefijo;
+					$consecutivo = $cons->desde;
+					$tipo_documento_id = $cons->tipo_documento_id;
+
+					$dtc = $detalle_consecutivos->findFirst("id = '$id'");
+					$dtc->setTransaction($transaction);
+					$dtc->desde = $dtc->desde+1;
+					
+					if($dtc->save()==false){
+						foreach($dtc->getMessages() as $message){ 
+							Flash::error("TABLA DETALLE CONSECUTIVOS: ".$message); 
+						}
+					$transaction->rollback();
+					}
+			
+					$ent = new EntradasEspeciales();
+					$ent->setTransaction($transaction);
+					//para traer el mismo modelo ya instanciado
+					$ent->id                           = '';
+					$ent->proveedores_id               = 1;
+					$ent->bodegas_id                   = $detalles->bodegas_id;
+					$ent->prefijo                      = $prefijo;
+					$ent->consecutivo                  = $consecutivo;
+					$ent->empresa_id                   = $detalles->empresa_id;
+					$ent->tipo_documento_id            = $tipo_documento_id ;
+					$ent->fecha                        = date("Y-m-d");
+					$ent->fecha_act                    = date("Y-m-d H:i:s");
+					$ent->hora                         = date("H:i:s");
+					$ent->hora_act                     = date("H:i:s");
+					$ent->anulado                      ='0';
+					
+					if($ent->save()==false){
+						foreach($ent->getMessages() as $message){ 
+							Flash::error("Error Guardando Entradas Especial ".$message); 
+						}
+						$transaction->rollback();
+					}	
+					
+					$detalles_ent = new DetalleEntradasEspeciales();
+					$detalles_ent->setTransaction($transaction);
+					$detalles_ent->id                     = '';
+					$detalles_ent->kardex_id              = $detalles->id;
+					$detalles_ent->entradas_especiales_id = $ent->id;
+					$detalles_ent->costo                  = $costo["costo"];
+					$detalles_ent->cantidad               = $detalles->cantidad*(-1);
+					$detalles_ent->total                  = $costo["costo"]*$detalles_ent->cantidad;
+					$detalles_ent->anulado                = '0';
+					$total +=  $detalles_ent->total;
+					
+						if($detalles_ent->save()==false){
+							foreach($detalles_ent->getMessages() as $message){ 
+								Flash::error(" ERROR DETALLE ENTRADAS ESPECIALES : ".$message); 
+							}
+							$transaction->rollback();
+						}	
+					
+					$transaction->commit();
+					Flash::success(" ENTRADA ESPECIAL ".$ent->prefijo.$ent->consecutivo);
+				
+			}catch(TransactionFailed $e){		
+				Flash::error($e->getMessage());
+			//cierre cacth try
+			}		
+		?>
+    </td>
+</tr>
+
+<?php 
+}
+endforeach; ?>
+
+</table>

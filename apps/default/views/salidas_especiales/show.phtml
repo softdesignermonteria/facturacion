@@ -1,0 +1,117 @@
+
+<?php
+
+$emp = new Empresa();
+$cli = new Proveedores();
+$r   = new DetalleSalidasEspeciales();
+foreach($encabezado as $rem):
+
+$emp->findFirst("id = '$rem->empresa_id'");
+$cli->findFirst("id = '$rem->proveedores_id'");
+
+
+
+?>
+<h1>ENTRADAS ESPECIALES</h1>
+
+<table width="100%" border="0" align="center" cellpadding="1" cellspacing="1" id="f1">
+  <tr>
+    <th colspan="4"> ENTRADA ESPECIAL NUMERO: <?php echo $rem->prefijo.$rem->consecutivo; ?></th>
+  </tr>
+  <tr>
+    <td width="25%" align="right"><div align="right">EMPRESA</div></td>
+    <td colspan="3">
+    <?php echo $emp->nombre_empresa ?></td>
+  </tr>
+  <tr>
+    <td align="right"><div align="right">PROVEEDOR:</div></td>
+    <td colspan="3" align="left" valign="middle" id="aclientes">
+		<?php echo $cli->razon_social; ?>    </td>
+  </tr>
+  <tr>
+    <td align="right" valign="top">FECHA</td>
+    <td width="24%">
+		<?php echo $rem->fecha; ?></td>
+    <td width="8%" align="right" valign="top">HORA: </td>
+    <td width="43%"><?php echo $rem->hora; ?></td>
+  </tr>
+</table>
+
+<?php endforeach; ?>
+<br />
+
+<div id="detalles">
+
+<table width="100%" border="0" align="center" cellpadding="1" cellspacing="1" id="f2">
+  <tr>
+    <th><div align="center">REFERENCIA</div></th>
+    <th><div align="center">DESCRIPCION</div></th>
+    
+    <th><div align="center">CANTIDAD</div></th>
+    <th><div align="center">COSTO</div></th>
+    </tr>
+  <?php 
+  $k = new Kardex();
+  $vd = 0;
+  $trans = 0;
+  foreach($detalles as $det):
+  ?>
+  <?php if($det->anulado == 0){?>
+  <tr>
+    <td align="center"><?php echo $det->kardex_id; ?></td>
+    <td align="left"><?php echo $k->findFirst(" id = '$det->kardex_id' ");
+							echo $k->nombre_producto; ?></td>
+    
+    <td align="center"><?php echo $det->cantidad; ?></td>
+    <td align="right"><?php echo $det->costo; ?></td>
+    </tr>
+  <?php }else{?>
+  <tr>
+    <td align="center"><?php echo $det->kardex_id; ?></td>
+    <td align="left"><?php echo $k->findFirst(" id = '$det->kardex_id' ");
+							echo $k->nombre_producto; ?></td>
+    
+    <td align="center">0</td>
+    <td align="right">ITEM ANULADO</td>
+    </tr>
+  <?php } ?>
+  <?php endforeach; ?>
+</table>
+
+</div>
+<br />
+
+<table width="100%" border="0" align="center" cellpadding="1" cellspacing="1" id="f3">
+  <tr>
+    <td width="58%">&nbsp;</td>
+    <th width="21%" align="right"><div align="right">CANTIDAD TOTAL:</div></th>
+    <td width="21%"><?php echo $r->sum("cantidad","conditions: salidas_especiales_id = '$idt' and anulado = 0"); ?></td>
+  </tr>
+</table>
+
+
+<br /><br />
+<div align="center">
+<table border="0" cellpadding="2" id="salidas_especiales"  cellspacing="2">
+  
+          <tr>
+          	<td align="center"><?php echo Tag::linkTo("#", Tag::image("64x64/Back.png",'width: 32px'),"onClick: window.close();") ?></td>
+            <td align="center"><?php echo Tag::linkTo("menu/", Tag::image("iconos/inicio.png",'width: 32px')); ?></td>
+            <td align="center"><?php echo Tag::linkTo("salidas_especiales/show/$rem->id", Tag::image("64x64/Search.png",'width: 32px')); ?></td>
+            <td align="center"><?php echo Tag::linkTo("salidas_especiales/modificar/$rem->id", Tag::image("64x64/Edit.png",'width: 32px')); ?></td>
+            <!--<td align="center"><?php //echo Tag::linkTo("print/salidas_especiales_html/$rem->id", Tag::image("iconos/impresora.png",'width: 32px'),"target: _blank"); ?></td>-->
+            <!-- <td align="center"><?php //echo Tag::linkTo("print/salidas_especiales/$rem->id", Tag::image("iconos/pdf.png",'width: 32px'),"target: _blank");s ?></td> -->
+          </tr>
+          <tr>
+          <td align="center">Regresar</td>
+            <td align="center">Inicio</td>
+            <td align="center">Mostrar</td>
+            <td align="center">Modificar</td>
+           <!-- <td align="center">Imprimir</td> -->
+            <!--<td align="center">Pdf</td>-->
+    	</tr>
+ </table>
+
+
+</div>
+

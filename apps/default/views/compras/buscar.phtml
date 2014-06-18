@@ -1,0 +1,112 @@
+<?php 
+	if(isset($_REQUEST["opcion"])){
+		Flash::notice("Doble Click en la Fila para ".$_REQUEST["opcion"]); 
+	}
+?>
+<table width="900px" align="center" cellpadding="2" cellspacing="2">
+	<tr>
+    	<th colspan="4" align="center">Filtros</th>
+    </tr>
+	<tr>
+    	<td align="right">Fecha Desde: </td>
+      <td><input type="text" id="desde" name="desde" /></td>
+      <td align="right">Fecha Hasta: </td>
+        <td><input type="text" id="hasta" name="hasta" /></td>
+    </tr>
+    <tr>
+    	<td align="right">Prefijo: </td>
+      <td><input type="text" id="prefijo" name="prefijo" /></td>
+        <td align="right">Consecutivo: </td>
+        <td><input type="text" id="consecutivo" name="consecutivo" /></td>
+  </tr>
+    <tr>
+    	<td align="right">Valor Factura: </td>
+      <td><input type="text" id="valor" name="valor" /></td>
+        <td align="right">Nombre Proveedor:</td>
+        <td><input type="text" id="nombre" name="nombre" /></td>
+  </tr>
+  <tr>
+    	<td colspan="4" align="center"><button type="button" id="buscar_item" name="buscar_item" >Buscar</button></td>
+    </tr>
+</table>
+
+<br />
+<table id="tabla<?php echo Router::getController(); ?>"></table>
+<div id="pager<?php echo Router::getController(); ?>"></div>
+<script>
+jQuery(document).ready(function(){
+	
+		jQuery("#buscar_item").click(function() {
+			//alert("entro");
+            jQuery("#tabla<?php echo Router::getController(); ?>").jqGrid('setGridParam',{ 
+				postData:{ 
+							desde:        jQuery("#desde").val(), 
+							hasta:        jQuery("#hasta").val(), 
+							prefijo:      jQuery("#prefijo").val(), 
+							consecutivo:  jQuery("#consecutivo").val(), 
+							valor:        jQuery("#valor").val(),
+							nombre:       jQuery("#nombre").val()
+						 } 
+			}).trigger('reloadGrid');
+        });
+
+		
+		jQuery("#tabla<?php echo Router::getController(); ?>").jqGrid(
+		{ 
+			ajaxGridOptions : {type:"POST"},
+			url:'<?php echo core::getInstancePath().Router::getController(); ?>/find_detalle_buscar', 
+			datatype: "json", 
+			colNames:['Id','Cedula','Nombre','Prefijo','Consecutivo','Fecha','Vencimiento','Subtotal','Descuento','Iva','Total'], 
+			colModel:[ 
+				{ name:'id'           ,index:'id'           , width:50},
+				{ name:'nit'          ,index:'nit'          , width:50}, 
+				{ name:'razon_social' ,index:'razon_social' , width:150},
+				{ name:'prefijo'      ,index:'prefijo'      , width:50}, 
+				{ name:'consecutivo'  ,index:'consecutivo'  , width:50}, 
+				{ name:'fecha'        ,index:'fecha'        , width:50},
+				{ name:'vencimiento'  ,index:'vencimiento'  , width:50},
+				{ name:'subtotal'     ,index:'subtotal'     , width:50, sorttype:'double',	 formatter:"number" },
+				{ name:'descuento'    ,index:'descuento'    , width:50, sorttype:'double',	 formatter:"number" },
+				{ name:'iva'          ,index:'iva'          , width:50, sorttype:'double',	 formatter:"number" },
+				{ name:'total'        ,index:'total'        , width:50, sorttype:'double',	 formatter:"number" }
+			], 
+			autoWidth:true,
+			width: 900,
+			height: 250,
+			rowNum:100, 
+			/*rowList:[10,20,30,40,50], */
+			pager: '#pager<?php echo Router::getController(); ?>', 
+			sortname: 'id', 
+			/*shrinkToFit :false,*/
+			viewrecords: true, 
+			sortorder: "asc", 
+			caption:"LISTADO DE COMPRAS",
+			ondblClickRow:function(rowid,iRow,iCol,e){
+				
+				var fila = jQuery(this).jqGrid('getRowData',rowid);
+					
+					/*if( jQuery("#nit")    ){ jQuery("#nit").val(fila['nit']); }
+					if( jQuery("#nombre1") ){ jQuery("#nombre1").val(fila['nombre1']); } 
+					if( jQuery("#nombre2") ){ jQuery("#nombre2").val(fila['nombre2']); } 
+					if( jQuery("#apellido1") ){ jQuery("#apellido1").val(fila['apellido1']); } 
+					if( jQuery("#apellido2") ){ jQuery("#apellido2").val(fila['apellido2']); } */
+					
+					<?php if(isset($_REQUEST["opcion"]) ){ ?>
+					redireccionar_action("<?php echo Router::getController(); ?>/<?php echo $_REQUEST["opcion"]; ?>/?id="+fila['id'] );
+					<?php }else{?>	
+						jQuery("#dialogo_<?php echo Router::getController(); ?>").dialog("close");
+					<?php } ?>
+					
+       		 }
+		});
+		 
+		/*jQuery("#tabla<?php //echo Router::getController(); ?>").jqGrid('navGrid','#pager<?php //echo Router::getController(); ?>',{edit:false,add:false,del:false}); 
+		jQuery("#tabla<?php //echo Router::getController(); ?>").jqGrid('navButtonAdd','#pager<?php //echo Router::getController(); ?>',{
+		caption: "Columnas",
+		title: "Reordena Columnas",
+		onClickButton : function (){
+			jQuery("#tabla<?php //echo Router::getController(); ?>").jqGrid('columnChooser');
+		
+	});}*/
+});
+</script>

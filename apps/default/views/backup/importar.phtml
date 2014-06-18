@@ -1,0 +1,74 @@
+<?php 
+$url = $_SERVER['DOCUMENT_ROOT'].core::getInstancePath().'public/files';
+		$archivo = $_REQUEST["archivo"];
+		$archivo= $url."/".$archivo;
+		
+		$path = $_SERVER['DOCUMENT_ROOT'].core::getInstancePath().'public/files/';
+		$path_system = $_SERVER['DOCUMENT_ROOT'];
+		$path_system = str_replace("htdocs","mysql/bin",$path_system);
+		/*
+		$executa = "$path_system/mysqldump -h localhost -u root -p 123 eysil4 < $archivo";
+		
+		system($executa, $resultado);
+		
+		
+		if (!$resultado) { echo "<H1>Error ejecutando comando: $executa</H1>\n"; } 
+		
+		
+		if (!$resultado) {
+			$mensaje="ERROR. La copia de seguridad no se ha restaurado completamente.";
+			$cabecera2="COPIA DE SEGURIDAD NO RESTAURADA";
+		} else {
+			$mensaje="La copia de seguridad se ha restaurado correctamente."; 
+			$cabecera2="COPIA DE SEGURIDAD RESTAURADA";
+		}*/
+		
+		/*REALIZAR IMPORTAR BD OPCION 1*/
+		
+		// let's pretend that connection to server is established
+		// and database chosen...
+		//echo $archivo;
+		$sql = explode(';', file_get_contents ($archivo));
+		//print_r($sql);
+		$n = count($sql) - 1;
+		//cogiendo el mismo hilo de la conexion
+		$db = DbBase::rawConnect();
+		//Flash::notice("numero de lienas: $n");
+		
+		for ($i = 0; $i < $n; $i++) {	
+			
+			//echo despues;
+			
+			if(trim($query) != "" && strpos($query, "--") == true)
+			{        
+				$sql2 = explode("--",$sql[$i]);
+				$query = $sql2[4];
+				
+				$result = mysql_query($query);
+				if($result){
+						Flash::success("LIENA AGREGADA: ".$query);
+					}else{
+						Flash::error("ERROR EN LINEA: ".$query);
+					}
+				
+			}else{
+				$query = $sql[$i];
+				if(trim($query)!=''){
+					
+					$result = mysql_query($query);
+					/*	or die ('<p>Query: <br><tt>' . $query .'</tt><br>failed. MySQL error: ' . mysql_error());*/
+					//Flash::notice($query);
+						if($result){
+							Flash::success("LIENA AGREGADA: ".$query);
+						}else{
+							Flash::error("ERROR EN LINEA: ".$query);
+						}
+				}
+			}
+				
+				
+		}
+		/*FIN REALIZAR IMPORTAR BD OPCION 1*/
+?>
+<?php echo View::renderPartial("listar_copias"); ?>
+<?php echo View::getContent(); ?>

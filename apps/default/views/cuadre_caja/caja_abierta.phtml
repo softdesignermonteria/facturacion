@@ -1,0 +1,69 @@
+<br />
+<br />
+<table cellpadding="2" id="remisiones" width="100%" class="ui-widget ui-widget-content ui-corner-all">
+    <tr>
+            <th colspan="12" class="ui-jqgrid-titlebar ui-widget-header ui-corner-top ui-helper-clearfix" align="left">
+           		LISTADO DE CUADRES DE CAJA ABIERTA           </th>
+        </tr>
+  <tr >
+    <th >ID</th>
+    <th >CONSECUTIVO</th>
+	<th  align="center">NOMBRE EMPEADO</th>
+	<th  align="center">DESDE</th>
+	<th  align="center">HASTA</th>
+	<th align="center">DEFECTO</th>
+	<th align="center">DEPOSITO</th>
+	<th  align="center">INGRESOS</th>
+	<th align="center">SALDO</th>
+	<th  align="center">MODIFICAR</th>
+    <th  align="center">VER</th>
+    <th  align="center">CERRAR</th>
+  </tr>
+        <?php 
+		 $i=0;	
+		 $emp = new Empleado();
+		 $turn = new Turnos();
+		 $t1=0; $t2=0; $t3=0; $t4;
+		 foreach($detalles as $det): 
+			$turn->findFirst(" id = '$det->turnos_id' and anulado = 0 "); 
+		 ?>  
+          <tr>
+            <td><?php echo $det->id; ?></td>
+            <td><?php echo $det->prefijo. $det->consecutivo;  ?></td>
+            <td align="left"><?php echo $emp->findFirst(" id = '$det->empleado_id' ")->nombre_completo; ?></td>
+            <td align="center"><?php echo $turn->inicio; ?></td>
+            <td align="center"><?php echo $turn->fin; ?></td>
+            <td align="right">$<?php echo number_format($det->valor_caja_defecto,0); $t1+=$det->valor_caja_defecto;?></td>
+            <td align="right">$<?php echo number_format($det->deposito_caja,0); $t2+=$det->deposito_caja;?></td>
+            <td align="right">$<?php echo number_format($det->total_ingresos,0); $t3+=$det->total_ingresos;?></td>
+            <td align="right">$<?php echo number_format($det->valor_caja_defecto + $det->deposito_caja + $det->total_ingresos,2); $t4+=$det->valor_caja_defecto + $det->deposito_caja + $det->total_ingresos; ?></td>
+            <td align="center"><?php echo Tag::linkTo("cuadre_caja/agregar/?id=$det->id", Tag::image("iconos/bd.png","width: 25")) ?></td> 
+            <td align="center"><?php echo Tag::linkTo("print/cuadre_caja_html/$det->id", Tag::image("iconos/entrar.png"),"target: _blank") ?></td>
+            <td align="center"><?php if(Session::get("role")=='superadministrador' || Session::get("role")=='administrador'){ echo Tag::linkTo("cuadre_caja/caja_abierta/?id=$det->id", Tag::image("iconos/borrar.png")); } ?></td>
+  </tr> 
+  <?php $i++; endforeach; ?> 
+          <tr>
+            <td>&nbsp;</td>
+            <td>&nbsp;</td>
+            <td align="center">&nbsp;</td>
+            <td align="center">&nbsp;</td>
+            <td align="center">&nbsp;</td>
+            <td align="right">$<?php echo number_format($t1,0); ?></td>
+            <td align="right">$<?php echo number_format($t2,0); ?></td>
+            <td align="right">$<?php echo number_format($t3,0); ?></td>
+            <td align="right">$<?php echo number_format($t4,0); ?></td>
+            <td align="center">&nbsp;</td>
+            <td align="center">&nbsp;</td>
+            <td align="center">&nbsp;</td>
+          </tr>
+       
+ </table>
+ 
+ <script>
+	 jQuery(function() {
+		jQuery("#progressbar").attr('style','display:none;');
+		jQuery("#progressbarWrapper").attr('style','display:none;');
+	});	
+ </script>
+
+<?php echo View::getContent(); ?>

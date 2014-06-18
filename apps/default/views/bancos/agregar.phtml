@@ -1,0 +1,109 @@
+<?php echo Tag::formRemote("bancos/add", "update: div_bancos", "id: ban","name: ban"); ?>
+
+<h1>AGREGAR BANCOS</h1>
+
+<table width="100%">
+    	<tr>
+    	  <th height="25" colspan="4">FORMULARIO PARA AGREGAR ENTIDAD BANCAR&Iacute;A</th>
+   	  </tr>
+    	<tr>
+    	  
+    	  <th width="30%" align="right">NOMBRE BANCO:</th>
+    	  <td width="64%" align="left"><?php  echo Tag::textField("banco","size: 50","maxlength: 50"); ?></td>
+    	  
+   	  </tr>
+      <tr>
+    	  <td colspan="4" align="center"><?php echo Tag::submitButton("Guardar"); ?></td>
+   	  </tr>
+  </table>
+
+<?php echo Tag::endForm(); ?>
+
+<br />        
+<h1>ENTIDADES BANCARIAS CREADAS</h1>
+<br />        
+
+
+
+<div id="div_bancos">
+
+<table width="100%">
+    	<tr>
+        	<th>CODIGO</th>
+            <th>NOMBRE DEL BANCO</th>
+            <th>MODIFICAR</th>
+            <th>ELIMINAR</th>
+        </tr>
+<?php 
+$i=1;
+$bancos = new Bancos();
+foreach($bancos->find("id") as $ban):
+?>        
+        <tr>
+        	<td><?php echo Tag::hiddenField("id$ban->id","value: $ban->id"); ?><?php echo $ban->id; ?></td>
+            <td><?php echo Tag::textUpperField("banco$ban->id","value: $ban->descripcion"); ?></td>
+            <td><a href="javascript: void(0);"  onClick="modificar('<?php echo $ban->id; ?>');" id='bt<?php echo $ban->id; ?>' name='bt<?php echo $ban->id; ?>'> <?php echo Tag::image("64x64/Edit.png",'width: 20px'); ?> </a></td>
+            <td><a href="javascript: void(0);"  onClick="eliminar('<?php echo $ban->id; ?>');" id='bt<?php echo $ban->id; ?>' name='bt<?php echo $ban->id; ?>'> <?php echo Tag::image("64x64/Stop.png",'width: 20px'); ?> </a></td>
+        <tr>
+<?php 
+$i++; endforeach;
+?>        
+</table>
+    
+ <div align="center">
+  <table border="0" cellpadding="2" id="remisiones"  cellspacing="2">
+    <tr>
+      <td align="center"><?php echo Tag::linkTo("#", Tag::image("64x64/Back.png",'width: 32px'),"onClick: window.close();") ?></td>
+      <td align="center"><?php echo Tag::linkTo("menu/", Tag::image("iconos/inicio.png",'width: 32px'),"tittle: Regresar al Menu"); ?></td>
+    </tr>
+    <tr>
+      <td align="center">Regresar</td>
+      <td align="center">Inicio</td>
+    </tr>
+  </table>
+</div>
+
+</div>
+
+<script>
+
+
+	function modificar(id){
+		
+								 
+			id   = $('id'+id).value;
+			banco   = $('banco'+id).value;
+						
+			url = 	"<?php echo core::getInstancePath(); ?>bancos/update/?id="+id+"&banco="+banco;
+			
+			
+				new Ajax.Updater('div_bancos'
+							, url
+							, { method: 'get' 
+							, evalScripts: true
+							, encoding: 'ISO-8859-1'
+						});
+		
+		}	
+	
+	
+	function eliminar(id){
+		
+								 
+			id   = $('id'+id).value;
+
+			url = 	"<?php echo core::getInstancePath(); ?>bancos/delete/?id="+id;
+			
+			
+				new Ajax.Updater('div_bancos'
+							, url
+							, { method: 'get' 
+							, evalScripts: true
+							, encoding: 'ISO-8859-1'
+						});
+			
+	}	
+
+</script>
+
+<?php echo view::getContent(); ?>

@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="clientesdelmes" language="groovy" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="d7f29e2b-8a60-47f9-bca0-47b47ecba9ca">
+	<property name="ireport.zoom" value="1.5"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<parameter name="fecha" class="java.util.Date">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="limite" class="java.lang.Integer">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[SELECT concat_ws(' ',cl.nombre1,cl.nombre2, cl.apellido1, cl.apellido2) as nombre,
+   sum(f.total) as total_compras,
+   COUNT(f.clientes_id) AS total_compra
+   FROM factura f,clientes cl
+   WHERE cl.id=f.clientes_id
+   and year(f.fecha)+month(f.fecha) = year($P{fecha})+month($P{fecha})
+   GROUP BY cl.nombre1,cl.nombre2,cl.apellido1,cl.apellido2,cl.id
+   limit $P{limite}]]>
+	</queryString>
+	<field name="nombre" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="total_compras" class="java.lang.Double"/>
+	<field name="total_compra" class="java.lang.Long"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<pageHeader>
+		<band height="85" splitType="Stretch">
+			<rectangle radius="10">
+				<reportElement uuid="a339a549-890c-4d4c-97c5-bc912620172e" x="3" y="0" width="555" height="41"/>
+			</rectangle>
+			<staticText>
+				<reportElement uuid="a49d0715-8a69-47ef-b25b-31a1a51c389e" x="106" y="8" width="352" height="29"/>
+				<textElement textAlignment="Center">
+					<font size="14" isBold="true"/>
+				</textElement>
+				<text><![CDATA[CLIENTES DEL MES]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="28b95bb7-146c-4f92-bc5b-5a8c6d0f8485" x="283" y="61" width="149" height="20"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Total Compra]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="40ba807e-9abe-44b0-8a06-200ddb369755" x="432" y="61" width="120" height="20"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Número de Compras]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="c8da3ce2-dc5c-4a56-bde9-59c7e96932ee" x="0" y="61" width="283" height="20"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Nombres y Apellidos]]></text>
+			</staticText>
+		</band>
+	</pageHeader>
+	<columnHeader>
+		<band height="10" splitType="Stretch"/>
+	</columnHeader>
+	<detail>
+		<band height="24" splitType="Stretch">
+			<rectangle>
+				<reportElement uuid="51cbb623-b6ac-4a78-ab37-43e9675abf28" x="3" y="1" width="552" height="22"/>
+			</rectangle>
+			<textField>
+				<reportElement uuid="7930dc65-f1ba-4b29-b0a6-2e74a253466e" x="3" y="3" width="283" height="20"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{nombre}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="6840ecf2-942c-4536-bbf6-685753e0ed17" x="286" y="3" width="149" height="20"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{total_compras}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="97055589-2751-403d-99e1-b3fb33e73471" x="435" y="3" width="120" height="20"/>
+				<textElement textAlignment="Justified"/>
+				<textFieldExpression><![CDATA[$F{total_compra}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<columnFooter>
+		<band height="8" splitType="Stretch"/>
+	</columnFooter>
+	<pageFooter>
+		<band height="22" splitType="Stretch">
+			<textField>
+				<reportElement uuid="9eb51cbd-a225-48d5-b219-5676dcb79a3d" x="435" y="0" width="80" height="20"/>
+				<textElement textAlignment="Right"/>
+				<textFieldExpression><![CDATA["Pagina "+$V{PAGE_NUMBER}+" of"]]></textFieldExpression>
+			</textField>
+			<textField evaluationTime="Report">
+				<reportElement uuid="85f7b235-2d9a-4882-b05c-73944be6f807" x="515" y="0" width="40" height="20"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[" " + $V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+			<textField pattern="dd/MM/yyyy h.mm a">
+				<reportElement uuid="e749bb36-2580-450f-98a2-5cfe990dec99" x="3" y="2" width="100" height="20"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[new java.util.Date()]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageFooter>
+	<summary>
+		<band height="10" splitType="Stretch"/>
+	</summary>
+</jasperReport>

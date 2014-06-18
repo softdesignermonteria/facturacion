@@ -1,0 +1,36 @@
+<h1>FORMULARIO PARA ELIMINAR PREGUNTA</h1>
+
+<?php echo Tag::formRemote(Router::getController()."/delete", "update: mensajes", "id: fx","name: fx"); ?>
+
+<table width="80%" border="0" align="center" cellpadding="1">
+  <tr>
+    <td  align="right" valign="middle">TEXTO DE LA PREGUNTA<?php echo Tag::hiddenField("id_pregunta"); ?><?php echo Tag::hiddenField("usuarios_id","value: ".Session::get("usuarios_id")); ?> </td>
+    <td align="left" valign="middle"><?php echo Tag::textArea2("texto_pregunta", "size: 30","maxlength: 20","placeholder: INGRESE TITULO ENCUESTA") ?></td>
+  </tr>
+  <tr>
+    <td colspan="3" align="center" >
+    <button type="submit" id="guardar" name="guardar">Eliminar</button>
+    <button type="button" id="cancelar" name="cancelar" onclick="doccancelar('<?php echo core::getInstancePath(); ?>','<?php echo Router::getController(); ?>');">Cancelar</button>
+    </td>
+  </tr> 
+</table>
+
+<div id="mensaje"><?php echo View::getContent(); ?></div>
+
+<?php echo Tag::endForm() ?>
+
+<div id="mensajes"></div>
+
+<script>
+	
+	jQuery(document).ready(function(e) {
+		
+        jQuery("#id").attr("readOnly","ReadOnly");
+		jQuery("#texto_pregunta").attr("readOnly","ReadOnly");
+		jQuery("#fecha_creacion").attr("readOnly","ReadOnly");
+		jQuery("#usuarios_id").attr("readOnly","ReadOnly");
+					
+
+    });
+	
+</script>

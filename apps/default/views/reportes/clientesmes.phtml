@@ -1,0 +1,42 @@
+
+
+<h1>REPORTE DE MEJORES CLIENTES POR MES </h1>
+
+<table width="100%" border="0" cellpadding="0" id="r1">
+  
+ 
+  <tr>
+    <td align="right">NUMERO DE CLIENTES</td>
+    <td colspan="3"><?php echo Tag::textField("limite","value: 100"); ?></td>
+  </tr>
+  <tr>
+    <td width="15%"><div align="right">DESDE</div></td>
+    <td width="10%"><?php echo Tag::textField("fecha","value: ".date("Y-m-d"),"size: 30"); ?></td>
+    <td width="19%"></td>
+    <td width="10%"></td>
+  </tr>
+ 
+</table>
+
+<div id="mensajes" style="min-height:50px;"></div>
+
+
+
+<div align="center"><button id="exportar" type="button">Exportar Informe a Pdf</button></div>
+
+
+
+<script>
+jQuery(document).ready(function(e) {
+	jQuery("#exportar").button({ icons: {primary:'ui-icon ui-icon-circle-check' ,secondary:'ui-icon-triangle-1-s'}       });	
+    
+	jQuery("#exportar").click(function(e) {
+		e.preventDefault();
+		datos = "limite=" + jQuery("#limite").val() + "&fecha=" + jQuery("#fecha").val() +"&otro=true"
+		window.open("<?php echo core::getInstancePath(); ?>/reportes/print_jaspertclientesmes/?"+datos);
+		return false;
+    });
+});
+</script>
+
+

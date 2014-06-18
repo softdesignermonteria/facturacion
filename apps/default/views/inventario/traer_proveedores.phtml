@@ -1,0 +1,8 @@
+<td width="15%"><div align="right">
+  <?php $proveedor = new Proveedores();
+      echo Tag::select('proveedores',$proveedor->find("order: razon_social"), 'using: id,razon_social','useDummy=yes'); 
+	  echo Tag::hiddenField('campo',"value:2");
+	  ?>
+      
+     </div>
+</td>

@@ -1,0 +1,50 @@
+<table id="tablaturnos"></table>
+<div id="pagerturnos"></div>
+<script>
+jQuery(document).ready(function(){
+
+		
+		jQuery("#tablaturnos").jqGrid(
+		{ 
+			ajaxGridOptions : {type:"POST"},
+			url:'<?php echo core::getInstancePath(); ?>turnos/find_detalle_buscar/?empleado_id=<?php echo $_REQUEST["empleado_id"]; ?>', 
+			datatype: "json", 
+			colNames:['Id','Empleado ID','Nombre Empleado','Fecha Inicio','Fecha Fin'], 
+			colModel:[ 
+				{ name:'id',index:'id', width:20}, 
+				{ name:'empleado_id',index:'empleado_id', width:20},
+				{ name:'nombre_empleado',index:'nombre_empleado', width:100},
+				{ name:'inicio',index:'inicio' },
+				{ name:'fin',index:'fin' }
+			], 
+			autoWidth:true,
+			width: 550,
+			height: 250,
+			rowNum:10, 
+			rowList:[10,20,30,40,50], 
+			pager: '#pagerturnos', 
+			sortname: 'inicio', 
+			/*shrinkToFit :false,*/
+			viewrecords: true, 
+			sortorder: "asc", 
+			caption:"listado de Tipos de Autos",
+			ondblClickRow:function(rowid,iRow,iCol,e){
+				
+				var fila = jQuery(this).jqGrid('getRowData',rowid);
+					
+					jQuery("#turnos_id").val(fila['id']);
+					jQuery("#fecha_apertura").val(fila['inicio']);
+					jQuery("#fecha_cierre").val(fila['fin']);
+					jQuery("#dialogo_turnos").dialog("close");
+       		 }
+		}); 
+		jQuery("#tablaturnos").jqGrid('navGrid','#pagerturnos',{edit:false,add:false,del:false}); 
+		jQuery("#tablaturnos").jqGrid('navButtonAdd','#pagerturnos',{
+		caption: "Columnas",
+		title: "Reordena Columnas",
+		onClickButton : function (){
+			jQuery("#tablaturnos").jqGrid('columnChooser');
+		}
+	});
+});
+</script>

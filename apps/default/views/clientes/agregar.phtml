@@ -1,0 +1,79 @@
+<h4>Formulario Agregar Clientes</h5>
+
+<?php echo Tag::formRemote("clientes/add", "update: mensajes", "id: clientes_add","name: clientes_add"); ?>
+
+<table border="0" align="center" cellpadding="1">
+  <tr>
+    <td width="152" height="0" align="right" valign="middle" >IDENTIFICACION</td>
+    <td width="130" height="0" align="left" valign="middle" scope="col"><?php echo Tag::textField("nit", "size: 12","maxlength: 12") ?></td>
+    <td width="150" align="right" scope="col">&nbsp;</td>
+    <td width="349" scope="col">&nbsp;</td>
+    </tr>
+  <tr>
+    <td height="0" align="right" valign="middle">PRIMER NOMBRE</td>
+    <td height="0" align="left" valign="middle"><?php echo Tag::textUpperField("nombre1", "size: 20","maxlength: 20") ?></td>
+    <td align="right">SEGUNDO NOMBRE</td>
+    <td><?php echo Tag::textUpperField("nombre2", "size: 30","maxlength: 20") ?></td>
+    </tr>
+  <tr>
+    <td height="0" align="right" valign="middle">PRIMER APELLIDO</td>
+    <td height="0" align="left" valign="middle"><?php echo Tag::textUpperField("apellido1", "size: 20","maxlength: 20") ?></td>
+    <td align="right">SEGUNDO APELLIDO</td>
+    <td><?php echo Tag::textUpperField("apellido2", "size: 30","maxlength: 20") ?></td>
+    </tr>
+  <tr>
+    <td height="0" align="right" valign="middle">RAZ&Oacute;N SOCIAL</td>
+    <td height="0" align="left" valign="middle"><?php echo Tag::textUpperField("razon_social", "size: 40","maxlength: 100") ?></td>
+    <td align="right" valign="middle">&nbsp;</td>
+    <td align="left" valign="middle">&nbsp;</td>
+  </tr>
+  <tr>
+    <td height="0" align="right" valign="middle">DIRECCION CASA</td>
+    <td height="0" align="left" valign="middle"><?php echo Tag::textUpperField("direccion_casa", "size: 40","maxlength: 100") ?></td>
+    <td align="right"></td>
+    <td></td>
+    </tr>
+  <tr>
+    <td height="0" align="right" valign="middle">DIRECCION OFICINA</td>
+    <td height="0" align="left" valign="middle"><?php echo Tag::textUpperField("direccion_oficina", "size: 40","maxlength: 100") ?></td>
+    <td align="right">&nbsp;</td>
+    <td>&nbsp;</td>
+    </tr>
+  <tr>
+    <td height="0" align="right" valign="middle">TELEFONO FIJO(1)</td>
+    <td height="0" align="left" valign="middle"><?php echo Tag::numericField("telefono1", "size: 15","maxlength: 20") ?></td>
+    <td align="right">TELEFONO FIJO(2)</td>
+    <td><?php echo Tag::numericField("telefono2", "size: 15","maxlength: 15") ?></td>
+  </tr>
+  <tr>
+    <td height="0" align="right" valign="middle">CELULAR</td>
+    <td height="0" align="left" valign="middle"><?php echo Tag::numericField("celular", "size: 15","maxlength: 15") ?></td>
+    <td align="right">&nbsp;</td>
+    <td>&nbsp;</td>
+    </tr>
+  <tr>
+    <td height="0" align="right" valign="middle">DEPARTAMENTOS</td>
+    <td height="0" colspan="3" align="left" valign="middle"><?php  echo Tag::textFieldExt("departamentos","campo: departamento","size: 10"); ?>
+      </td>
+    </tr>
+  <tr>
+    <td height="0" align="right" valign="middle">MUNICIPIOS</td>
+    <td height="0" colspan="3" align="left" valign="middle"><?php  echo Tag::textFieldExt("municipios","campo: municipio","size: 10"); ?></td>
+  </tr>
+  <tr>
+    <td height="0" align="right" valign="middle">EMAIL</td>
+    <td height="0" align="left" valign="middle"><?php echo Tag::textUpperField("email", "size: 30","maxlength: 100") ?></td>
+    <td align="right">PAGINA WEB</td>
+    <td><?php echo Tag::textUpperField("web", "size: 30","maxlength: 50") ?></td>
+    </tr>
+ 
+</table>
+<br />
+	<div align="center">
+    	<button id="guardar" type="submit">Guardar</button>
+        <button id="cancelar" type="button">Cancelar</button>
+    </div>
+<?php echo Tag::endForm() ?>
+
+<div id="mensajes"></div>
+<br />

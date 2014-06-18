@@ -1,0 +1,25 @@
+<h4>FORMULARIO AGREGAR TIPOS DE DOCUMENTOS</h4>
+<?php echo Tag::formRemote(Router::getController()."/add", "update: mensajes", "id: fx","name: fx"); ?>
+<table width="80%" border="0" align="center" cellpadding="1">
+      
+      <tr>
+   		 <td align="right">NOMBRE DEL DOCUMENTO</td>
+      	 <td align="left">
+		 		<?php  echo Tag::hiddenField("id","size: 30","maxlength: 50"); ?>
+				<?php  echo Tag::textUpperField("nombre","size: 30","maxlength: 50"); ?>
+         </td>
+   	  </tr>
+      <tr>
+    	  <td colspan="2" align="center">
+          <button type="submit" id="guardar" name="guardar">Guardar</button>
+          <button type="button" id="cancelar" name="cancelar" onclick="doccancelar('<?php echo core::getInstancePath(); ?>','<?php echo Router::getController(); ?>');">Cancelar</button>
+          </td>
+   	  </tr>
+ 
+  </table>
+
+<div id="mensajes"></div>
+
+<?php echo Tag::endForm(); ?>
+<?php echo view::getContent(); ?>
+

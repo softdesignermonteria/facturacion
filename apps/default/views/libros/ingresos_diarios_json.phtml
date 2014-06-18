@@ -1,0 +1,213 @@
+<?php 
+$db = DbBase::rawConnect();
+$condicion = '';
+/*$consulta = str_replace(" ","%",$_REQUEST["term"]);
+if($_REQUEST["term"]!=''){
+    $condicion .= " and color like '%$consulta%' ";
+}*/
+if($_REQUEST["fecha"]!=''){
+    $condicion .= " and pc.fecha = '".$_REQUEST["fecha"]."' ";
+}
+/*if($_REQUEST["bodegas_id"]!=''){
+    $condicion .= " and movimientos_inventario.bodegas_id = '".$_REQUEST["bodegas_id"]."' ";
+}*/
+
+
+
+
+$page = $_REQUEST['page']; 
+// get the requested page 
+$limit = $_REQUEST['rows']; 
+// get how many rows we want to have into the grid 
+$sidx = $_REQUEST['sidx']; 
+// get index row - i.e. user click to sort 
+$sord = $_REQUEST['sord']; 
+// get the direction if(!$sidx) 
+//$sidx =1; 
+if(!$sidx) $sidx =1;
+
+$wh = "";
+$searchOn = Strip($_REQUEST['_search']);
+if($searchOn=='true') {
+    $searchOper = $_REQUEST["searchOper"];
+    $searchField = $_REQUEST["searchField"];
+    $searchString = $_REQUEST["searchString"];
+    
+        switch ($searchOper) {
+            case 'eq': $wh = " and $searchField = '$searchString' "; break;
+        }
+    
+}
+
+// connect to the database 
+//$db = mysql_connect($dbhost, $dbuser, $dbpassword) or die("Connection Error: " . mysql_error()); 
+//mysql_select_db($database) or die("Error conecting to db."); 
+/*
+SELECT
+     sum(dpc.valor) AS total,
+	 pc.id
+     pc.prefijo AS pc_prefijo,
+     pc.consecutivo AS pc_consecutivo,
+     centro_produccion.centro_produccion AS centro_produccion,
+     tipo_habitacion.tipo_habitacion AS tipo_habitacion,
+     pc.fecha AS total,
+     tipo_centro_produccion.tipo_centro_produccion AS tipo_centro_produccion_tipo_centro_produccion,
+     empresa.id AS empresa_id,
+     empresa.nombre_corto AS empresa_nombre_corto,
+     empresa.nombre_empresa AS empresa_nombre_empresa,
+     empresa.nit AS empresa_nit,
+     empresa.direccion AS empresa_direccion,
+     empresa.logo AS empresa_logo,
+     empresa.regimen_id AS empresa_regimen_id,
+     empresa.telefonos AS empresa_telefonos,
+     empresa.celular AS empresa_celular,
+     empresa.web AS empresa_web,
+     empresa.correo AS empresa_correo,
+     empresa.activo AS empresa_activo,
+     empresa.kardex_id_default AS empresa_kardex_id_default,
+     empresa.tipo_costeo AS empresa_tipo_costeo,
+     empresa.valor_caja_defecto AS empresa_valor_caja_defecto,
+     empresa.cobro_tarifa AS empresa_cobro_tarifa
+FROM
+     detalle_pedido_clientes dpc INNER JOIN pedido_clientes pc ON dpc.pedido_clientes_id = pc.id
+     INNER JOIN centro_produccion centro_produccion ON pc.centro_produccion_id = centro_produccion.id
+     INNER JOIN empresa empresa ON pc.empresa_id = empresa.id
+     INNER JOIN tipo_habitacion tipo_habitacion ON centro_produccion.tipo_habitacion_id = tipo_habitacion.id
+     INNER JOIN tipo_centro_produccion tipo_centro_produccion ON centro_produccion.tipo_centro_produccion_id = tipo_centro_produccion.id
+WHERE
+     pc.anulado = 0
+     and dpc.anulado = 0
+     and pc.fecha = $P{fecha}
+GROUP BY
+     pc.consecutivo
+ORDER BY
+     pc.consecutivo ASC
+*/
+$db = DbBase::rawConnect();
+$result = $db->query("SELECT COUNT(*) AS count 
+							FROM
+								 detalle_pedido_clientes dpc INNER JOIN pedido_clientes pc ON dpc.pedido_clientes_id = pc.id
+								 INNER JOIN centro_produccion centro_produccion ON pc.centro_produccion_id = centro_produccion.id
+								 INNER JOIN empresa empresa ON pc.empresa_id = empresa.id
+								 INNER JOIN tipo_habitacion tipo_habitacion ON centro_produccion.tipo_habitacion_id = tipo_habitacion.id
+								 INNER JOIN tipo_centro_produccion tipo_centro_produccion ON centro_produccion.tipo_centro_produccion_id = tipo_centro_produccion.id
+							WHERE
+								 pc.anulado = 0
+								 and dpc.anulado = 0
+                            $condicion
+                            ".$wr."
+								GROUP BY
+    								 pc.consecutivo
+							"); 
+
+$row = $db->fetchArray($result); 
+$count = $row['count']; 
+if( $count >0 ) { 
+        $total_pages = ceil($count/$limit); 
+    } else { 
+        $total_pages = 0; 
+} 
+
+if ($page > $total_pages) $page=$total_pages; 
+$start = $limit*$page - $limit;  // do not put 	$limit*($page - 1) 
+$responce = new stdClass();
+$SQL = "SELECT 
+					 sum(dpc.valor) AS total,
+					 pc.prefijo AS prefijo,
+					 pc.id,
+					 pc.consecutivo AS consecutivo,
+					 centro_produccion.centro_produccion AS centro_produccion,
+					 tipo_habitacion.tipo_habitacion AS tipo_habitacion,
+		
+					 tipo_centro_produccion.tipo_centro_produccion AS tipo_centro_produccion_tipo_centro_produccion,
+					 empresa.id AS empresa_id,
+					 empresa.nombre_corto AS empresa_nombre_corto,
+					 empresa.nombre_empresa AS empresa_nombre_empresa,
+					 empresa.nit AS empresa_nit,
+					 empresa.direccion AS empresa_direccion,
+					 empresa.logo AS empresa_logo,
+					 empresa.regimen_id AS empresa_regimen_id,
+					 empresa.telefonos AS empresa_telefonos,
+					 empresa.celular AS empresa_celular,
+					 empresa.web AS empresa_web,
+					 empresa.correo AS empresa_correo,
+					 empresa.activo AS empresa_activo,
+					 empresa.kardex_id_default AS empresa_kardex_id_default,
+					 empresa.tipo_costeo AS empresa_tipo_costeo,
+					 empresa.valor_caja_defecto AS empresa_valor_caja_defecto,
+					 empresa.cobro_tarifa AS empresa_cobro_tarifa
+				FROM
+								 detalle_pedido_clientes dpc INNER JOIN pedido_clientes pc ON dpc.pedido_clientes_id = pc.id
+								 INNER JOIN centro_produccion centro_produccion ON pc.centro_produccion_id = centro_produccion.id
+								 INNER JOIN empresa empresa ON pc.empresa_id = empresa.id
+								 INNER JOIN tipo_habitacion tipo_habitacion ON centro_produccion.tipo_habitacion_id = tipo_habitacion.id
+								 INNER JOIN tipo_centro_produccion tipo_centro_produccion ON centro_produccion.tipo_centro_produccion_id = tipo_centro_produccion.id	 
+				WHERE
+					 pc.anulado = 0
+					 and dpc.anulado = 0
+                    $condicion
+                     ".$wh." 
+					 GROUP BY
+    					 pc.consecutivo
+         ORDER BY $sidx $sord 
+        LIMIT $start , $limit"; 
+$result = $db->query( $SQL ); 
+$responce->page = $page ;
+$responce->sql = $SQL; 
+$responce->total = $total_pages; 
+$responce->records = $count; 
+$total = 0;
+$cantidad = 0;
+$i=0; 
+while( $row = $db->fetchArray($result) ) { 
+	$total += $row[total];
+	$cantidad += $row[cantidad];
+    $responce->rows[$i]['id']=$row[id]; 
+    $responce->rows[$i]['cell']=array($row[id],$row[prefijo],$row[consecutivo],$row[centro_produccion],$row[tipo_habitacion],$row[total]); 
+    $i++; 
+} 
+
+//$responce->userdata['amount']  = $amttot; 
+//$responce->userdata['tax']     = $taxtot; 
+$responce->userdata['centro_produccion']  = 'Totales:';
+$responce->userdata['total']              = $total; 
+//$responce->userdata['cantidad']           = $cantidad; 
+
+
+echo json_encode($responce);
+
+		
+function Strip($value)
+{
+	if(get_magic_quotes_gpc() != 0)
+  	{
+    	if(is_array($value))  
+			if ( array_is_associative($value) )
+			{
+				foreach( $value as $k=>$v)
+					$tmp_val[$k] = stripslashes($v);
+				$value = $tmp_val; 
+			}				
+			else  
+				for($j = 0; $j < sizeof($value); $j++)
+        			$value[$j] = stripslashes($value[$j]);
+		else
+			$value = stripslashes($value);
+	}
+	return $value;
+}
+
+function array_is_associative ($array)
+{
+    if ( is_array($array) && ! empty($array) )
+    {
+        for ( $iterator = count($array) - 1; $iterator; $iterator-- )
+        {
+            if ( ! array_key_exists($iterator, $array) ) { return true; }
+        }
+        return ! array_key_exists(0, $array);
+    }
+    return false;
+}
+?>
+    

@@ -1,0 +1,65 @@
+<h4>FORMULARIO AGREGAR ENCUESTA</h4>
+
+<?php echo Tag::formRemote(Router::getController()."/add", "update: mensajes", "id: fx","name: fx"); ?>
+
+<table width="80%" border="0" align="center" cellpadding="1">
+  <tr>
+    <td  align="right" valign="middle">TITULO ENCUESTA<?php echo Tag::hiddenField("usuarios_id","value: ".Session::get("usuarios_id")); ?></td>
+    <td align="left" valign="middle"><?php echo Tag::textField("descripcion", "size: 50","maxlength: 50","placeholder: INGRESE TITULO ENCUESTA") ?></td>
+  </tr>
+  <tr>
+    <td  align="right" valign="middle">ENCABEZADO</td>
+    <td align="left" valign="middle"><textarea name="encabezado" id="encabezado" cols="80" rows="1" style="width: 637px; height: 17px;" placeholder="INGRESE ENCABEZADO"></textarea></td>
+  </tr>
+  <tr>
+    <td  align="right" valign="middle">TAMAÑO FUENTE</td>
+    <td align="left" valign="middle"><?php echo Tag::numericField("tamano", "size: 30","maxlength: 50","placeholder: INGRESE TAMAÑO FUENTE") ?></td>
+  </tr>
+  <tr>
+    <td  align="right" valign="middle">TIPO DE FUENTE</td>
+    <td align="left" valign="middle"><?php $fuentes=new Fuentes(); 
+		echo Tag::select('fuente_id',$fuentes->find('order: id'), 'using: fuente,fuente', 'useDummy: yes', 'onclick: cambiar_fuente(this.value);') ?></td>
+  </tr>
+  <tr>
+    <td  align="right" valign="middle">COLOR FUENTE</td>
+    <td align="left" valign="middle"><div id="escala" style="width:40px"></div><?php echo Tag::numericField("color", "size: 10") ?></td>
+  </tr>
+  <tr>
+    <td  align="right" valign="middle">FECHA CIERRE</td>
+    <td align="left" valign="middle"><?php echo Tag::textField("fecha_cierre", "size: 30","maxlength: 20","placeholder: INGRESE FECHA") ?></td>
+  </tr>
+  <tr>
+    <td  align="right" valign="middle">ESTADO ENCUESTA</td>
+    <td align="left" valign="middle"><?php echo Tag::selectStatic('estado', array('' => 'Seleccione...','0' => 'ACTIVA','1' => 'INACTIVA')) ?></td>
+  </tr>
+   <tr>
+    <td  align="right" valign="middle">ENVIAR POR CORREO</td>
+    <td align="left" valign="middle"><?php echo Tag::selectStatic('correo', array('' => 'Seleccione...','0' => 'NO ENVIAR','1' => 'ENVIAR')) ?></td>
+  </tr>
+  <tr>
+    <td colspan="3" align="center" >
+    <button type="submit" id="guardar" name="guardar">Guardar</button>
+    <button type="button" id="cancelar" name="cancelar" onclick="doccancelar('<?php echo core::getInstancePath(); ?>','<?php echo Router::getController(); ?>');">Cancelar</button>
+    </td>
+  </tr> 
+</table>
+<?php echo Tag::endForm() ?>
+
+<div id="mensajes"></div>
+<br />
+
+<script type="text/javascript">
+
+jQuery("#color").attr("readOnly","ReadOnly");
+
+jQuery('#escala').colorPicker({			
+    
+	click: function(color){
+		
+	  jQuery('#color').val(color);
+	  
+	} 
+	
+});
+
+</script>

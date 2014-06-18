@@ -1,0 +1,681 @@
+
+<form id="pedidos_clientes" name="pedidos_clientes">
+
+<table width="100%" border="0" align="center" cellpadding="2" cellspacing="4">
+ <tr>
+            <th colspan="6" class="ui-jqgrid-titlebar ui-widget-header ui-corner-top ui-helper-clearfix" align="left">
+           		<?php echo $tipo_documento; echo " - "; echo $tipo_documento_nombre;  ?> - <?php echo Tag::textField("nombre_empresa","size: 30","readOnly: readOnly","style: background: #cccccc;"); ?> <b id="numero"></b>
+                   <?php echo Tag::hiddenField("id"); ?> 
+					<?php echo Tag::hiddenField("tipo_documento_id"); ?> 
+                    <?php echo Tag::hiddenField("empresa_id"); ?> 
+                    <?php echo Tag::hiddenField("prefijo2"); ?> 
+                    <?php echo Tag::hiddenField("consecutivo"); ?> 
+                    <?php echo Tag::hiddenField("anulado"); ?>
+                    
+                    <?php echo Tag::hiddenField("visto_bueno"); ?>            </th>
+    </tr>
+  
+  
+  <tr>
+    <td width="26%" align="right" valign="top">EMPLEADO</td>
+    <td colspan="3">
+		<?php echo Tag::textField("empleado_id","size: 4","readOnly: readOnly","style: background: #cccccc;"); ?>
+		<?php echo Tag::textField("nombre_empleados","size: 50","readOnly: readOnly","style: background: #cccccc;"); ?>
+            <?php if(Session::get("role")=='administrador' || Session::get("role")=='superadministrador'){?>
+            <button id="buscar_empleados" type="button">Buscar</button>
+            <?php } ?>
+   			<!--<button id="agregar_centro_produccion" type="button">Agregar</button> -->   </td>
+  </tr>
+  <tr>
+    <td align="right" valign="top">FECHA</td>
+    <td><input type="text" size="20" id="fecha" name="fecha"  /></td>
+    <td>&nbsp;</td>
+    <td align="left" valign="top">&nbsp;</td>
+  </tr>
+  <tr>
+    <td align="right" valign="top">HORA APERTURA</td>
+    <td width="25%">
+    		<input type="hidden" size="20" id="turnos_id" name="turnos_id" readonly="readonly" style="background: #cccccc;" />
+            <input type="text" size="20" id="fecha_apertura" name="fecha_apertura" readonly="readonly" style="background: #cccccc;" />
+      <span class="ui-icon ui-icon-calendar" style="float:left;"></span></td>
+    <td width="19%">HORA CIERRE</td>
+    <td width="30%" align="left" valign="top">
+      <input type="text" size="20" id="fecha_cierre" name="fecha_cierre" readonly="readonly" style="background: #cccccc;" />
+      <span class="ui-icon ui-icon-calendar" style="float:left;"></span>
+       <?php //if(Session::get("role")=='administrador' || Session::get("role")=='superadministrador'){?>
+       	<button id="buscar_turnos" type="button">Buscar</button>
+        <?php // } ?>      </td>
+    </tr>
+  <tr>
+    <td align="right" valign="top">VALOR CAJA POR DEFECTO</td>
+    <td>
+    	<input type="text" size="20" id="valor_caja_defecto" name="valor_caja_defecto" readonly="readonly" style="background: #cccccc;" />    </td>
+    <td>TOTAL INGRESOS</td>
+    <td align="left" valign="top">
+    	<input type="text" size="20" id="total_ingresos" name="total_ingresos"  readonly="readonly" style="background: #cccccc;"  />        </td>
+  </tr>
+  <tr>
+    <td align="right" valign="top">VALOR DEPOSITO CAJA</td>
+    <td><input type="text" size="20" id="deposito_caja" name="deposito_caja" /></td>
+    <td>TOTAL EGRESOS</td>
+    <td align="left" valign="top">
+    	<input type="text" size="20" id="total_egresos" name="total_egresos"  readonly="readonly" style="background: #cccccc;"  />    </td>
+  </tr>
+  <tr>
+    <td align="right" valign="top">SALDO DISPONIBLE EN CAJA</td>
+    <td><div id="saldo"></div></td>
+    <td colspan="2"><div id="saldo_letras"></div></td>
+    </tr>
+</table>
+<div id="detalles_items" style="display:none;"></div>
+<table id="grid_cuadre_caja"></table>
+<div id="pagpedidos_clientes"></div>
+  
+  <button id="agregar_item" type="button">Agregar</button>
+  <button id="buscar_item" type="button">Traer Todo</button> 
+  <?php if(Session::get("role")=='superadministrador' || Session::get("role")=='administrador'){ ?>
+      <button id="modificar_item" type="button">Modificar</button>
+      <button id="borrar_item" type="button">Borrar</button>
+  <?php } ?>
+ <br />
+ <div align="center">
+    <button id="guardar" type="button">Guardar</button>
+        <button id="cancelar" type="button">Cancelar</button>
+      
+    </div>
+
+
+<div id="mensajes"></div>
+
+</form>
+
+<div title="Agergar Pedidos Liquidados" id="dialogo_agregar_item_cxc">
+	<table id="tablacxc"></table>
+	<div id="pagercxc"></div>
+</div>
+
+<div title="Agergar Producto a la Compra" id="dialogo_liquidar">
+
+</div>
+
+
+<?php echo View::getContent(); ?>
+
+<?php 
+
+$pd  = new CuadreCaja();
+$emp = new Empresa();
+$turn = new Turnos();
+$bg  = new Bodegas();
+$dt  = new CxcCuadreCaja();
+$ep  = new Empleado();
+
+
+
+$id                         = '';
+$tipo_documento_id          = $tipo_documento;
+$empresa_id                 = Session::get("id_empresa");
+$nombre_empresa             = Session::get("nombre_empresa");
+//$fecha                      = date("Y-m-d");
+//Flash::notice("op1 = ".Session::get("id_empresa").Session::get("nombre_empresa").date("Y-m-d"));
+$empleado_id                = Session::get("id_empleado");
+$nombre_empleados           = Session::get("nombre_empleado"); //Session::get("role"); //role
+	$turnos = $turn->findFirst("anulado = 0 and empleado_id = '$empleado_id' and date(inicio) = '".date("Y-m-d")."' ");
+$turnos_id                  = $turn->id;	
+$fecha_apertura             = $turn->inicio;
+$fecha_cierre               = $turn->fin;
+$valor_caja_defecto         = $emp->findFirst(" id = '".Session::get("id_empresa")."' ")->valor_caja_defecto;
+$fecha                      = date("Y-m-d");
+$prefijo2                   = '';
+$consecutivo                = '';
+$placa                      = '';
+$color                      = '';
+$db = DbBase::rawConnect();
+$sql = " select IFNULL(sum(dt.total),0) as total 
+				from 
+					egresos e, detalle_egresos dt 
+					where 
+						e.id = dt.egresos_id 
+						and dt.anulado = 0 
+						and e.anulado = 0 
+						and e.fecha > '$turn->inicio' 
+						and e.fecha <= '$turn->fin' ";
+						
+$result = $db->query($sql);
+$row = $db->fetchArray($result); 
+$anulado                    = '0';
+$total_egresos              = $row["total"];
+$total_ingresos             = '0';
+$visto_bueno                = '0';
+$deposito_caja              = '0';
+$saldo                      = $valor_caja_defecto;
+
+
+if(isset($_REQUEST["id"])){ 
+	if($_REQUEST["id"]!=''){
+			$idt = $_REQUEST["id"];
+			$encabezado = $pd->findFirst(" id = '$idt' and anulado = 0 ");
+			//Flash::notice(print_r($encabezado));
+			$id                         = $encabezado->id;
+			$tipo_documento_id          = $encabezado->tipo_documento_id;
+			$empresa_id                 = $encabezado->empresa_id;
+			$nombre_empresa             = $emp->findFirst("id = '$empresa_id'")->nombre_empresa;
+			$empleado_id                = $encabezado->empleado_id;
+			$nombre_empleados           = $ep->findFirst("id = '$empleado_id '")->nombre_completo;
+			$turnos_id                  = $encabezado->turnos_id;
+			$fecha                      = $encabezado->fecha;
+			$fecha_apertura             = $turn->findFirst("anulado = 0 and id = '$encabezado->turnos_id' ")->inicio;
+			$fecha_cierre               = $turn->findFirst("anulado = 0 and id = '$encabezado->turnos_id' ")->fin;
+			$valor_caja_defecto         = $emp->findFirst("id = '$empresa_id'")->valor_caja_defecto;
+			$prefijo2                   = $encabezado->prefijo;
+			$consecutivo                = $encabezado->consecutivo;
+			$anulado                    = $encabezado->anulado;
+			$visto_bueno                = $encabezado->visto_bueno;
+			$deposito_caja              = $encabezado->deposito_caja;
+			$total_egresos              = $encabezado->total_egresos;
+			$total_ingresos             = $encabezado->total_ingresos;
+			$saldo                      = $valor_caja_defecto + $deposito_caja + $total_ingresos - $total_egresos;
+	}
+}
+?>
+
+<script type="text/javascript">
+
+jQuery(document).ready(function(){
+
+var detalles = [];
+
+
+
+<?php
+if(isset($_REQUEST["id"])){ 
+	if($_REQUEST["id"]!=''){ 
+			?>
+				jQuery("#id").val("<?php echo $id; ?>");	
+				jQuery("#tipo_documento_id").val("<?php echo $tipo_documento_id; ?>");	
+				jQuery("#empresa_id").val("<?php echo $empresa_id; ?>");	
+				jQuery("#nombre_empresa").val("<?php echo $nombre_empresa; ?>");	
+				jQuery("#empleado_id").val("<?php echo $empleado_id; ?>");	
+				jQuery("#nombre_empleados").val("<?php echo $nombre_empleados; ?>");	
+				jQuery("#fecha").val("<?php echo $fecha; ?>");	
+				jQuery("#fecha_apertura").val("<?php echo $fecha_apertura; ?>");	
+				jQuery("#turnos_id").val("<?php echo $turnos_id; ?>");	
+				jQuery("#fecha_cierre").val("<?php echo $fecha_cierre; ?>");	
+				jQuery("#prefijo2").val("<?php echo $prefijo2; ?>");	
+				jQuery("#valor_caja_defecto").val("<?php echo $valor_caja_defecto; ?>");	
+				jQuery("#consecutivo").val("<?php echo $consecutivo; ?>");	
+				jQuery("#anulado").val("<?php echo $anulado; ?>");	
+				jQuery("#visto_bueno").val("<?php echo $visto_bueno; ?>");	
+				jQuery("#deposito_caja").val("<?php echo $deposito_caja; ?>");	
+				jQuery("#total_egresos").val("<?php echo $total_egresos; ?>");	
+				jQuery("#total_ingresos").val("<?php echo $total_ingresos; ?>");	
+				jQuery("#saldo").html("<?php echo $saldo; ?>");	
+				jQuery("#numero").html(" Consecutivo: <?php echo $prefijo2.$consecutivo; ?>");	
+					
+				<?php 
+						$cxc = new Cxc();
+						$pedido = new PedidoClientes();
+						foreach($dt->find(" cuadre_caja_id = '$id' ") as $dt): 
+							$cxc2 = $cxc->findFirst(" id = '$dt->cxc_id' ");
+							//echo " anulado = 0 and tipo_documento_id = '$cxc2->tipo_documento_id' and prefijo = 'cxc2->prefijo' and consecutivo = '$cxc2->consecutivo' ";
+						?>
+						detalles.push(
+								{
+									 id:         "<?php echo $dt->id; ?>"     
+									,cxc_id:     "<?php echo $dt->cxc_id; ?>" 
+									,prefijo:    "<?php echo $cxc2->prefijo; ?>"
+									,consecutivo:"<?php echo $cxc2->consecutivo; ?>" 
+									,hora_salida:"<?php echo $pedido->findFirst(" anulado = 0 and tipo_documento_id = '$cxc2->tipo_documento_id' and prefijo = '$cxc2->prefijo' and consecutivo = '$cxc2->consecutivo' ")->hora_salida; ?>" 
+									,valor:      "<?php echo $cxc2->total; ?>" 
+									,anulado:    "<?php if($dt->anulado==0){echo "NO";}else{ echo "SI"; } ?>"
+								}
+							);
+						
+				<?php endforeach; ?>
+				reload_grid();
+				jQuery("#detalles_items").html(JSON.stringify(detalles));
+						
+   <?php	
+ 	  }
+}else{ ?>
+				jQuery("#tipo_documento_id").val("<?php echo $tipo_documento_id; ?>");	
+				jQuery("#empresa_id").val("<?php echo $empresa_id; ?>");	
+				jQuery("#nombre_empresa").val("<?php echo $nombre_empresa; ?>");	
+				jQuery("#turnos_id").val("<?php echo $turnos_id; ?>");
+				jQuery("#fecha").val("<?php echo $fecha; ?>");	
+				jQuery("#fecha_apertura").val("<?php echo $fecha_apertura; ?>");	
+				jQuery("#fecha_cierre").val("<?php echo $fecha_cierre; ?>");	
+				jQuery("#empleado_id").val("<?php echo $empleado_id; ?>");	
+				jQuery("#nombre_empleados").val("<?php echo $nombre_empleados; ?>");
+				jQuery("#total_ingresos").val("<?php echo $total_ingresos; ?>");
+				jQuery("#total_egresos").val("<?php echo $total_egresos; ?>");
+				jQuery("#valor_caja_defecto").val("<?php echo $valor_caja_defecto; ?>");
+				jQuery("#deposito_caja").val("<?php echo $deposito_caja; ?>");
+				jQuery("#visto_bueno").val("<?php echo $deposito_caja; ?>");
+				jQuery("#anulado").val("<?php echo $anulado; ?>");
+				jQuery("#saldo").html("<?php echo $saldo; ?>");
+					
+<?php
+}		
+?>
+
+
+
+
+/*-----------------------------------------------Guardar Pedido---------------------------------------------------------------*/
+
+	
+	jQuery("#guardar").click(function(){
+		
+		
+			var srv = JSON.stringify(detalles);
+		
+			jQuery( "#progressbar" ).progressbar({ value: 50 });	
+		
+			var jqXHR = jQuery.ajax({
+					type: "POST",
+					url: "<?php echo core::getInstancePath(); ?>cuadre_caja/add",
+					data: {
+							id:                   jQuery("#id").val(),
+							tipo_documento_id:    jQuery("#tipo_documento_id").val(),
+							centro_produccion_id: jQuery("#centro_produccion_id").val(),
+							empleado_id:          jQuery("#empleado_id").val(),
+							empresa_id:           jQuery("#empresa_id").val(),
+							fecha:                jQuery("#fecha").val(),
+							fecha_apertura:       jQuery("#fecha_apertura").val(),
+							fecha_cierre:         jQuery("#fecha_cierre").val(),
+							prefijo:              jQuery("#prefijo2").val(),
+							consecutivo:          jQuery("#consecutivo").val(),
+							anulado:         	  jQuery("#anulado").val(),
+							turnos_id:         	  jQuery("#turnos_id").val(),
+							visto_bueno:          jQuery("#visto_bueno").val(),
+							valor_caja_defecto:   jQuery("#valor_caja_defecto").val(),
+							deposito_caja:        jQuery("#deposito_caja").val(),
+							total_ingresos:       jQuery("#total_ingresos").val(),
+							total_egresos:        jQuery("#total_egresos").val(),
+							detalles:             jQuery("#detalles_items").html()
+					},
+					success: function(data) {
+						jQuery( '#mensajes' ).html("");
+						jQuery( "#progressbar" ).progressbar({ value: 90 });
+						jQuery( '#mensajes' ).html(data);
+					},
+					error: function(data) {
+						jQuery('#dialogo_mensajes').html("Error Enviando parametros.....");
+						jQuery( "#progressbar" ).progressbar({ value: 0 });
+						jQuery('#dialogo_mensajes').dialog("open");
+					}
+				});
+				
+				 jqXHR.done(function(data){
+					jQuery( "#progressbar" ).progressbar({ value: 0 });
+				});
+		
+});
+
+/*-----------------------------------------------------Traer Todo----------------------------------------------------------------*/
+
+jQuery("#buscar_item").click(function(){
+	jQuery( "#progressbar" ).progressbar({ value: 50 });
+		
+		var jqXHR = jQuery.ajax({
+		type: "POST",
+		dataType:"json",
+		url: "<?php echo core::getInstancePath(); ?>cuadre_caja/traer_todo",
+		data: {
+				empleado_id:          jQuery("#empleado_id").val(),
+				empresa_id:           jQuery("#empresa_id").val(),
+				fecha_apertura:       jQuery("#fecha_apertura").val(),
+				fecha_cierre:         jQuery("#fecha_cierre").val(),
+		},
+		success: function(data) {
+			jQuery( "#progressbar" ).progressbar({ value: 90 });
+			if(data){
+				jQuery.each( data, function(k,v){
+						agregar_item(v);
+					});
+				}
+		},
+		error: function(data) {
+			jQuery('#dialogo_mensajes').html("Error Enviando parametros Traer Todo.....");
+			jQuery( "#progressbar" ).progressbar({ value: 0 });
+			jQuery('#dialogo_mensajes').dialog("open");
+		}
+	});
+	
+	 jqXHR.done(function(data){
+		jQuery( "#progressbar" ).progressbar({ value: 0 });
+	});
+});		
+
+
+/*-----------------------------------------------------Agregar Item--------------------------------------------------------------------------------*/
+	
+	jQuery("#dialogo_agregar_item_cxc").dialog(
+		{ 
+			autoOpen:false
+			, width:600 
+			, heigth:400 
+			,modal: true
+			,buttons:[
+				{
+					text:  "Cerrar"
+					,click: function(){
+								
+							jQuery(this).dialog("close"); 
+							
+						}	
+				}
+			]
+		});
+		
+		
+		
+jQuery("#agregar_item").click(function(){
+	
+	if( jQuery("#fecha_cierre").val()!='' ){
+		
+		reload_grid2();
+		jQuery("#dialogo_agregar_item_cxc").dialog("open");
+		
+	}else{
+			jQuery("#dialogo_mensajes").html("");
+			jQuery("#dialogo_mensajes").html("Fecha Cierre es Requerido");
+			jQuery("#dialogo_mensajes").dialog("open");
+	}
+
+});		
+		
+//agregar un item al vector json de items
+function agregar_item(data){
+var existe = false;   
+for(i=0;i<detalles.length;i++) {  
+	if (detalles[i]["cxc_id"] == data["cxc_id"]) {  
+	   //alert("articulo ya esta el pedido");  
+	   existe = true;  
+	 }   
+ }
+if (!existe) {   
+	value = parseFloat(jQuery.trim(jQuery("#total_ingresos").val()));
+	detalles.push(
+		{
+			id:             data["id"]
+			,cxc_id:        data["cxc_id"]
+			,prefijo:       data["prefijo"]
+			,consecutivo:   data["consecutivo"]
+			,valor:         data["valor"]
+			,hora_salida:   data["hora_salida"]
+			,anulado:       data["anulado"]
+			
+		}
+		
+	);
+	
+	//alert(detalles.length);
+		value += parseFloat(data["valor"]);
+		vdf = parseFloat(jQuery("#valor_caja_defecto").val());
+		vdc = parseFloat(jQuery("#deposito_caja").val());
+		veg = parseFloat(jQuery("#total_egresos").val());
+		jQuery("#saldo").html(value + vdf + vdc - veg);
+		jQuery("#total_ingresos").val(value);
+	
+	}
+	
+	reload_grid();
+	//jQuery("#saldo").html( jQuery("#saldo").html() );
+	jQuery("#detalles_items").html(JSON.stringify(detalles));
+	
+	//alert(detalles.length);
+	
+}
+
+
+
+ <?php //if(Session::get("role")=='superadministrador' || Session::get("role")=='administrador'){ ?>
+/*-----------------------------------------------------Borrar Item-----------------------------------------------------------------------------------*/
+
+jQuery("#borrar_item").click(function(){
+		
+var gr = jQuery("#grid_cuadre_caja").jqGrid('getGridParam','selrow');
+jQuery("#grid_cuadre_caja").find("#"+gr).remove();
+//getSelectedRow();
+if( gr != null ) {
+	var obj = new Array();
+	var html = '';
+		detalles = jQuery.grep(
+		detalles, 
+		function (item,index) { 
+		  return item.id !=  gr; 
+		});
+	
+	 jQuery("#dialogo_mensajes").html( detalles.length);
+	 jQuery("#dialogo_mensajes").dialog("open");
+}else{
+	 alert("Por favor seleccione una fila para borrar!");
+}
+
+});	 
+
+<?php //} ?>	 
+
+/*------------------------------------------------Modificar Item-----------------------------------------------------------------*/	 
+ <?php if(Session::get("role")=='superadministrador' || Session::get("role")=='administrador'){ ?>
+ 
+jQuery("#modificar_item").click(function(){
+			//jQuery("#dialogo_agregar_item_cxc").dialog("open");
+			//reload_grid();
+	 });
+	 
+<?php } ?>	 
+jQuery("#buscar_item").click(function(){
+			//jQuery("#dialogo_agregar_item_cxc").dialog("open");
+			//reload_grid();
+	 });	 
+
+	 
+
+
+
+		
+
+//detalles.push({id:1,referencia:123,nombre:"prueba",costo:10000,tarifaiva:16,iva:16000,descuento:20000,porc_desc:20,total:80000});
+function reload_grid(){
+		jQuery("#grid_cuadre_caja").jqGrid('setGridParam',
+			{ 	datatype: 'local',
+				data:detalles
+			}).trigger("reloadGrid");
+}
+
+
+
+
+/*---------------------------------------------Configurar Grilla Pedidos Clientes---------------------------------------------------------*/
+
+/*grib maestros de clientes*/
+function config_grid_cuadre_caja(){
+	grid_fndcuadre_caja = jQuery("#grid_cuadre_caja").jqGrid({
+			datatype:"local",
+			data: detalles,
+			height:200,
+			rowNum:25,
+			autowidth:true,
+			pager:"#pagpedidos_clientes",
+			
+			colNames:['Id',"Cxc Id",'Prefijo','Consecutivo','Valor','Hora Salida','Anulado'],
+			colModel:[
+			{   name:'id',          index:'id',          sorttype:'text'                         },
+			{	name:'cxc_id',	    index:'kardex_id',	 sorttype:'text'	                     },
+			{	name:'prefijo',	    index:'referencia',	 sorttype:'text'	                     },
+			{	name:'consecutivo',	index:'nombre',		 sorttype:'integer',                     },
+			{	name:'valor',       index:'valor',       sorttype:'double',   formatter:"number" },
+			{	name:'hora_salida', index:'hora_salida', sorttype:'datetime'                     },
+			{	name:'anulado',		index:'anulado',  	 sorttype:'text'                         }
+			],
+			multiselect:false,
+			caption:"Detalle Cuadre de Caja",
+			sortname: 'id', 
+			viewrecords: true, 
+			sortorder: "id",
+			
+			ondblClickRow:function(rowid,iRow,iCol,e){
+				
+				/*var fila = $(this).jqGrid('getRowData',rowid);
+				
+				$("#cod_medico").val(fila['codigo'])
+				$("#desc_medico").val(fila['nombres']+" "+fila['apellidos'])
+				
+				diag_fndMedicos.dialog("close")*/
+			}
+	});
+}
+
+config_grid_cuadre_caja();
+
+
+/*---------------------------------------------Cuadro Dialogo cxc----------------------------------------------------*/
+
+function reload_grid2(){
+		jQuery("#tablacxc").jqGrid('setGridParam',
+			{ 	datatype: 'json'
+				,ajaxGridOptions : {	
+					type:"POST"
+					}
+				,url : "<?php echo core::getInstancePath(); ?>cxc/ccfind_detalle_buscar/?fecha_cierre="+jQuery("#fecha_cierre").val()+"&fecha_apertura="+jQuery("#fecha_apertura").val()
+				,data:{ fecha_cierre: jQuery("#fecha_cierre").val() }
+			}).trigger("reloadGrid");
+}
+
+
+function config_grid_cxc(){
+	grid_fndcxc = jQuery("#tablacxc").jqGrid(
+		{ 
+			ajaxGridOptions : {	
+					type:"POST"
+					},
+			url:'<?php echo core::getInstancePath(); ?>cxc/ccfind_detalle_buscar/?fecha_cierre=<?php echo date("Y-m-d H:i:s"); ?>&fecha_apertura=<?php echo date("Y-m-d H:i:s"); ?>', 
+			datatype: "json", 
+			colNames:['Id','Prefijo','Consecutivo','Hora Salida','Total'], 
+			colModel:[ 
+				
+				{ name:'id',index:'id', width:20}, 
+				{ name:'prefijo',index:'prefijo', width:90},
+				{ name:'consecutivo',index:'consecutivo', width:90},
+				{ name:'hora_salida',index:'fecha', width:90},
+				{ name:'total',index:'total', width:90}
+			], 
+			autoWidth:true,
+			width: 550,
+			height: 250,
+			rowNum:50, 
+			multiselect: true,
+			
+			pager: '#pagercxc', 
+			sortname: 'consecutivo', 
+			/*shrinkToFit :false,*/
+			viewrecords: true, 
+			sortorder: "asc", 
+			caption:"listado de Pedidos Liquidados",
+			onSelectAll : function(aSel,selected) { 
+				if(selected){ 
+						var value =0; 
+						for(var i=0;i < aSel.length;i++){ 
+							var data = jQuery("#tablacxc").jqGrid('getRowData',aSel[i]); 
+							//value += parseFloat(data.total); 
+							
+							var jqXHR = jQuery.ajax({
+									url:"<?php echo core::getInstancePath(); ?>cuadre_caja/agregar_item/",
+									type:"POST",
+									dataType:"json",
+									data:{
+											cxc_id 			 :  data.id,
+											prefijo          :  data.prefijo,
+											consecutivo      :  data.consecutivo,
+											hora_salida      :  data.hora_salida,
+											valor            :  data.total,
+											anulado          : "NO"
+										}
+										,
+										fail:function(){
+											alert("error");
+										},
+										error:function(jqXHR,textStatus,errorThrown){
+											alert("error "+textStatus+"\n"+jqXHR+"\n"+errorThrown);
+										}
+							});
+							
+							 jqXHR.done(function(data){
+								agregar_item(data);
+							});
+							
+							//agregar_item(data);
+						} 
+							//jQuery("#total_ingresos").val(value.toFixed(2)); 
+						} else { 
+							//jQuery("#total_ingresos").val('0.00'); 
+						} 
+					}, 
+			onSelectRow : 
+				function(rowid, selected){ 
+					var data = jQuery("#tablacxc").jqGrid('getRowData',rowid); 
+					//var value = parseFloat(jQuery.trim(jQuery("#totamt").html())); 
+					//var value = parseFloat( jQuery.trim( jQuery("#total_ingresos").val() ) );
+					if(selected) { 
+							//value += parseFloat(data.total); 
+							var jqXHR = jQuery.ajax({
+									url:"<?php echo core::getInstancePath(); ?>cuadre_caja/agregar_item/",
+									type:"POST",
+									dataType:"json",
+									data:{
+											cxc_id 			 :  data.id,
+											prefijo          :  data.prefijo,
+											consecutivo      :  data.consecutivo,
+											hora_salida      :  data.hora_salida,
+											valor            :  data.total,
+											anulado          : "NO"
+										}
+										,
+										fail:function(){
+											alert("error");
+										},
+										error:function(jqXHR,textStatus,errorThrown){
+											alert("error "+textStatus+"\n"+jqXHR+"\n"+errorThrown);
+										}
+							});
+							
+							 jqXHR.done(function(data){
+								agregar_item(data);
+							});
+							
+						} else { 
+								//value -= parseFloat(data.total); 
+								
+							} 
+							//jQuery("#total_ingresos").val(value.toFixed(2)); 
+			},
+			ondblClickRow:function(rowid,iRow,iCol,e){
+				
+				var fila = jQuery(this).jqGrid('getRowData',rowid);
+				
+		
+       		 }
+		}); 
+		jQuery("#tablacxc").jqGrid('navGrid','#pagercxc',{edit:false,add:false,del:false}); 
+		jQuery("#tablacxc").jqGrid('navButtonAdd','#pagercxc',{
+		caption: "Columnas",
+		title: "Reordena Columnas",
+		onClickButton : function (){
+			jQuery("#tablacxc").jqGrid('columnChooser');
+		}
+		
+	});
+	
+}
+
+
+config_grid_cxc();
+	
+});
+
+</script>
+
+

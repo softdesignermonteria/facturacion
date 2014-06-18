@@ -1,0 +1,51 @@
+<?php foreach($empresa as $emp): ?>
+
+<?php echo Tag::formRemote("empresa/update", "update: mensajes", "id: empresa","name: empresa"); ?>
+
+<table width="100%" border="0" cellpadding="0">
+    <tr>
+   	 <th  colspan="2" align="center" >CONFIGURE EMPRESA</th>
+    </tr>
+  <tr>
+    <th width="25%"  align="right" ><strong>NIT</strong></th>
+    <td width="75%" >
+		<?php echo Tag::hiddenField("id", "size: 30","maxlength: 20","value: $emp->id") ?>
+		<?php echo Tag::textField("nit", "size: 30","maxlength: 20","value: $emp->nit") ?>
+    </td>
+  </tr>
+  <tr>
+    <th  align="right"><strong>NOMBRE EMPRESA</strong></th>
+    <td ><?php echo Tag::textField("nombre_empresa", "size: 50","maxlength: 50","value: $emp->nombre_empresa") ?></td>
+  </tr>
+ 
+  <tr>
+    <th  align="right"><strong>DIRECCION  
+    </strong>
+    <td ><?php echo Tag::textUpperField("direccion", "size: 30","maxlength: 20","value: $emp->direccion") ?>    </tr>
+  <tr>
+    <th  align="right"><strong>REGIMEN        
+    </strong>
+    <td ><?php $regimen = new Regimen();
+      echo Tag::select('regimen_id',$regimen->find(), 'using: id,descripcion','useDummy=yes',"value: $emp->regimen_id"); 
+	  ?>    </tr>
+  <tr>
+    <th  align="right">TELEFONOS
+  <td ><?php echo Tag::textUpperField("telefonos", "size: 30","maxlength: 20","value: $emp->telefonos") ?>    </tr>
+  <tr>
+    <th  align="right">CELULAR  
+    <td ><?php echo Tag::numericField("celular", "size: 30","maxlength: 20","value: $emp->celular") ?>    </tr>
+  <tr>
+    <th  align="right">WEB  
+    <td ><?php echo Tag::textUpperField("web", "size: 50","maxlength: 20","value: $emp->web") ?>  </tr>
+  <tr>
+    <th  align="right">CORREO
+    <td ><?php echo Tag::textUpperField("correo", "size: 50","maxlength: 20","value: $emp->correo") ?>    </tr>
+  <tr>
+    <td  colspan="2" align="center"><?php echo Tag::submitButton('Guardar Informacion', 'id: guardar', 'name: guardar') ?></tr>
+</table>
+<div id="mensajes"></div>
+
+<br />
+<?php echo Tag::endForm(); ?>
+
+<?php endforeach; ?>

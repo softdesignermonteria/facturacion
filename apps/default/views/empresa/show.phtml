@@ -1,0 +1,46 @@
+<?php foreach($empresa as $emp): ?>
+
+<table width="100%" border="0" cellpadding="0">
+    <tr>
+   	 <th  colspan="2" align="center" >EMPRESA ACTUALIZADA</th>
+    </tr>
+  <tr>
+    <th width="25%"  align="right" ><strong>NIT</strong></th>
+    <td width="75%" ><?php echo $emp->nit; ?>
+    </td>
+  </tr>
+  <tr>
+    <th  align="right"><strong>NOMBRE EMPRESA</strong></th>
+    <td ><?php echo $emp->nombre_empresa; ?></td>
+  </tr>
+ 
+  <tr>
+    <th  align="right"><strong>DIRECCION  
+    </strong>
+    <td ><?php echo $emp->direccion; ?>    </tr>
+  <tr>
+    <th  align="right"><strong>REGIMEN        
+    </strong>
+    <td ><?php 
+			$regimen = new Regimen();
+			echo $regimen->findFirst("id = '$emp->regimen_id'")->descripcion;	
+   
+	  ?>    </tr>
+  <tr>
+    <th  align="right">TELEFONOS
+  <td ><?php echo $emp->telefonos; ?>    </tr>
+  <tr>
+    <th  align="right">CELULAR  
+    <td ><?php echo $emp->celular; ?>    </tr>
+  <tr>
+    <th  align="right">WEB  
+    <td ><?php echo $emp->web; ?>  </tr>
+  <tr>
+    <th  align="right">CORREO
+    <td ><?php echo $emp->correo; ?>    </tr>
+  <tr>
+  <th  colspan="2" align="center"><?php echo Tag::linkTo("empresa/modificar/$emp->id", Tag::image("64x64/Edit.png","width: 32")) ?></tr>
+</table>
+<?php endforeach; ?>
+
+<?php echo View::getContent(); ?>

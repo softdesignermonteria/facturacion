@@ -1,0 +1,47 @@
+<?php
+$path = $_SERVER['DOCUMENT_ROOT'];
+$path .= Core::getInstancePath()."public/reportes";
+$path_class = $path."/phpjasperxml_0.8c/";
+//$path_class = $path."/PHPJasperXML-master/";
+//echo $path."<br>";
+//echo $path_class;
+
+$config = CoreConfig::readEnviroment();
+		//print_r(CoreConfig::readEnviroment());
+
+$host = "";
+$user = "";
+$psw  = "";
+$bd   = "";
+
+foreach($config->development as $key=>$val):
+		if($key == "database.host"     ){ $host = $val; }
+		if($key == "database.username" ){ $user = $val; }
+		if($key == "database.password" ){ $psw  = $val; }
+		if($key == "database.name"     ){ $bd   = $val; }
+endforeach;
+
+$server = $host;
+$pass   = $psw;
+$db     = $bd;
+		
+		
+//include_once($path_class."class/fpdf/fpdf.php");
+include_once($path_class."class/tcpdf/tcpdf.php");
+include_once($path_class."class/PHPJasperXML.inc.php");
+//error_reporting(E_ERROR | E_WARNING | E_PARSE | E_NOTICE);
+
+
+$xml = simplexml_load_file($path."/inventario/"."inventario_general.jrxml");
+
+$PHPJasperXML = new PHPJasperXML("en","XLS");
+$PHPJasperXML->arrayParameter=array("parameter1"=>0);
+$PHPJasperXML->debugsql=false;
+//$parametro=$_GET['parametro'];
+//$PHPJasperXML->arrayParameter=array("parametro"=>$parametro);
+$PHPJasperXML->xml_dismantle($xml);
+//$PHPJasperXML->connect($server,$user,$pass,$db);
+$PHPJasperXML->transferDBtoArray($server,$user,$pass,$db);
+$PHPJasperXML->outpage("I","archivo.xls");
+
+?>

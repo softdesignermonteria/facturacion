@@ -1,0 +1,22 @@
+<?php
+$db = DbBase::rawConnect();
+//$responce = new stdClass();
+
+$consulta = str_replace(" ","%",$_REQUEST["term"]);
+if($_REQUEST["term"]!=''){
+$condicion = " and color like '%$consulta%' ";
+}
+$SQL = "SELECT color FROM pedido_clientes where 1 = 1 $condicion group by color order by color limit 10 "; 
+$result = $db->query( $SQL ); 
+//$responce->sql = $SQL; 
+$i=0; 
+while( $row = $db->fetchArray($result) ) { 
+    $responce[$i]["id"] = $row[id];
+	$responce[$i]["value"] = $row[color];
+	$responce[$i]["color"] = $row[color];
+    $i++; 
+} 
+
+echo json_encode($responce);
+
+?>

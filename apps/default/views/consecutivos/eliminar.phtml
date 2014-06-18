@@ -1,0 +1,171 @@
+<h4>FORMULARIO AGREGAR CONSECUTIVOS AL SISTEMA</h4>
+
+<?php echo Tag::formRemote("consecutivos/delete", "update: mensajes", "id: fx","name: fx"); ?>
+
+<table border="0" width="100%" cellpadding="1" cellspacing="1">
+</td>
+<tr>
+  <td width="10%" height="0" >&nbsp;</td>
+    <td width="19%" height="0" align="right" >ID</td>
+    <td width="58%" height="0" scope="col"><?php echo Tag::textField("id");?></td>
+    <td width="13%" height="0" scope="col">&nbsp;</td>
+</tr>
+<tr>
+  <td height="0">&nbsp;</td>
+  <td height="0" align="right">DESCRIPCION</td>
+  <td height="0"><?php echo Tag::textUpperField("descripcion", "size: 50","maxlength: 50") ?></td>
+  <td height="0">&nbsp;</td>
+</tr>
+<tr>
+  <td height="0">&nbsp;</td>
+    <td height="0" align="right">FECHA</td>
+    <td height="0"><?php echo Tag::textField("fecha") ?></td>
+    <td height="0">&nbsp;</td>
+</tr>
+<tr>
+  <td height="0">&nbsp;</td>
+  <td height="0" align="right">PREFIJO</td>
+  <td height="0"><?php echo Tag::textUpperField("prefijo", "size: 10","maxlength: 10") ?></td>
+  <td height="0">&nbsp;</td>
+</tr>
+<tr>
+  <td height="0">&nbsp;</td>
+  <td height="0" align="right">DESDE</td>
+  <td height="0"><?php echo Tag::numericField("desde", "size: 15","maxlength: 15") ?></td>
+  <td height="0">&nbsp;</td>
+</tr>
+<tr>
+  <td height="0">&nbsp;</td>
+  <td height="0" align="right">HASTA</td>
+  <td height="0"><?php echo Tag::numericField("hasta", "size: 15","maxlength: 15") ?></td>
+  <td height="0">&nbsp;</td>
+</tr>
+<tr>
+  <td height="0">&nbsp;</td>
+  <td height="0" align="right">RESOLUCION DIAN</td>
+  <td height="0"><?php echo Tag::textField("resolucion_dian", "size: 40","maxlength: 50") ?></td>
+  <td height="0">&nbsp;</td>
+</tr>
+<tr>
+  <td height="0">&nbsp;</td>
+  <td height="0" align="right">TIPO DOCUMENTO</td>
+  <td height="0"><?php 
+  		$tp = new TipoDocumento();
+  echo Tag::select("tipo_documento_id",$tp->find("empresa_id = '".Session::get("id_empresa")."'"),'using: id,nombre','useDummy=yes' ) ?></td>
+  <td height="0">&nbsp;</td>
+</tr>
+<tr>
+  <td height="0">&nbsp;</td>
+  <td height="0" align="right">ACTIVO</td>
+  <td height="0"><?php echo Tag::selectStatic("activo",array("0"=>"SI","1"=>"NO")) ?></td>
+  <td height="0">&nbsp;</td>
+</tr>
+<tr>
+  <td height="0">&nbsp;</td>
+  <td height="0" align="right">&nbsp;</td>
+  <td height="0">&nbsp;</td>
+  <td height="0">&nbsp;</td>
+</tr>
+<tr>
+    <td height="0" colspan="4" align="center"><button type="submit" id="guardar" name="guardar">Eliminar</button>
+     <button type="button" id="cancelar" name="cancelar" onclick="doccancelar('<?php echo core::getInstancePath(); ?>','<?php echo Router::getController(); ?>');">Cancelar</button>
+    </td>
+</tr>    
+</td>
+</table>
+
+<div id="mensajes">
+
+<script type="text/javascript">
+	
+	 	jQuery("#id").attr("readOnly","ReadOnly");
+		jQuery("#prefijo").attr("readOnly","ReadOnly");
+		jQuery("#desde").attr("readOnly","ReadOnly");
+		jQuery("#hasta").attr("readOnly","ReadOnly");
+		jQuery("#fecha").prop('disabled',true);
+		jQuery("#resolucion_dian").attr("readOnly","ReadOnly");
+		jQuery("#activo").prop('disabled', true);
+		jQuery("#tipo_documento_id").prop('disabled', true);
+		jQuery("#descripcion").prop('disabled', true);
+		
+</script>
+
+
+<!--<table width="100%">
+<thead>
+	<tr class="ui-jqgrid-titlebar ui-widget-header ui-corner-top ui-helper-clearfix">
+    	<th>EMPRESA</th>
+        <th>DESCRIPCION</th>
+        <th>PREFIJO</th>
+        <th>RESOLUCION DIAN</th>
+        <th>FECHA</th>
+        <th>DESDE</th>
+        <th>HASTA</th>
+        <th>ACTIVO</th>
+        <th>DOCUMENTO</th>
+     
+        <th>MODIFICAR</th>
+	</tr>
+</thead>
+<tbody>    
+<?php //$cons = new DetalleConsecutivos(); ?>
+<?php 
+/*
+  id,
+  prefijo,
+  desde,
+  hasta,
+  resolucion_dian,
+  fecha,
+  activo,
+  consecutivos_id,
+  tipo_documento_id
+*/
+$query = new ActiveRecordJoin(array(
+						"entities" => array("DetalleConsecutivos","Empresa","TipoDocumento"),
+						"fields" => array(
+						
+						"{#Empresa}.nombre_empresa",
+						"{#DetalleConsecutivos}.descripcion",
+						"{#DetalleConsecutivos}.id",
+						"{#DetalleConsecutivos}.prefijo",
+						"{#DetalleConsecutivos}.resolucion_dian",
+						"{#DetalleConsecutivos}.fecha",
+						"{#DetalleConsecutivos}.activo",
+						"{#DetalleConsecutivos}.desde",
+						"{#DetalleConsecutivos}.hasta",
+						
+						"{#DetalleConsecutivos}.tipo_documento_id",
+						"{#TipoDocumento}.nombre"
+						),
+						"conditions" => "{#DetalleConsecutivos}.empresa_id = '".Session::get("id_empresa")."'"
+						
+				));
+
+foreach($query->getResultSet() as $cons):	
+				
+?>
+
+	<tr>
+    	<td><?php echo $cons->nombre_empresa; ?></td>
+        <td><?php echo $cons->descripcion; ?></td>
+        <td><?php echo $cons->prefijo; ?></td>
+        <td><?php echo $cons->resolucion_dian; ?></td>
+        <td><?php echo $cons->fecha; ?></td>
+       <td><?php echo $cons->desde; ?></td>
+       <td><?php echo $cons->hasta; ?></td>
+        <td><?php echo $cons->activo; ?></td>
+        <td><?php echo $cons->nombre; ?></td>
+     
+        <td align="center"><?php echo Tag::linkTo("consecutivos/modificar/$cons->id",Tag::image("iconos/editar.png","width: 30px"));?></td>
+	</tr>
+    
+<?php endforeach; ?>
+</tbody>
+</table>-->
+</div>
+
+
+
+<?php echo Tag::endForm() ?>
+

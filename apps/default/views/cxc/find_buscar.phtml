@@ -1,0 +1,62 @@
+<table id="tablacxp"></table>
+<div id="pagercxp"></div>
+<script>
+jQuery(document).ready(function(){
+
+		
+		jQuery("#tablacxp").jqGrid(
+		{ 
+			ajaxGridOptions : {	type:"POST"	},
+			url:'<?php echo core::getInstancePath(); ?>cxp/find_detalle_buscar', 
+			datatype: "json", 
+			data: {
+					proveedores_id: jQuery("#proveedores_id")
+				   },
+			colNames:['Id','Prefijo','Consecutivo','Fecha','Vencimiento','Total','Factura','Concepto','iddtemp'], 
+			colModel:[ 
+				
+				{ name:'id',index:'id', width:20}, 
+				{ name:'prefijo',index:'prefijo', width:90},
+				{ name:'consecutivo',index:'consecutivo', width:90},
+				{ name:'fecha',index:'fecha', width:90},
+				{ name:'vencimiento',index:'banco', width:90},
+				{ name:'total',index:'total', width:90},
+				{ name:'factura',index:'factura' },
+				{ name:'concepto',index:'concepto' },
+				{ name:'idtemp',index:'idtemp', width:40}
+			], 
+			autoWidth:true,
+			width: 550,
+			height: 250,
+			rowNum:50, 
+			pager: '#pagercxp', 
+			sortname: 'vencimiento', 
+			/*shrinkToFit :false,*/
+			viewrecords: true, 
+			sortorder: "asc", 
+			caption:"listado de Cuentas por Pagar",
+			ondblClickRow:function(rowid,iRow,iCol,e){
+				
+				var fila = jQuery(this).jqGrid('getRowData',rowid);
+				//alert(fila['factura'] + fila['concepto']);
+				//jQuery("#tmp_cxp_id").val(fila['id']);
+			//	jQuery("#tmp_factura").val(fila['prefijo'] + fila['consecutivo']);
+					if( jQuery("#tmp_idtemp")  ){jQuery("#tmp_idtemp").val(fila['idtemp']);}
+					if( jQuery("#tmp_cxp_id")  ){jQuery("#tmp_cxp_id").val(fila['id']);}
+					if( jQuery("#tmp_factura") ){jQuery("#tmp_factura").val(fila['factura']);}
+					if( jQuery("#tmp_valor") ){jQuery("#tmp_valor").val( fila['total'] );}
+					if( jQuery("#tmp_concepto") ){jQuery("#tmp_concepto").val( fila['concepto'] );}
+					//jQuery("#nombre_banco").val(fila['bancos']);
+					jQuery("#dialogo_cxp").dialog("close");
+       		 }
+		}); 
+		jQuery("#tablacxp").jqGrid('navGrid','#pagercxp',{edit:false,add:false,del:false}); 
+		jQuery("#tablacxp").jqGrid('navButtonAdd','#pagercxp',{
+		caption: "Columnas",
+		title: "Reordena Columnas",
+		onClickButton : function (){
+			jQuery("#tablacxp").jqGrid('columnChooser');
+		}
+	});
+});
+</script>

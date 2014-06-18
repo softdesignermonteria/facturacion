@@ -1,0 +1,93 @@
+<!--Formulario para configurar los grupos en el kardex-->
+<h1>FORMULARIO PARA LA CREACION DE GRUPOS DE INVENTARIO</h1>
+
+<?php echo Tag::formRemote("grupos/add", "update: mensajes", "id: grupos_add","name: grupos_add"); ?>
+
+<table border="0" cellpadding="1"  width="100%" cellspacing="0">
+    <tr>
+   	 <th colspan="4" scope="col">CONFIGURE GRUPOS EN EL KARDEX</th>
+    </tr>
+  <tr>
+    <td width="19%" height="30" >GRUPO</td>
+    <td width="43%" scope="col"><?php echo Tag::textField("nombre_grupo", "size: 30","maxlength: 20") ?></td>
+    <td width="21%" scope="col">&nbsp;</td>
+    <td width="17%" scope="col">&nbsp;</td>
+  </tr>
+  <tr>
+    <td height="30" colspan="4" align="center"><?php echo Tag::submitButton('Guardar Informacion', 'id: guardar', 'name: guardar') ?></tr>
+</table>
+
+<?php echo Tag::endForm() ?>
+<br />
+<h1>LISTADO DE GRUPOS DE INVENTARIO</h1>
+<br />
+<div id="mensajes">
+<table border="0" cellpadding="1"  width="100%" cellspacing="0">
+<tr>
+	<th>NUMERO</th>
+    <th>CODIGO</th>
+    <th>NOMBRE DEL GRUPO</th>
+    <th>MODIFICAR</th>
+    <th>ELIMINAR</th>
+</tr>
+<?php 
+$i=0;
+$gp = new Grupos();
+foreach($gp->find() as $gp): 
+
+?>
+<tr>
+	<td><?php echo $i; ?></td>
+    <td><?php echo $gp->id; ?></td>
+    <td><?php echo Tag::textField("nombre_grupo".$i,"size: 50","value: $gp->nombre_grupo"); 
+			  echo Tag::hiddenField("id".$i,"size: 10","value: $gp->id");?></td>
+   	<td align="center" valign="middle"><a href="javascript: void(0);"  onClick="modificar('<?php echo $i?>');" id='bt<?php echo $i?>' name='bt<?php echo $i?>'> <?php echo Tag::image("64x64/Edit.png",'width: 20px'); ?> </a></td>
+    <td align="center" valign="middle"><a href="javascript: void(0);"  onClick="eliminar('<?php echo $i?>');" id='bt<?php echo $i?>' name='bt<?php echo $i?>'> <?php echo Tag::image("64x64/Stop.png",'width: 20px'); ?> </a></td>
+</tr>
+<?php $i++; endforeach; ?>
+</table>
+<?php echo view::getContent(); ?>
+</div>
+
+
+<script>
+
+
+function modificar(ident){
+
+nombre_grupo  = $('nombre_grupo'+ident).value;
+id  = $('id'+ident).value;
+
+url = 	"<?php echo core::getInstancePath(); ?>grupos/update/?id="+id+"&nombre_grupo="+nombre_grupo;
+
+
+	new Ajax.Updater('mensajes'
+				, url
+				, { method: 'get' 
+				, evalScripts: true
+				, encoding: 'ISO-8859-1'
+			});
+			
+	
+}
+
+
+function eliminar(ident){
+				 
+id  = $('id'+ident).value;
+
+url = 	"<?php echo core::getInstancePath(); ?>grupos/delete/"+id;
+
+
+	new Ajax.Updater('mensajes'
+				, url
+				, { method: 'get' 
+				, evalScripts: true
+				, encoding: 'ISO-8859-1'
+			});
+			
+	
+}
+
+
+</script>

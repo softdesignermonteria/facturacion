@@ -1,0 +1,72 @@
+
+<h1>FORMULARIO PARA BUSCAR CLIENTES</h1>
+
+<?php echo Tag::formRemote("clientes/detalle_buscar", "update: mensajes", "id: clientes_find","name: clientes_find"); ?>
+
+<table width="100%">
+  <tr>
+    <th colspan="6">BUSCAR CLIENTES</th>
+  </tr>
+  <tr>
+    <td width="13%">&nbsp;</td>
+    <td width="13%">Nit</td>
+    <td width="26%"><?php echo Tag::textField("nit","size: 12"); ?></td>
+    <td width="15%">&nbsp;</td>
+    <td width="29%">&nbsp;</td>
+    <td width="4%">&nbsp;</td>
+  </tr>
+
+  <tr>
+    <td>&nbsp;</td>
+    <td>Razon Social</td>
+    <td colspan="3"><?php echo Tag::textField("razon_social","size: 50"); ?></td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>&nbsp;</td>
+    <td>Ordernar por</td>
+    <td><?php echo Tag::selectStatic('ordenar', 
+					array(
+					'id' => 'POR DEFECTO',
+					'nit' => 'NIT',
+					//'nombre1' => 'PRIMER NOMBRE',
+					//'nombre2' => 'SEGUNDO NOMBRE',
+					//'apellido1' => 'PRIMER APELLIDO',
+					//'apellido2' => 'SEGUNDO APELLIDO'
+					'razon_social' => 'RAZON SOCIAL'
+					)
+					); ?></td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td colspan="6" align="center"><?php echo Tag::submitButton("Enviar"); ?></td>
+  </tr>
+</table>
+<div align="center">
+  <table border="0" cellpadding="2" id="remisiones"  cellspacing="2">
+    <tr>
+      <td align="center"><?php echo Tag::linkTo("#", Tag::image("64x64/Back.png",'width: 32px'),"onClick: window.close();") ?></td>
+      <td align="center"><?php echo Tag::linkTo("menu/", Tag::image("iconos/inicio.png",'width: 32px'),"tittle: Regresar al Menu"); ?></td>
+    </tr>
+    <tr>
+      <td align="center">Regresar</td>
+      <td align="center">Inicio</td>
+    </tr>
+  </table>
+</div>
+<div id="mensajes" style="min-height:400px;"></div>
+<?php echo Tag::endForm(); ?>
+<div align="center">
+  <table border="0" cellpadding="2" id="remisiones"  cellspacing="2">
+    <tr>
+      <td align="center"><?php echo Tag::linkTo("#", Tag::image("64x64/Back.png",'width: 32px'),"onClick: window.close();") ?></td>
+      <td align="center"><?php echo Tag::linkTo("menu/", Tag::image("iconos/inicio.png",'width: 32px'),"tittle: Regresar al Menu"); ?></td>
+    </tr>
+    <tr>
+      <td align="center">Regresar</td>
+      <td align="center">Inicio</td>
+    </tr>
+  </table>
+</div>

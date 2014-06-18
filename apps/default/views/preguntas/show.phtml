@@ -1,0 +1,119 @@
+<input type="hidden" name="id_encuesta" id="id_encuesta" value="<?php echo $encuesta->id; ?>"/>
+   <table width="80%" border="1">
+	     <tr>
+         	 <?php if(($encuesta->tipo_fuente=="")&&($encuesta->tamano_fuente=="")){ ?>
+         	 <td colspan="3">ENCUESTA N°: <?php echo $encuesta->id; ?>
+             <br /><div align="center" ><font face="Arial, Helvetica, sans-serif" size="+1"><?php echo $encuesta->encabezado; ?></font></div><br /></td>
+             <?php }else{ ?>
+             <td colspan="3"><font face="<?php echo $encuesta->tipo_fuente; ?>" color="<?php echo $encuesta->color_fuente; ?>" size="<?php echo $encuesta->tamano_fuente; ?>">ENCUESTA N°: <?php echo $encuesta->id; ?></font>
+			 <br /><div align="center" ><font face="<?php echo $encuesta->tipo_fuente; ?>" color="<?php echo $encuesta->color_fuente; ?>" size="<?php echo $encuesta->tamano_fuente; ?>"><?php echo $encuesta->encabezado; ?></font></div><br /></td>
+			 <?php } ?>
+         </tr>
+         <?php foreach($formulario_encuesta as $formulario_encuesta): ?>
+          <tr id="tr_<?php echo $formulario_encuesta->id; ?>">
+             <td align="left" id="eliminar_item">
+                 <input type="hidden" name="preguntas[]" id="id_pregunta" value="<?php echo $formulario_encuesta->id_pregunta; ?>"/> 
+        		 <input type="hidden" name="tipo_pregunta[]" id="id_tipo_pregunta" value="<?php echo $formulario_encuesta->id_tipo_pregunta; ?>"/>  
+   	 	 		 <?php $preg = new Preguntas(); echo $preg->findFirst("id = '$formulario_encuesta->id_pregunta'")->texto_pregunta; ?>
+             </td>
+           <td align="left"><?php 
+               
+               $db = DbBase::rawConnect();
+               
+               $result = $db->query("select texto,valor from lista_menu where id_encuesta='".$formulario_encuesta->id_encuesta."' and id_pregunta='".$formulario_encuesta->id_pregunta."'");
+               //Preguntamos si el tipo de etiqueta de respuesta es lista/menú
+               if($formulario_encuesta->id_tipo_pregunta=='5'){
+                    
+                    print_r($formulario_encuesta->etiqueta_html);
+                 
+                 while($row = $db->fetchArray($result)){
+                     
+                    print_r("<option value='".$row['valor']."'>".$row['texto']."</option>");
+                    
+                 }
+               
+                    print_r("</select>");
+               
+               }else{
+                   
+                   echo $formulario_encuesta->etiqueta_html; 
+                   
+               }
+               ?>
+               </td>
+  				<td align="left"><a href="javascript: void(0);"  onClick="eliminar_item('<?php echo $formulario_encuesta->id; ?>','<?php echo $formulario_encuesta->id_encuesta; ?>','<?php echo $formulario_encuesta->id_pregunta; ?>','<?php echo $formulario_encuesta->id_tipo_pregunta; ?>');" id='link' 
+  name='link'><?php echo Tag::image("iconos/borrar.png",'width: 15px'); ?></a>
+		</td>
+  		</tr>
+       <?php endforeach; ?>
+   	    <tr>
+   	      <td colspan="5" align="center" >&nbsp;</td>
+  		</tr>
+   	    <tr>
+        <td colspan="5" align="center" >
+                <!--<button type="submit" id="guardar" name="guardar">Guardar</button>-->
+          <button type="button" id="guardar" name="guardar" onclick="cerrar_encuesta('<?php echo core::getInstancePath(); ?>','preview_encuesta/add_resultados_enc/','<?php echo $encuesta->id;?> ');">Publicar Encuesta</button>
+         </td>
+        </tr>
+        
+</table>
+
+<div title="Informaci&oacute;n detallada de la encuesta" id="dialogo_cerrar_enc">
+	
+    <table width="80%" cellpadding="2" cellspacing="2" align="center">
+        <tr>
+          <td>Enlace para Compartir</td>
+        </tr>
+        <tr>
+          <td><?php echo Tag::textField("vinculo","size: 60","maxlength: 30"); ?></td>
+        </tr>
+        <tr>
+          <td><b><font size="3" face="Arial Black, Gadget, sans-serif">Para tener en cuenta: </font></b>Seleccione el link, luego presione click derecho en la opción copiar para enviarlo a los encuestados.</td>
+        </tr>
+    </table>
+
+</div>
+
+
+<div id="mensajes"></div>
+
+<?php echo View::getContent(); ?></p>
+
+<script>
+
+function eliminar_item(id,id_encuesta,id_pregunta,id_tipo_pregunta){
+	
+		var jqXHR = jQuery.ajax({
+				type: "POST",
+				url: "<?php echo core::getInstancePath(); ?>preguntas/eliminar_item_encuesta",
+				data: {
+						id:               id,
+						id_encuesta:      id_encuesta,
+						id_pregunta:      id_pregunta,
+						id_tipo_pregunta: id_tipo_pregunta
+				},
+				success: function(data) {
+					jQuery( '#mensajes' ).html("");
+					jQuery( '#mensajes' ).html(data);
+				},
+				error: function(data) {
+					jQuery('#dialogo_mensajes').html("Error Enviando parametros....." + data);
+					jQuery('#dialogo_mensajes').dialog("open");
+				}
+	
+			});
+	
+			 jqXHR.done(function(data){
+				 
+				 jQuery("#tr_"+id).fadeOut(600,function() { 
+					 jQuery("#tr_"+id).remove();
+					  quitar_mensajes();
+				 });
+				
+				//jQuery( "#progressbar" ).progressbar({ value: 0 });
+				   
+			});
+	
+	}
+
+</script>

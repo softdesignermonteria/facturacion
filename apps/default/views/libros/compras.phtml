@@ -1,0 +1,53 @@
+<?php echo Tag::formRemote("libros/detalle_compras", "update: mensajes", "id: facturas","name: facturas"); ?>
+
+<h1>REPORTE DE FACTURAS DE COMPRAS POR FECHA</h1>
+
+<table width="100%" border="0" cellpadding="0" id="r1">
+  
+  <tr>
+    <td align="right">EMPRESA:</td>
+    <td colspan="3">
+		<?php $empresa = new Empresa(); echo Tag::select("empresa_id",$empresa->find(),'using: id,nombre_empresa'); ?>
+        <script>$('empresa_id').value = '<?php echo Session::get("id_empresa"); ?>';</script>
+        </td>
+  </tr>
+  <tr>
+    <td align="right">PROVEEDORES</td>
+    <td colspan="3"><?php echo Tag::textFieldExt("proveedores"); ?></td>
+  </tr>
+  <tr>
+    <td width="15%"><div align="right">DESDE</div></td>
+    <td width="10%"><?php echo Tag::textField("desde","value: ".Date::getFirstDayofMonth( date("m"),date("Y") ),"size: 30"); ?></td>
+    <td width="19%"><div align="right">HASTA</div></td>
+    <td width="10%"><?php echo Tag::textField("hasta","value: ".Date::getLastDayofMonth( date("m"),date("Y") ),"size: 30"); ?></td>
+  </tr>
+  
+  <tr>
+    <td colspan="4" align="center"><button id="guardar" name="guardar">Enviar</button></td>
+  </tr>
+</table>
+
+<div id="mensajes" style="min-height:50px;"></div>
+
+<?php echo Tag::endForm(); ?>
+
+
+
+<div align="center"><button id="exportar" type="button">Exportar Informe a Pdf</button></div>
+
+
+
+<script>
+jQuery(document).ready(function(e) {
+	jQuery("#exportar").button({ icons: {primary:'ui-icon ui-icon-circle-check' ,secondary:'ui-icon-triangle-1-s'}       });	
+    
+	jQuery("#exportar").click(function(e) {
+		e.preventDefault();
+		datos = "clientes_id=" + jQuery("#proveedores_id").val() + "&desde=" + jQuery("#desde").val() +"&hasta=" + jQuery("#hasta").val() +"&otro=true"
+		window.open("<?php echo core::getInstancePath(); ?>/libros/compraspdf/?"+datos);
+		return false;
+    });
+});
+</script>
+
+

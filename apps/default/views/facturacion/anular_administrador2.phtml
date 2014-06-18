@@ -1,0 +1,95 @@
+<br /><br />
+
+<form action="<?php echo core::getInstancePath(); ?>pedido_clientes/anular_administrador" method="post" id="fx">
+<table width="400px" align="center" cellpadding="1" cellspacing="1" class="ui-widget ui-widget-content ui-corner-all">
+<tr> 
+	<th colspan="4" class="ui-jqgrid-titlebar ui-widget-header ui-corner-top ui-helper-clearfix" align="left">Filtro</th>
+</tr>
+<tr>
+	<td>Desde</td>
+    <td><input type="text" id="desde" name="desde" /></td>
+    <td>Hasta</td>
+    <td><input type="text" id="hasta" name="hasta"  /></td>
+</tr>
+<tr>
+<td colspan="4" align="center"><button id="guardar" type="submit">Guardar</button></td>
+</tr>
+</table>
+</form>
+<script>
+<?php if(isset($_REQUEST["desde"])){ ?>
+	jQuery("#desde").val('<?php echo $_REQUEST["desde"]; ?>');
+<?php } ?>
+<?php if(isset($_REQUEST["hasta"])){ ?>
+	jQuery("#hasta").val('<?php echo $_REQUEST["hasta"]; ?>');
+<?php } ?>
+</script>
+
+<?php if(Session::get("role")=="superadministrador" || Session::get("role")=="administrador"){ ?>
+<table width="100%" align="center" cellpadding="1" cellspacing="1" class="ui-widget ui-widget-content ui-corner-all">
+<tr> 
+	<th colspan="9" class="ui-jqgrid-titlebar ui-widget-header ui-corner-top ui-helper-clearfix" align="left">ULTIMOS 100</th>
+</tr>
+<tr>
+	<th>Numero</th>
+	
+    <th>Consecutivo</th>
+    <th>Hora Entrada</th>
+    <th>Habitacion</th>
+    <th>Hora Salida</th>
+    <th>Tiempo</th>
+    <th>Modificar</th>
+    <th>Anular</th>
+    <th>anulado</th>
+</tr>
+<?php 
+	$i = 1;
+	$encabezado = new PedidoClientes();
+	$hb = new CentroProduccion();
+	$condicion1 ="";
+	$condicion2 ="";
+	if( isset($_REQUEST["desde"]) ) { $condicion1 = " and fecha >='".$_REQUEST["desde"]."' "; }
+	if( isset($_REQUEST["hasta"]) ) { $condicion2 = " and fecha <='".$_REQUEST["hasta"]."' "; }
+	
+	foreach($encabezado->find(" 1=1 $condicion1 $condicion2 ","limit: 100","order: id desc") as $encabezado):
+	$db = DbBase::rawConnect();
+	$fila = $db->query("select HOUR(TIMEDIFF('".Date::now()."','$encabezado->hora_entrada')) as hora , MINUTE(TIMEDIFF('".Date::now()."','$encabezado->hora_entrada')) as minutos");
+	$minutos = $db->fetchArray($fila);
+	//echo $minutos["hora"];
+	//echo $minutos["minutos"];
+?>
+<tr>
+	<td><?php echo $i; ?></td>
+    <td><?php echo $encabezado->prefijo.$encabezado->consecutivo; ?></td>
+    <td><?php echo $hb->findFirst(" id  = '$encabezado->centro_produccion_id' ")->centro_produccion; ?></td>
+    <td><?php echo $encabezado->hora_entrada; ?></td>
+    <td><?php echo $encabezado->hora_salida; ?></td>
+    <td><?php echo $minutos["hora"].":".$minutos["minutos"]; ?></td>
+    <td><?php echo Tag::linkTo("pedido_clientes/agregar/?centro_produccion_id=$encabezado->centro_produccion_id",Tag::image("iconos/bd.png")); ?></td>
+    <td>
+	 <?php echo Tag::linkTo("pedido_clientes/anular_administrador2/?id=$encabezado->id&prefijo=$encabezado->prefijo&consecutivo=$encabezado->consecutivo",Tag::image("iconos/borrar.png")); ?>
+     <?php //echo Tag::linkTo("pedido_clientes/anular/?id=$encabezado->id&prefijo=$encabezado->prefijo&consecutivo=$encabezado->consecutivo",Tag::image("iconos/borrar.png")); ?>
+    </td>
+    <td><?php if($encabezado->anulado == 0){ echo "No"; }else{ echo "Si"; } ?></td>
+</tr>
+
+<?php $i++; endforeach; ?>
+
+</table>
+
+<?php } ?>
+
+<?php echo view::getContent(); ?>
+
+
+<script>
+jQuery(function() {
+
+jQuery("#progressbar").attr('style','display:none;');
+jQuery("#progressbarWrapper").attr('style','display:none;');
+
+
+});
+
+</script>
+

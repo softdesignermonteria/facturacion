@@ -1,0 +1,98 @@
+
+<h1>EGRESOS DE LA EMPRESA</h1>
+
+<table width="90%" border="0" align="center" cellpadding="0" cellspacing="0" id="f1">
+  <tr>
+    <th colspan="4" align="left"> EGRESO NUMERO: <?php echo $encabezado->prefijo.$encabezado->consecutivo; ?></th>
+  </tr>
+  
+  <tr>
+    <td align="right" valign="top">EMPRESA</td>
+    <td><?php $e = new Empresa(); echo $e->findFirst(" id = '$encabezado->empresa_id' ")->nombre_empresa; ?></td>
+    <td align="right" valign="top">&nbsp;</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td align="right" valign="top">PROVEEDOR</td>
+    <td><?php $p = new Proveedores(); echo $p->findFirst(" id = '$encabezado->proveedores_id' ")->razon_social; ?></td>
+    <td align="right" valign="top">&nbsp;</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td width="25%" align="right" valign="top">FECHA: </td>
+    <td width="24%">
+		<?php echo $encabezado->fecha; ?></td>
+    <td width="8%" align="right" valign="top">HORA: </td>
+    <td width="43%"><?php echo $encabezado->hora; ?></td>
+  </tr>
+  <tr>
+    <td align="right" valign="top">FORMA DE PAGO</td>
+    <td><?php $f = new FormaPago(); echo $f->findFirst(" id = '$encabezado->forma_pago_id' ")->forma_pago; ?></td>
+    <td align="right" valign="top">&nbsp;</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td align="right" valign="top">CHEQUE NUMERO</td>
+    <td><?php echo $encabezado->cheque; ?></td>
+    <td align="right" valign="top">&nbsp;</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td align="right" valign="top">BANCO</td>
+    <td><?php $b = new Bancos(); echo $b->findFirst(" id = '$encabezado->bancos_id' ")->descripcion; ?></td>
+    <td align="right" valign="top">&nbsp;</td>
+    <td>&nbsp;</td>
+  </tr>
+</table>
+
+<br />
+
+<?php foreach($detalles as $det): ?>
+
+<table width="60%" cellpadding="1" cellspacing="1" style="font-size:11pt;" align="center">
+    	<tr>
+          <th><div align="center">CONCEPTO</div></th>
+         <th><div align="right">VALOR</div></th>
+        </tr>
+        <tr>
+            <td><?php echo $det->concepto; ?></td>
+            <td><?php echo $det->total; ?></td>
+        <tr>
+<?php 
+endforeach;
+?>        
+</table>
+
+<br />
+
+<table width="90%" border="0" align="center" cellpadding="0" cellspacing="0" id="f3">
+ <tr>
+    <td width="58%">&nbsp;</td>
+    <th width="21%" align="right"><div align="right">TOTAL EGRESO:</div></th>
+    <td width="21%"><?php  $dt2 = new DetalleEgresos(); echo $dt2->sum("total","conditions: id = '$idt' and anulado = 0"); ?></td>
+  </tr>
+</table>
+
+
+<br /><br />
+<div align="center">
+<table border="0" cellpadding="2" id="remisiones"  cellspacing="2">
+  
+          <tr>
+            <td align="center"><?php echo Tag::linkTo("menu/", Tag::image("iconos/inicio.png",'width: 32px')); ?></td>
+            <td align="center"><?php echo Tag::linkTo("egresos/show/$idt", Tag::image("64x64/Search.png",'width: 32px')); ?></td>
+            <td align="center"><?php echo Tag::linkTo("egresos/modificar/$idt", Tag::image("64x64/Edit.png",'width: 32px')); ?></td>
+            <td align="center"><?php echo Tag::linkTo("print/egresos_html/$idt", Tag::image("iconos/impresora.png",'width: 32px'),"target: _blank"); ?></td>
+          <!--   <td align="center"><?php //echo Tag::linkTo("print/remisiones/$rem->id", Tag::image("iconos/pdf.png",'width: 32px'),"target: _blank"); ?></td>-->
+          </tr>
+          <tr>
+            <td align="center">Inicio</td>
+            <td align="center">Mostrar</td>
+            <td align="center">Modificar</td>
+            <td align="center">Imprimir</td>
+            <!--<td align="center">Pdf</td>-->
+    	</tr>
+ </table>
+
+
+</div>

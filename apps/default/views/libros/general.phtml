@@ -1,0 +1,118 @@
+<br />
+<?php
+
+$query = new ActiveRecordJoin(array(
+		"entities" => array("Kardex","MovimientosInventario","Empresa"),
+		"groupFields" => array(
+								"{#Kardex}.id"
+								,"{#Kardex}.codigo"
+								,"{#Kardex}.nombre_producto"
+								,"{#Kardex}.valor"
+								),
+								
+		"sumatory"=> array(
+						"multiplica*{#MovimientosInventario}.cantidad"
+						),						
+		"conditions"=>("{#MovimientosInventario}.anulado = '0' ")
+));
+
+$t_empresa_cons = 0;
+$t_valor_empresa_cons = 0;
+
+//Flash::notice($query->getSqlQuery());	
+//Flash::notice(print_r($query));
+?>
+<table id="grid_inventario_general"></table>
+<div id="pag_inventario_general"></div>
+ 
+ <br />
+ 
+ <table align="center" cellpadding="2" cellspacing="2">
+ 	<tr  class="ui-jqgrid-titlebar ui-widget-header ui-corner-top" >
+    	<th>REGRESAR</th>
+        <th>EXPORTAR PDF</th>
+        <!--<th>EXPORTAR EXCEL</th>
+        <th>EXPORTAR WORD</th>-->
+    </tr>
+    <tr>
+    	<td align="center"><a href="<?php echo core::getInstancePath(); ?>menu" target="_self"><?php echo Tag::image("iconos/inicio.png"); ?></a></td>
+        <td align="center"><a href="<?php echo core::getInstancePath(); ?>libros/general_pdf/" target="_blank"><?php echo Tag::image("iconos/pdf.png"); ?></a></td>
+        <!--<td align="center"><a href="<?php echo core::getInstancePath(); ?>libros/general_excel/" target="_blank"><?php echo Tag::image("iconos/excel.png"); ?></a></td>
+        <td align="center"><a href="<?php echo core::getInstancePath(); ?>libros/general_word/" target="_blank"><?php echo Tag::image("iconos/word.png"); ?></a></td>-->
+    </tr>
+ </table>
+ 
+ 
+<script>
+
+
+jQuery(document).ready(function(){
+
+jQuery("#progressbar").attr('style','display:none;');
+jQuery("#progressbarWrapper").attr('style','display:none;');
+
+var detalles = [];
+
+<?php 
+$db = DbBase::rawConnect();
+
+foreach($query->getResultSet() as $detalles):
+$costo = $db->fetchOne("select calcular_costo('$detalles->id','".date("Y-m-d")."','0','REFERENCIA') as costo;");
+
+?>	
+
+<?php //print_r($detalles); ?>
+detalles.push(
+		{
+			 kardex_id: "<?php echo $detalles->id; ?>"
+			,referencia: "<?php echo $detalles->codigo; ?>"
+			,nombre: "<?php echo $detalles->nombre_producto; ?>"
+			,costo: '<?php echo $costo["costo"]; ?>' 
+			,cantidad: "<?php echo $detalles->cantidad; ?>"
+			,total: "<?php echo $detalles->cantidad*$costo["costo"]; ?>"
+			,valor: "<?php echo $detalles->valor; ?>"
+			,utilidad: "<?php echo $costo["costo"]*100/$detalles->valor; ?>"
+		}
+	);
+ 
+ <?php endforeach; ?>
+
+/*grib maestros de clientes*/
+function config_gridCompras(){
+		grid_fndCompras = jQuery("#grid_inventario_general").jqGrid({
+		datatype:"local",
+		data: detalles,
+		height:400,
+		rowNum:100,
+		autowidth:true,
+		pager:"#pag_inventario_general",
+		
+		colNames:['Kardex id','Referencia','Nombre','Costo','Cantidad','Total',"Valor Venta","Utilida Neta(Und) %"],
+		colModel:[
+		{   name:'kardex_id',   index:'kardex_id',          sorttype:'text'                        },
+		{	name:'referencia',	index:'referencia',	 sorttype:'text'	                    },
+		{	name:'nombre',		index:'nombre',		 sorttype:'text',   width: 300          },
+		{	name:'costo',		index:'costo',       sorttype:'double',	 formatter:"number" },
+		{	name:'cantidad',    index:'cantidad',    sorttype:'integer', formatter:"number" },
+		{	name:'total',	    index:'total',   sorttype:'integer', formatter:"number" },
+		{	name:'valor',	    index:'valor',   sorttype:'integer', formatter:"number" },
+		{	name:'utilidad',	index:'utilidad',   sorttype:'integer', formatter:"number" },
+		
+		],
+		multiselect:false,
+		caption:"Inventario General",
+		sortname: 'id', 
+		viewrecords: true, 
+		sortorder: "desc",
+		ondblClickRow:function(rowid,iRow,iCol,e){
+		
+		}
+	});
+}
+	
+config_gridCompras();
+
+
+});	
+	
+</script>

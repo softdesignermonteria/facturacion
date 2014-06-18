@@ -1,0 +1,107 @@
+<?php echo Tag::formRemote("libros/detalle_facturas", "update: mensajes", "id: facturas","name: facturas"); ?>
+
+<h1>REPORTE DE FACTURAS POR FECHA</h1>
+
+<table width="100%" border="0" cellpadding="0" id="r1">
+  
+  <tr>
+    <th colspan="4" align="center">LISTADO DE FACTURA DE CLIENTES</th>
+  </tr>
+  <tr>
+    <td align="right">EMPRESA:</td>
+    <td colspan="3">
+		<?php $empresa = new Empresa(); echo Tag::select("empresa_id",$empresa->find(),'using: id,nombre_empresa'); ?>
+        <script>$('empresa_id').value = '<?php echo Session::get("id_empresa"); ?>';</script>
+        </td>
+  </tr>
+  <!--<tr>
+    <td width="15%"><div align="right">DESDE</div></td>
+    <td width="10%"><?php echo Tag::dateFieldMod("finicial","value: ".Date::getFirstDayofMonth( date("m"),date("Y") ),"size: 10"); ?></td>
+    <td width="19%"><div align="right">HASTA</div></td>
+    <td width="10%"><?php echo Tag::dateFieldMod("ffinal","value: ".Date::getLastDayofMonth( date("m"),date("Y") ),"size: 10"); ?></td>
+  </tr>-->
+  <tr>
+    <td colspan="4" align="center">
+    		<?php 		$mes = array(	"1"=>"ENERO",
+										"2"=>"FEBRERO",
+										"3"=>"MARZO",
+										"4"=>"ABRIL",
+										"5"=>"MAYO",
+										"6"=>"JUNIO",
+										"7"=>"JULIO",
+										"8"=>"AGOSTO",
+										"9"=>"SEPTIEMBRE",
+										"10"=>"OCTUBRE",
+										"11"=>"NOVIEMBRE",
+										"12"=>"DICIEMBRE"
+									); ?>
+    		MES <?php echo Tag::selectStatic("mes",$mes); ?> <?php echo utf8_encode("AÑO"); ?> <?php echo Tag::textField("yyyy","size: 4","maxlength: 4","value: ".date("Y")); ?>
+            	<script>
+                	$('mes').value = '<?php echo intval(date("m")); ?>';
+                </script>
+            </td>
+  </tr>
+  <tr>
+    <td colspan="4"><div align="center"><?php echo Tag::submitButton("Enviar"); ?></div></td>
+  </tr>
+</table>
+<div align="center">
+  <table border="0" cellpadding="2" id="remisiones"  cellspacing="2">
+    <tr>
+      <td align="center"><?php echo Tag::linkTo("#", Tag::image("64x64/Back.png",'width: 32px'),"onClick: window.close();") ?></td>
+      <td align="center"><?php echo Tag::linkTo("menu/", Tag::image("iconos/inicio.png",'width: 32px'),"tittle: Regresar al Menu"); ?></td>
+    </tr>
+    <tr>
+      <td align="center">Regresar</td>
+      <td align="center">Inicio</td>
+    </tr>
+  </table>
+</div>
+<div id="mensajes" style="min-height:400px;"></div>
+
+<div align="center">
+  <table border="0" cellpadding="2" id="remisiones"  cellspacing="2">
+    <tr>
+      <td align="center"><?php echo Tag::linkTo("#", Tag::image("64x64/Back.png",'width: 32px'),"onClick: window.close();") ?></td>
+      <td align="center"><?php echo Tag::linkTo("menu/", Tag::image("iconos/inicio.png",'width: 32px'),"tittle: Regresar al Menu"); ?></td>
+    </tr>
+    <tr>
+      <td align="center">Regresar</td>
+      <td align="center">Inicio</td>
+    </tr>
+  </table>
+</div>
+
+<?php echo Tag::endForm(); ?>
+
+<script>
+
+function ver_pagos_realizados(factura_id,empresa_id){
+
+					 parametros = '';
+					 parametros += "factura_id=" + factura_id;
+					 parametros += "&empresa_id=" + empresa_id;
+					
+							
+					 Dialog.alert(
+						{
+							url: "<?php echo core::getInstancePath(); ?>libros/ver_pagos/?"+parametros, 
+							options: {
+								method: 'get', 
+								evalScripts: true
+							}
+						}, 
+						{
+							className: "mac_os_x", 
+								width:900,
+								height:600,
+							okLabel: "Click Aqui Para Cerrar Esta Ventana"
+							}
+						);
+						
+						
+			
+			 
+}
+</script>
+

@@ -1,0 +1,88 @@
+
+<br />
+<table width="50%" height="160"  align="center" cellpadding="2" cellspacing="2">
+ <tr>
+    <th colspan="6" class="ui-jqgrid-titlebar ui-widget-header ui-corner-top ui-helper-clearfix" align="left">
+   		 Buscar Turnos de los Empleados
+    </th>
+</tr>
+
+ 
+  <tr>
+    <td align="right">Nombre Empleado</td>
+    <td align="left"><?php echo Tag::textField("empleado_id", "size: 5","maxlength: 30","readOnly: readOnly","style: background: #cccccc;") ?><?php echo Tag::textField("nombre_empleados", "size: 25","maxlength: 30") ?></td>
+    <td align="left"><button id="buscar_empleados">Buscar</button></td>
+  </tr>
+  
+   <tr>
+    <td align="right">Fecha Inicio</td>
+    <td align="left"><?php echo Tag::textField("fecha_inicio", "size: 15") ?></td>
+    <td align="left">&nbsp;</td>
+  </tr>
+  
+  <tr>
+    <td align="right">Fecha Fin</td>
+    <td align="left"><?php echo Tag::textField("fecha_fin", "size: 15") ?></td>
+    <td align="left">&nbsp;</td>
+  </tr>
+  
+  
+</table>
+<br />
+<div align="center">
+	<button id="enviar">Enviar</button>
+</div>
+
+<br /><br />
+
+<div id="mensajes">
+
+</div>
+
+
+<script>
+
+
+jQuery("#enviar").click(function(){
+	enviar();
+});
+
+function enviar(){
+var datos = "";
+jQuery( '#mensajes' ).html("");
+jQuery( "#progressbar" ).progressbar({ value: 50 });	
+	var jqXHR = jQuery.ajax({
+		type: "POST",
+		url: "<?php echo core::getInstancePath(); ?>turnos/detalle_buscar",
+		data: {
+				id:             jQuery("#id").val(),
+				fecha_inicio:   jQuery("#fecha_inicio").val(),
+				fecha_fin:      jQuery("#fecha_fin").val(),
+				empleado_id:    jQuery("#empleado_id").val(),
+				anulado:        jQuery("#anulado").val(),
+				
+		},
+		success: function(data) {
+			jQuery( '#mensajes' ).html("");
+			jQuery( "#progressbar" ).progressbar({ value: 90 });
+			jQuery( '#mensajes' ).html(data);
+		},
+		error: function(data) {
+			jQuery('#dialogo_mensajes').html("Error Enviando parametros.....");
+			jQuery( "#progressbar" ).progressbar({ value: 0 });
+			jQuery('#dialogo_mensajes').dialog("open");
+		}
+	});
+
+ 	jqXHR.done(function(data){
+		jQuery( "#progressbar" ).progressbar({ value: 0 });
+	});
+
+}
+
+
+
+
+
+</script>
+

@@ -1,0 +1,173 @@
+<?php 
+$db = DbBase::rawConnect();
+$condicion = '';
+/*$consulta = str_replace(" ","%",$_REQUEST["term"]);
+if($_REQUEST["term"]!=''){
+    $condicion .= " and color like '%$consulta%' ";
+}*/
+if($_REQUEST["desde"]!=''){
+    $condicion .= " and pc.hora_entrada >= '".$_REQUEST["desde"]."' ";
+}
+if($_REQUEST["hasta"]!=''){
+    $condicion .= " and pc.hora_entrada <= '".$_REQUEST["hasta"]."' ";
+}
+
+if($_REQUEST["centro_produccion_id"]!=''){
+    $condicion .= " and pc.centro_produccion_id = '".$_REQUEST["centro_produccion_id"]."' ";
+}
+
+if($_REQUEST["clase_vehiculo_id"]!=''){
+    $condicion .= " and pc.clase_vehiculo_id = '".$_REQUEST["clase_vehiculo_id"]."' ";
+}
+
+if($_REQUEST["clase_vehiculo_id"]!=''){
+    $condicion .= " and pc.clase_vehiculo_id = '".$_REQUEST["clase_vehiculo_id"]."' ";
+}
+
+
+
+$page = $_REQUEST['page']; 
+// get the requested page 
+$limit = $_REQUEST['rows']; 
+// get how many rows we want to have into the grid 
+$sidx = $_REQUEST['sidx']; 
+// get index row - i.e. user click to sort 
+$sord = $_REQUEST['sord']; 
+// get the direction if(!$sidx) 
+//$sidx =1; 
+if(!$sidx) $sidx =1;
+
+$wh = "";
+$searchOn = Strip($_REQUEST['_search']);
+if($searchOn=='true') {
+    $searchOper = $_REQUEST["searchOper"];
+    $searchField = $_REQUEST["searchField"];
+    $searchString = $_REQUEST["searchString"];
+    
+        switch ($searchOper) {
+            case 'eq': $wh = " and $searchField = '$searchString' "; break;
+        }
+    
+}
+
+// connect to the database 
+//$db = mysql_connect($dbhost, $dbuser, $dbpassword) or die("Connection Error: " . mysql_error()); 
+//mysql_select_db($database) or die("Error conecting to db."); 
+
+$db = DbBase::rawConnect();
+$result = $db->query("SELECT COUNT(*) AS count 
+								FROM pedido_clientes pc ,centro_produccion cp, clase_vehiculo cv, tipo_auto ta
+									where
+									pc.centro_produccion_id = cp.id
+									and pc.clase_vehiculo_id = cv.id
+									and pc.tipo_auto_id = ta.id
+									and pc.empresa_id = '".Session::get("id_empresa")."' 
+									and pc.anulado = 0
+									and pc.liquidado = 0
+									
+									$condicion
+                            ".$wr."
+								
+							");  
+
+$row = $db->fetchArray($result); 
+$count = $row['count']; 
+if( $count >0 ) { 
+        $total_pages = ceil($count/$limit); 
+    } else { 
+        $total_pages = 0; 
+} 
+
+if ($page > $total_pages) $page=$total_pages; 
+$start = $limit*$page - $limit;  // do not put 	$limit*($page - 1) 
+$responce = new stdClass();
+$SQL = "SELECT pc.*, sum(dt.total) as total, cp.centro_produccion, cv.clase_vehiculo, ta.tipo_auto
+                FROM pedido_clientes pc , detalle_pedido_clientes dt, centro_produccion cp, clase_vehiculo cv, tipo_auto ta
+                    where
+					pc.id = dt.pedido_clientes_id
+					and pc.centro_produccion_id = cp.id
+					and pc.clase_vehiculo_id = cv.id
+					and pc.tipo_auto_id = ta.id
+                    and pc.empresa_id = '".Session::get("id_empresa")."' 
+					and pc.anulado = 0
+					and pc.liquidado = 0
+					and dt.anulado = 0
+                    $condicion
+                     ".$wh." 
+					 group by pc.empresa_id,pc.tipo_documento_id,pc.prefijo,pc.consecutivo
+         ORDER BY $sidx $sord 
+        LIMIT $start , $limit"; 
+$result = $db->query( $SQL ); 
+$responce->page = $page ;
+$responce->sql = $SQL; 
+$responce->total = $total_pages; 
+$responce->records = $count; 
+$i=0; 
+$total=0; 
+$acumulado=0;
+$SQL2 = "SELECT sum(dt.total) as total
+                FROM pedido_clientes pc , detalle_pedido_clientes dt, centro_produccion cp, clase_vehiculo cv, tipo_auto ta
+                    where
+					pc.id = dt.pedido_clientes_id and pc.centro_produccion_id = cp.id
+					and pc.clase_vehiculo_id = cv.id and pc.tipo_auto_id = ta.id
+                    and pc.empresa_id = '".Session::get("id_empresa")."' 
+					and pc.anulado = 0 and pc.liquidado = 0 and dt.anulado = 0
+                    $condicion
+                     ".$wh."  ";
+$result2 = $db->query( $SQL2 );					 
+while( $row = $db->fetchArray($result2) ) { 
+	$acumulado=$acumulado+$row[total];
+	
+}
+
+while( $row = $db->fetchArray($result) ) { 
+    $responce->rows[$i]['id']=$row[id]; 
+	$total = $total+$row[total];
+    $responce->rows[$i]['cell']=array($row[id],$row[prefijo],$row[consecutivo],$row[centro_produccion_id],$row[centro_produccion],$row[clase_vehiculo],$row[tipo_auto],$row[placa],$row[color],$row[hora_entrada],$row[hora_salida],$row[total]); 
+    $i++; 
+} 
+
+
+$responce->userdata['color'] = number_format($total,0); 
+$responce->userdata['placa'] = 'Total Pagina:';
+
+$responce->userdata['total'] = $acumulado;
+$responce->userdata['hora_salida'] = 'Total Reporte:';
+
+echo json_encode($responce);
+
+		
+function Strip($value)
+{
+	if(get_magic_quotes_gpc() != 0)
+  	{
+    	if(is_array($value))  
+			if ( array_is_associative($value) )
+			{
+				foreach( $value as $k=>$v)
+					$tmp_val[$k] = stripslashes($v);
+				$value = $tmp_val; 
+			}				
+			else  
+				for($j = 0; $j < sizeof($value); $j++)
+        			$value[$j] = stripslashes($value[$j]);
+		else
+			$value = stripslashes($value);
+	}
+	return $value;
+}
+
+function array_is_associative ($array)
+{
+    if ( is_array($array) && ! empty($array) )
+    {
+        for ( $iterator = count($array) - 1; $iterator; $iterator-- )
+        {
+            if ( ! array_key_exists($iterator, $array) ) { return true; }
+        }
+        return ! array_key_exists(0, $array);
+    }
+    return false;
+}
+?>
+    

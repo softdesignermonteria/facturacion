@@ -1,0 +1,35 @@
+<?php
+$db = DbBase::rawConnect();
+//$responce = new stdClass();
+
+$consulta = str_replace(" ","%",$_REQUEST["term"]);
+
+if($_REQUEST["term"]!=''){
+
+$condicion = " and (codigo like '%$consulta%' or nombre_producto like '%$consulta%') and empresa_id = '".Session::get("id_empresa")."' ";
+
+}
+
+$SQL = "SELECT * FROM kardex where 1 = 1 $condicion limit 10"; 
+
+$result = $db->query( $SQL ); 
+
+//$responce->sql = $SQL; 
+
+$i=0; 
+
+while( $row = $db->fetchArray($result) ) { 
+
+    $responce[$i]["id"] = $row[id];
+	$responce[$i]["value"] = $row[nombre_producto];
+	$responce[$i]["nombre"] = $row[nombre_producto];
+	$responce[$i]["referencia"] = $row[codigo];
+	$responce[$i]["tarifa_iva_id"] = $row[iva_venta];
+	$responce[$i]["valor_venta"] = $row[valor];
+    $i++; 
+
+} 
+
+echo json_encode($responce);
+
+?>

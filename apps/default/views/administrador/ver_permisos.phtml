@@ -1,0 +1,90 @@
+
+<?php echo View::getContent(); ?>
+
+<br />
+<table width="55%" height="160"  align="center" cellpadding="2" cellspacing="2" class="ui-widget ui-widget-content ui-corner-all">
+ <tr>
+    <th colspan="5" class="ui-jqgrid-titlebar ui-widget-header ui-corner-top ui-helper-clearfix" align="left">
+    Listado de Permisos para Este Perfil
+    </th>
+</tr>
+<tr>
+   		 <td >Numero</td>
+         <td >Descripcion</td>
+         <td >Controlador</td>
+         <td >Accion</td>
+         <td >Permiso</td>
+
+	</tr>
+<?php 
+	$menu = new Menu();
+	$acl = new AccessList();
+	$i=1;
+	 foreach($menu->find("posicion_y <> 0") as $menu): 
+		
+	 	$tmp = explode("/",$menu->url);	
+		$controlador = $tmp[0];
+		$accion = $tmp[1];
+		if( $accion == '' ){ $accion = 'index'; }
+		$acl->findFirst(" resource = '$controlador' and action = '$accion' and role = '".$_REQUEST["role"]."' ");
+		
+	 ?>
+     <tr>
+   		 <td ><?php echo $i; ?></td>
+         <td ><?php echo $menu->descripcion; ?></td>
+         <td ><?php echo $controlador; ?>	</td>
+         <td ><?php echo $accion; ?>	</td>
+         <td >
+         		<button id="<?php echo $i; ?>" onclick="permiso('<?php echo $_REQUEST["role"]; ?>','<?php echo $controlador; ?>','<?php echo $accion; ?>','<?php echo $acl->getAllow(); ?>')"><?php echo $acl->getAllow(); ?></button>
+		 		<script>
+						jQuery( "#<?php echo $i; ?>" ).button(
+															{ icons: 
+																{primary:'ui-icon ui-icon-circle-check' 
+																,secondary:'ui-icon-triangle-1-s'}      
+														 }); 
+              </script>
+        </td>
+	</tr>
+<?php $i++; endforeach; ?>
+
+</table>
+
+
+
+<script>
+
+function permiso(role,controlador,accion,permiso){
+
+var datos = "";
+jQuery( '#mensajes' ).html("");
+		
+	var jqXHR = jQuery.ajax({
+		type: "POST",
+		url: "<?php echo core::getInstancePath(); ?>administrador/ver_permisos",
+		data: {
+				role:    role,
+				controlador: controlador,
+				accion:    accion,
+				permiso:   permiso
+		},
+		success: function(data) {
+			jQuery( '#ver_permisos' ).html("");
+			jQuery( '#ver_permisos' ).html(data);
+		},
+		error: function(data) {
+			jQuery('#dialogo_mensajes').html("Error Enviando parametros.....");
+			jQuery('#dialogo_mensajes').dialog("open");
+		}
+	});
+	
+	 jqXHR.done(function(data){
+		//jQuery( "#progressbar" ).progressbar({ value: 0 });
+	});
+
+}
+
+
+
+
+</script>
+

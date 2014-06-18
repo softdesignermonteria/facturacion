@@ -1,0 +1,15 @@
+<h1>CAMBIO DE EMPRESA</h1>
+<div align="center">
+<?php if(Session::get("usuario_autenticado")==true) {?>
+            <h4>CAMBIAR DE EMPRESA</h4>
+              <?php echo Tag::form("administrador/cambiar_empresa");?>
+              		<?php $emp2 = new Empresa(); 
+						echo Tag::select('empresa',$emp2->find(), 'using: id,nombre_empresa','useDummy=yes'); 
+						echo Tag::submitButton("Enviar");
+					?>
+	          <?php echo Tag::endForm();?>
+              <script>$('empresa').value = '<?php echo Session::get("id_empresa"); ?>';</script>
+              <?php }else{
+			  	echo "<h4>USUARIO NO AUTENTICADO...</h4>";
+			  } ?>
+</div>

@@ -1,0 +1,17 @@
+<?php foreach($regimen as $reg): ?>
+<table border="0" cellpadding="1">
+    <tr>
+   	 <th colspan="4" scope="col">REGIMEN AGREGADO</th>
+    </tr>
+  <tr>
+    <td width="28%" height="30" ><div align="right">REGIMEN</div></td>
+    <td width="9%" scope="col"><?php echo $reg->descripcion; ?></td>
+  </tr>
+  <tr>
+    <td height="30"></td>    
+    <td height="30"><div align="center"><?php echo Tag::linkTo("regimen/modificar/$reg->id", Tag::image("/iconos/editar.png")) ?></div></td>    
+  </tr>
+</table>
+<?php endforeach; ?>
+
+<?php echo View::getContent(); ?>

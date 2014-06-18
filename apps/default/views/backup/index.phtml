@@ -1,0 +1,120 @@
+<?php echo view::getContent(); ?>
+<h1>REALIZAR BACKUP DE LA BASE DE DATOS</h1>
+<p align="justify">
+	<em>
+    	<strong>Por favor:</strong>una vez pulse Crear, la copia podría durar unos 15 seg. para que se cree.La página no se cargará inmediatamente, ten paciencia.
+    </em>
+</p>
+
+<?php //echo Tag::form("backup/exportar","id: backup","name: backup"); ?>
+<?php //echo Tag::formRemote("backup/exportar", "update: resultados"); ?>
+<form action="<?php echo core::getInstancePath(); ?>backup/exportar" id="fx1" name="fx1" method="post">
+<?php 
+$path = $_SERVER['DOCUMENT_ROOT'].core::getInstancePath().'public/files/';
+$path_system = $_SERVER['DOCUMENT_ROOT'];
+$path_system = str_replace("htdocs","mysql/bin/",$path_system);
+$env = coreConfig::readEnviroment();
+
+		$config = CoreConfig::readEnviroment();
+		//print_r(CoreConfig::readEnviroment());
+		
+		$host = "";
+		$user = "";
+		$psw  = "";
+		$bd   = "";
+ 
+ 		foreach($config->development as $key=>$val):
+				if($key == "database.host"     ){ $host = $val; }
+				if($key == "database.username" ){ $user = $val; }
+				if($key == "database.password" ){ $psw  = $val; }
+				if($key == "database.name"     ){ $bd   = $val; }
+		endforeach;
+//print_r($env);
+//print_r( $env->development->database["username"]);
+//print_r( $env->development->database->username);
+//print $env->development->database->password;
+//print $env->development->database->name;
+
+?>    
+
+<table width="100%" cellpadding="0" cellspacing="0" border="0">
+<thead>
+<tr class="ui-jqgrid-titlebar ui-widget-header ui-corner-top ui-helper-clearfix">
+ 	 <th colspan="2" >REALIZAR BACKUP DE LA BASE DE DATOS</th>
+  </tr>
+</thead>
+<tbody>  
+    <tr>
+        <th width="27%" align="right">Nombre del fichero: <strong><?php echo $path;?></strong></th>
+        <td width="73%" align="left"><input type="text" name="filename" value="<?php echo $bd."_".date('d_m_Y_H_i_s').'.sql';?>" size="50" /><br /></td>
+    </tr>
+    
+    <tr>
+        <th align="right"><input type="checkbox" name="bzip" value="true" id="bzipTick" checked="checked" /></th>
+        <td align="left"><label for="bzipTick">Usar Bzip2 para compresion</label><br /></td>
+    </tr>
+    
+    <tr>
+        <th align="right">Nombre de usuario MySQL:</th>
+        <td align="left"><input type="text" name="mysqluser" value="<?php echo $user; ?>" /></td>
+    </tr>
+    <tr>
+        <th align="right">Password MySQL: </th>
+        <td align="left"><input type="password" name="mysqlpass" value="<?php echo $psw; ?>" /></td>
+    </tr>
+    <tr>
+        <th align="right">Backup ¿ de que ?</th>
+        <td align="left"><input type="radio" name="backupall" value="true" id="backupallTrue" checked="checked" /></td>
+    </tr>
+    <tr>
+        <th align="right"><label for="backupallFalse">Una en especifico</label> <!--<label for="backupallTrue">Todas las bases de datos</label><br />--><!--<input type="radio" name="backupall" value="false" id="backupallFalse" />--></th>
+        <td align="left"><input type="text" name="backupwhichdb" value="<?php echo $bd; ?>" /></td>
+    </tr>
+    <tr>
+        <th colspan="2" align="center"><button type="submit" id="guardar" name="guardar"  >RELIZAR LA COPIA DE SEGURIDAD</button></th>
+    </tr>
+</tbody>
+</table>
+<div id="loader" align="center" style="display:none;"><?php echo Tag::image("ajax-loader.gif"); ?></div>
+<?php //echo Tag::endForm(); ?>
+</form>
+
+<div id="resultados"><?php echo View::renderPartial("listar_copias"); ?></div>
+<br />
+
+<?php echo view::getContent(); ?>
+
+<script>
+
+jQuery(document).ready(function(e) {
+  
+    jQuery("#fx1").submit(function(event) {
+  	// Enviamos el formulario usando AJAX
+		event.preventDefault();
+		
+  		jQuery('#loader').css("display","");
+		
+        jQuery.ajax({
+            type: 'POST',
+            url: jQuery(this).attr('action'),
+            data: jQuery(this).serialize(),
+            // Mostramos un mensaje con la respuesta de PHP
+            success: function(data) {
+                jQuery('#resultados').html(data);
+            }
+        })        
+        //return false;
+    }); 
+
+});
+ 
+function mostrar(){
+	jQuery('#loader').css("display","");
+}
+
+function ocultar(){
+	jQuery('#loader').css("display","none");
+	
+}
+
+</script>

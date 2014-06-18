@@ -1,0 +1,46 @@
+<table id="tablacentroproduccion"></table>
+<div id="pagercentroproduccion"></div>
+<script>
+jQuery(document).ready(function(){
+
+		
+		jQuery("#tablacentroproduccion").jqGrid(
+		{ 
+			ajaxGridOptions : {type:"POST"},
+			url:'<?php echo core::getInstancePath(); ?>centro_produccion/find_detalle_buscar', 
+			datatype: "json", 
+			colNames:['Id','Centro Produccion'], 
+			colModel:[ 
+				{ name:'id',index:'id', width:20}, 
+				{ name:'centro_produccion',index:'centro_produccion', width:90}
+			], 
+			autoWidth:true,
+			width: 550,
+			height: 250,
+			rowNum:10, 
+			rowList:[10,20,30,40,50], 
+			pager: '#pagercentroproduccion', 
+			sortname: 'centro_produccion', 
+			/*shrinkToFit :false,*/
+			viewrecords: true, 
+			sortorder: "asc", 
+			caption:"listado de Centro de Produccion",
+			ondblClickRow:function(rowid,iRow,iCol,e){
+				
+				var fila = jQuery(this).jqGrid('getRowData',rowid);
+					
+					jQuery("#centro_produccion_id").val(fila['id']);
+					jQuery("#centro_produccion").val(fila['centro_produccion']);
+					jQuery("#dialogo_centro_produccion").dialog("close");
+       		 }
+		}); 
+		jQuery("#tablacentroproduccion").jqGrid('navGrid','#pagercentroproduccion',{edit:false,add:false,del:false}); 
+		jQuery("#tablacentroproduccion").jqGrid('navButtonAdd','#pagercentroproduccion',{
+		caption: "Columnas",
+		title: "Reordena Columnas",
+		onClickButton : function (){
+			jQuery("#tablacentroproduccion").jqGrid('columnChooser');
+		}
+	});
+});
+</script>

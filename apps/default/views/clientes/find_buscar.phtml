@@ -1,0 +1,66 @@
+<table id="tabla<?php echo Router::getController(); ?>"></table>
+<div id="pager<?php echo Router::getController(); ?>"></div>
+<script>
+jQuery(document).ready(function(){
+
+		
+		jQuery("#tabla<?php echo Router::getController(); ?>").jqGrid(
+		{ 
+			ajaxGridOptions : {type:"POST"},
+			url:'<?php echo core::getInstancePath().Router::getController(); ?>/find_detalle_buscar', 
+			datatype: "json", 
+			colNames:['Id','Cedula','Primer Nombre','Segundo Nombre','Primer Apellido','Segundo Apellido'], 
+			colModel:[ 
+				{ name:'id',index:'id', width:200},
+				{ name:'nit',index:'nit', width:200}, 
+				{ name:'nombre1',index:'nombre1', width:500},
+				{ name:'nombre2',index:'nombre2', width:200}, 
+				{ name:'apellido1',index:'apellido1', width:200}, 
+				{ name:'apellido2',index:'apellido2', width:200}
+			], 
+			autoWidth:true,
+			width: 550,
+			height: 250,
+			rowNum:50, 
+			/*rowList:[10,20,30,40,50], */
+			pager: '#pager<?php echo Router::getController(); ?>', 
+			sortname: 'id', 
+			/*shrinkToFit :false,*/
+			viewrecords: true, 
+			sortorder: "asc", 
+			caption:"LISTADO DE CLIENTES",
+			ondblClickRow:function(rowid,iRow,iCol,e){
+				
+				var fila = jQuery(this).jqGrid('getRowData',rowid);
+					
+					if( jQuery("#nit")    ){ jQuery("#nit").val(fila['nit']); }
+					if( jQuery("#nombre1") ){ jQuery("#nombre1").val(fila['nombre1']); } 
+					if( jQuery("#nombre2") ){ jQuery("#nombre2").val(fila['nombre2']); } 
+					if( jQuery("#apellido1") ){ jQuery("#apellido1").val(fila['apellido1']); } 
+					if( jQuery("#apellido2") ){ jQuery("#apellido2").val(fila['apellido2']); } 
+					
+					
+					jQuery("#clientes_id").val("");
+					jQuery("#nombre1").val("");
+					jQuery("#nombre2").val("");
+					jQuery("#apellido1").val("");
+					jQuery("#apellido2").val("");
+								
+					jQuery("#clientes_id").val(fila['id']);
+					jQuery("#clientes").val(fila['nombre1']+' '+fila['nombre2']+' '+fila['apellido1']+' '+fila['apellido2']);
+
+					jQuery("#dialogo_<?php echo Router::getController(); ?>").dialog("close");
+					
+       		 }
+		});
+		 
+		/*jQuery("#tabla<?php //echo Router::getController(); ?>").jqGrid('navGrid','#pager<?php //echo Router::getController(); ?>',{edit:false,add:false,del:false}); 
+		jQuery("#tabla<?php //echo Router::getController(); ?>").jqGrid('navButtonAdd','#pager<?php //echo Router::getController(); ?>',{
+		caption: "Columnas",
+		title: "Reordena Columnas",
+		onClickButton : function (){
+			jQuery("#tabla<?php //echo Router::getController(); ?>").jqGrid('columnChooser');
+		
+	});}*/
+});
+</script>

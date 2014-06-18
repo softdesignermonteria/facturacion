@@ -1,0 +1,22 @@
+<h4>FORMULARIO MODIFICAR ENCUESTA</h4>
+
+<?php echo Tag::formRemote(Router::getController()."/update", "update: mensajes", "id: fx","name: fx"); ?>
+
+<table width="80%" border="0" align="center" cellpadding="1">
+  <tr>
+    <td  align="right" valign="middle">TEXTO DE LA PREGUNTA</td>
+    <td align="left" valign="middle"><?php echo Tag::hiddenField("id_pregunta"); ?><? echo Tag::hiddenField("usuarios_id","value: ".Session::get("usuarios_id")); ?>
+	<?php echo Tag::textArea2("texto_pregunta", "size: 30","maxlength: 20","placeholder: INGRESE TITULO ENCUESTA") ?></td>
+  </tr>
+  <tr>
+     <td colspan="3" align="center" >
+     <button type="submit" id="guardar" name="guardar">Guardar</button>
+     <button type="button" id="cancelar" name="cancelar" onclick="doccancelar('<?php echo core::getInstancePath(); ?>','<?php echo Router::getController(); ?>');">Cancelar</button>
+     </td>
+  </tr> 
+</table>
+<?php echo Tag::endForm() ?>
+
+
+<div id="mensajes"></div>
+<br />

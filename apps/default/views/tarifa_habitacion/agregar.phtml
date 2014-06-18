@@ -1,0 +1,158 @@
+
+<br />
+<table width="55%" height="160"  align="center" cellpadding="2" cellspacing="2">
+ <tr>
+    <th colspan="6" class="ui-jqgrid-titlebar ui-widget-header ui-corner-top ui-helper-clearfix" align="left">
+   		 Agregar o Modificar Tipo de habitacion
+    </th>
+</tr>
+
+  <tr>
+    <td width="29%" align="right">Id</td>
+    <td width="38%" align="left"><?php echo Tag::textField("id", "size: 25","maxlength: 20","readOnly: readOnly","style: background: #cccccc;") ?></td>
+    <td width="33%" align="left">&nbsp;</td>
+  </tr>
+    <tr>
+    <td align="right">Año(AAAA)</td>
+    <td align="left"><?php echo Tag::textField("yyyy", "size: 5","value: ".date("Y")) ?></td>
+    <td align="left">&nbsp;</td>
+  </tr>
+  <tr>
+    <td align="right">Hora Inicio</td>
+    <td align="left"><?php echo Tag::textField("hora_inicio", "size: 15") ?></td>
+    <td align="left">&nbsp;</td>
+  </tr>
+  
+  <tr>
+    <td align="right">Hora Fin</td>
+    <td align="left"><?php echo Tag::textField("hora_fin", "size: 15") ?></td>
+    <td align="left">&nbsp;</td>
+  </tr>
+  
+   <tr>
+    <td align="right">Tarifa</td>
+    <td align="left"><?php echo Tag::textField("valor", "size: 15") ?></td>
+    <td align="left">&nbsp;</td>
+  </tr>
+  
+  <tr>
+    <td align="right">Tipo de Habitacion</td>
+    <td align="left">
+    <select id="tipo_habitacion_id">
+    	<?php 
+			$th = new TipoHabitacion(); 
+			foreach($th->find(" id != '1' ") as $th):
+		?>
+        <option value="<?php echo $th->id;?>"><?php echo $th->tipo_habitacion; ?></option>
+        <?php endforeach; ?>
+    </select>    
+    </td>
+    <td align="left">&nbsp;</td>
+  </tr>
+  
+</table>
+<br />
+<div align="center">
+	<button id="guardar">Guardar</button>
+    <button id="buscar">buscar</button>
+    <button id="cancelar">Cancelar</button>
+    
+    <button id="generar">Generar horarios</button>
+    <button id="copiar">Copiar Horarios y Tarifas</button>
+</div>
+
+<br /><br />
+
+<div id="mensajes"></div>
+
+
+<?php 
+$admin =  new Turnos();
+
+
+	if( isset( $_REQUEST["id"] ) ){
+		if($_REQUEST["id"]!=''){
+		
+			$idt = $_REQUEST["id"];
+			$encabezado       = $admin->findFirst(" id = '$idt' ");
+			$id               = $encabezado->id; 
+			$yyyy             = $encabezado->yyyy; 
+			$hora_inicio     = $encabezado->hora_inicio; 
+			$hora_fin        = $encabezado->hora_fin; 
+			$tipo_habitacion_id  = $encabezado->tipo_habitacion_id; 
+			
+				
+		}
+	}
+?>
+
+<script>
+
+jQuery(document).ready(function(){
+
+	<?php if( isset( $_REQUEST["id"] ) ){
+		if($_REQUEST["id"]!=''){ ?>
+			
+				jQuery("#id").val("<?php echo $id; ?>");
+			
+				jQuery("#hora_inicio").val("<?php echo $hora_inicio; ?>");
+				jQuery("#hora_fin").val("<?php echo $hora_fin; ?>");
+				jQuery("#tipo_habitacion_id").val("<?php echo $tipo_habitacion_id; ?>");
+				jQuery("#yyyy").val("<?php echo $yyyy; ?>");
+<?php	
+			}
+	}
+	
+	?>
+	
+
+jQuery("#guardar").click(function(){
+	guardar();
+});
+
+function guardar(){
+var datos = "";
+jQuery( '#mensajes' ).html("");
+jQuery( "#progressbar" ).progressbar({ value: 50 });	
+var jqXHR = jQuery.ajax({
+	type: "POST",
+	url: "<?php echo core::getInstancePath(); ?>tarifa_habitacion/add",
+	data: {
+			id:             jQuery("#id").val(),
+			hora_inicio:   jQuery("#hora_inicio").val(),
+			hora_fin:      jQuery("#hora_fin").val(),
+			valor:      jQuery("#valor").val(),
+			tipo_habitacion_id:    jQuery("#tipo_habitacion_id").val(),
+			yyyy:        jQuery("#yyyy").val(),
+			
+	},
+	success: function(data) {
+		jQuery( '#mensajes' ).html("");
+		jQuery( "#progressbar" ).progressbar({ value: 90 });
+		jQuery( '#mensajes' ).html(data);
+	},
+	error: function(data) {
+		jQuery('#dialogo_mensajes').html("Error Enviando parametros.....");
+		jQuery( "#progressbar" ).progressbar({ value: 0 });
+		jQuery('#dialogo_mensajes').dialog("open");
+	}
+});
+
+ jqXHR.done(function(data){
+	jQuery( "#progressbar" ).progressbar({ value: 0 });
+	 jQuery("#id").val("");
+	 jQuery("#hora_inicio").val("");
+	 jQuery("#hora_fin").val("");
+	 jQuery("#tipo_habitacion_id").val("");
+	
+	 jQuery("#yyyy").val("<?php echo date("Y"); ?>");
+});
+
+}
+
+
+});
+
+
+</script>
+

@@ -1,0 +1,92 @@
+
+
+<h1>DATOS DEL CLIENTE</h1>
+
+<?php foreach($clientes as $cli): ?>
+<table border="0" cellpadding="1" width="100%">
+    <tr>
+   	 <th colspan="4" scope="col">CLIENTE AGREGADO</th>
+    </tr>
+  <tr>
+    <th width="26%"  ><div align="right">IDENTIFICACION (NIT/CEDULA)</div></th>
+    <td width="27%" scope="col"><?php echo $cli->nit; ?></td>
+    <th width="22%" scope="col"><div align="right"></div></th>
+    <td width="25%" scope="col">&nbsp;</td>
+  </tr>
+  <!--<tr>
+    <th ><div align="right"><strong>PRIMER NOMBRE</strong></div></th>
+    <td ><?php echo $cli->nombre1; ?></td>
+    <th><div align="right"><strong>SEGUNDO NOMBRE</strong></div></th>
+    <td><?php echo $cli->nombre2; ?></td>
+    </tr>
+  <tr>
+    <th ><div align="right"><strong>PRIMER APELLIDO</strong></div></th>
+    <td ><?php echo $cli->apellido1; ?></td>
+    <th><div align="right"><strong>SEGUNDO APELLIDO</strong></div></th>
+    <td><?php echo $cli->apellido2; ?></td>
+    </tr>-->
+  <tr>
+    <th ><div align="right"><strong>RAZ&Oacute;N SOCIAL</strong></div></th>
+    <td  colspan="3"><?php echo $cli->razon_social; ?></td>
+    </tr>
+  <tr>
+    <th ><div align="right"><strong>DIRECCION CASA</strong></div></th>
+    <td ><?php echo $cli->direccion_casa; ?></td>
+    <th>
+      <div align="right">
+      <div align="right"><strong>TELEFONO FIJO(1)</strong></div></th>
+    <td><?php echo $cli->telefono1; ?></td>
+    </tr>
+  <tr>
+    <th ><div align="right"><strong>DIRECCION OFICINA</strong></div></th>
+    <td ><?php echo $cli->direccion_oficina; ?></td>
+    <th><div align="right">
+    <div align="right"><strong>TELEFONO FIJO(2)</strong></div></th>
+    <td><?php echo $cli->telefono2; ?></td>
+    </tr>
+  <tr>
+    <th ><div align="right"><strong>CELULAR</strong></div></th>
+    <td ><?php echo $cli->celular; ?></td>
+    <th><div align="right"></div></th>
+    <td>&nbsp;</td>
+    </tr>
+  <tr>
+    <th ><div align="right"><strong>EMAIL</strong></div></th>
+    <td ><?php echo $cli->correo; ?></td>
+    <th><div align="right"></div></th>
+    <td>&nbsp;</td>
+    </tr>
+  <tr>
+    <th ><div align="right"><strong>PAGINA WEB</strong></div></th>
+    <td ><?php echo $cli->web; ?></td>
+    <th><div align="right"></div></th>
+    <td>&nbsp;</td>
+  </tr>
+  
+</table>
+<p>
+  <?php endforeach; ?>
+  
+  <?php echo View::getContent(); ?>
+  <br />
+  <br />
+</p>
+<div align="center">
+  <table border="0" cellpadding="2" id="remisiones"  cellspacing="2">
+    <tr>
+      <td align="center"><?php echo Tag::linkTo("#", Tag::image("64x64/Back.png",'width: 32px'),"onClick: window.close();") ?></td>
+      <td align="center"><?php echo Tag::linkTo("menu/", Tag::image("iconos/inicio.png",'width: 32px'),"tittle: Regresar al Menu"); ?></td>
+      <td align="center"><?php echo Tag::linkTo("clientes/show/$cli->id", Tag::image("64x64/Search.png",'width: 32px')) ?></td>
+      <td align="center"><?php echo Tag::linkTo("clientes/modificar/$cli->id", Tag::image("64x64/Edit.png",'width: 32px')) ?></td>
+      <td align="center"><?php echo Tag::linkTo("clientes/delete/$cli->id", Tag::image("64x64/Stop.png",'width: 32px')) ?></td>
+    </tr>
+    <tr>
+	  <td align="center">Regresar</td>
+      <td align="center">Inicio</td>
+      <td align="center">Mostrar</td>
+      <td align="center">Modificar</td>
+      <td align="center">Eliminar</td>
+    </tr>
+  </table>
+</div>
+<p>&nbsp; </p>

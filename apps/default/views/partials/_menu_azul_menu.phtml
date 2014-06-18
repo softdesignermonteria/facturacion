@@ -1,0 +1,57 @@
+<?php if(Session::get("usuario_autenticado")==true){ ?>
+
+<!-- Beginning of compulsory code below -->
+
+<div class="nav-wrapper">
+	<div class="nav-left"></div>
+        <div class="nav">
+            <ul id="navigation">
+                <li class="active">
+                    <a href="<?php echo core::getInstancePath();  ?>menu/">
+                        <span class="menu-left"></span>
+                        <span class="menu-mid">Inicio</span>
+                        <span class="menu-right"></span>
+                    </a>
+                 </li>
+
+					<?php 
+                    $menu = new Menu();
+                    $s_menu = new Menu();
+                    
+                    foreach($menu->find("posicion_x<>0","order: orden") as $menu):
+                    
+                    echo "<li class=''>
+                            <a href='".core::getInstancePath()."$menu->url' title='$menu->tittle'>
+                                <span class=\"menu-left\"></span>
+                                <span class=\"menu-mid\">$menu->descripcion</span>
+                                <span class=\"menu-right\"></span>
+                            </a>
+                            <div class=\"sub\">
+                                <ul>";
+                                if($s_menu->count("posicion_y='$menu->posicion_x'")){			
+                                        foreach($s_menu->find("posicion_y='$menu->posicion_x'","order: orden") as $s_menu):
+                                        echo "<li>";
+                                            echo "<a href='".core::getInstancePath()."$s_menu->url' class='dir' title='$s_menu->tittle'>$s_menu->descripcion</a>";
+                                        echo "</li>";
+                                        endforeach;
+                                }
+                            echo "</ul>";
+							echo "<div class=\"btm-bg\"></div></div>";
+                    echo "</li>";
+                  
+                    endforeach;
+                    ?>			
+                     <li class="last">
+                    <a href="<?php echo core::getInstancePath(); ?>administrador/salir/">
+                        <span class="menu-left"></span>
+                        <span class="menu-mid">Cerrar</span>
+                        <span class="menu-right"></span>
+                    </a>
+                </li>
+	
+            </ul>
+        </div>
+        <div class="nav-right"></div>
+    </div>
+</div>
+<?php } ?>

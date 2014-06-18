@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+	<meta charset="utf-8"/>
+	<title>...:::Factutesis:::....</title>
+    <?php echo view::renderPartial('adminiziolite_encabezado'); ?>
+	<?php echo view::renderPartial('javascript'); ?>
+</head>
+<body>
+
+<div id="main">
+<header>
+	<!-- Tray -->
+	<div id="tray" class="box"> 
+		<p class="f-left box">
+			Project: 
+            	<font size="+1" face="verdana"> Factutesis v1.0</font>
+            <br />
+		</p>
+		<?php if(Session::get("usuario_autenticado")==true){ ?>
+        	<p class="f-right">Usuario: 
+            	<strong>
+            		<a href="#"><?php echo Session::get("admin_username"); ?></a>
+                </strong> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  
+                Nombre: 
+                <strong>
+                	<a href="#"><?php echo Session::get("nombre_completo"); ?></a>
+                </strong> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                 Empresa: 
+                <strong>
+                	<a href="#"><?php echo Session::get("nombre_empresa"); ?></a>
+                </strong> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;                 
+                <strong>
+                	<a href="<?php echo core::getInstancePath(); ?>login/salir" id="logout">Cerrar Session</a>
+               </strong>
+            </p> 
+	   <?php } ?>
+    </div> <!--  /tray -->
+</header>
+
+<hr class="noscreen" />
+<!-- Menu -->
+<nav>
+    <div id="menu" class="box">
+        <?php echo view::renderPartial('adminiziolite_menu'); ?>
+    </div>
+</nav>
+
+<article>
+    <!-- Columns -->
+	<div id="cols" class="box">
+    
+		<?php //if(Session::get("usuario_autenticado")==true){ ?>
+		<aside>
+              <!-- Aside (Left Column) -->
+               	<div id="aside" class="box" >
+                   <div class="padding box">
+                       <!-- Logo (Max. width = 200px) -->
+                            <p id="logo">
+                               <!-- <a href="#"> -->
+                                    <?php echo Tag::image("logo.png","border: 0","height: 80px"); ?>
+                               <!--  </a> -->
+                            </p>
+                        </div> <!-- /padding -->
+                    <?php echo view::renderPartial('adminiziolite_menu_left'); ?>
+               </div> <!-- /aside -->
+        </aside>
+		<?php //} ?>
+        
+		<hr class="noscreen" />
+                    <section>
+                         <article>
+                                <!-- Content (Right Column) -->
+                                <div id="content" class="box content2" style="min-height:450px;" align="center">
+                                    <div class="fix"></div>
+                                                <?php View::getcontent(); ?>	
+                                    <div class="fix"></div>
+                                </div> <!-- /content -->
+                        </article>
+                </section>
+    
+	    </div> <!-- /cols -->
+	<hr class="noscreen" />
+</article>	
+
+	
+<footer>
+    <!-- Footer -->
+    <div id="footer" class="box">
+        <?php echo view::renderPartial('adminiziolite_pie'); ?>
+    </div> <!-- /footer -->
+</footer>
+
+</div> <!-- /main -->
+
+<?php echo view::renderPartial('javascript2'); ?>
+
+</body>
+</html>

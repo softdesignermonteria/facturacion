@@ -1,0 +1,48 @@
+<table border="0" cellpadding="1" id="mytable" width="100%">
+  <thead>
+   <tr>
+    <th>NUMERO</th>
+    <th>PROVEEDOR</th>
+    
+    <th>FECHA</th>
+    <th>MODIFICAR</th>
+    <th>MOSTRAR</th>
+    <th>IMPRIMIR</th>
+   <!-- <th>&nbsp;</th>-->
+  </tr>
+  </thead>
+  <tbody>
+        <?php 
+		 $i=0;	
+		 $prov = new Proveedores();
+		 $dir = new Direccion();
+		 foreach($detalles as $rem): ?>  
+          <tr>
+            <td><?php echo $rem->prefijo.$rem->consecutivo; ?></td>
+            <td><?php echo $rem->razon_social;  ?></td>
+            <td><?php echo $rem->fecha ; ?></td>
+            <td><?php echo Tag::linkTo("egresos/modificar/$rem->id", Tag::image("64x64/Edit.png","width: 32")) ?></td>
+            <td><?php echo Tag::linkTo("egresos/show/$rem->id", Tag::image("64x64/Search.png","width: 32")) ?></td>
+            <td><?php echo Tag::linkTo("print/egresos_html/$rem->id", Tag::image("iconos/impresora.png","width: 32"),"target: _blank") ?></td>
+            <!---<td><?php //echo Tag::linkTo("print/egresos/$rem->id", Tag::image("iconos/pdf.png","width: 32"),"target: _blank") ?></td>-->
+          </tr>
+        <?php $i++; endforeach; ?> 
+   </tbody>     
+ </table>
+
+<?php echo View::getContent(); ?>
+
+ <script>
+	jQuery(document).ready(function(e) {
+		  
+		   config = tableToGrid("#mytable",{
+					
+					height: 'auto', 
+					/*autowidth:true,*/
+					viewrecords: true,
+					loadui: true,
+					 /*pager : "#ptreegrid2",*/
+					caption: "LISTADO DE EGRESOS" 
+	   });
+	  }); 
+ </script>    

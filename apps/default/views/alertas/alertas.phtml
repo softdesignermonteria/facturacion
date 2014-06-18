@@ -1,0 +1,6 @@
+<?php 
+$placa = $_REQUEST["placa"];
+$alertas = new Alertas(); 
+foreach($alertas->find(" anulado = 0 and placa = '$placa' ") as $alertas):
+	echo "Fecha: $alertas->fecha -- $alertas->observacion --  <br />\n";
+endforeach; ?>

@@ -1,0 +1,245 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+
+<head>
+ <style media="print" type="text/css" >
+   .oculto{ 
+      display:none; 
+    }
+
+</style>
+</head>
+
+<body style="margin:0px; padding:0px; font-size:10pt;font-family:Arial, Helvetica, sans-serif;">
+<?php 
+
+$emp = new Empresa();
+$empresa = $emp->findFirst(" id = '$encabezado->empresa_id' ");
+$nombre_empresa = $empresa->nombre_empresa;
+$regimen=$empresa->regimen_id;
+$nit=$empresa->nit;
+$consecutivo = str_pad(intval($encabezado->consecutivo), 4, '0', STR_PAD_LEFT);
+$consecutivo=$encabezado->prefijo." ".$consecutivo;
+$direccion=$empresa->direccion;
+$telefonos=$empresa->telefonos;
+$celular=$empresa->celular;
+$web=$empresa->web;
+$correo=$empresa->correo;
+$nit_cliente=$cli->nit;
+$razon_social=$cli->razon_social;
+$direccion_ciente=$dir->direccion;
+$telefonos_cliente=$cli->telefono1. " ".$cli->telefono2;
+$fecha=$encabezado->fecha;
+$observaciones=$encabezado->observaciones;
+$mostrar_logo=$tipo_documento->mostrar_logo;
+$logo=$tipo_documento->logo;
+$ancho=$tipo_documento->ancho;
+$alto=$tipo_documento->alto;
+$font=$tipo_documento->font;
+$size=$tipo_documento->size;
+$tipo_letra=$tipo_documento->tipo_letra;
+$papel=$tipo_documento->papel;
+$entro = '';
+$limite = $total_page;
+?>
+
+<table width="100%" border="0" cellspacing="0" cellpadding="1" style="font-size:10pt;font-family:Arial, Helvetica, sans-serif;">
+<thead>
+	<tr>
+   	  <td colspan="7">
+       	  <table width="100%">
+           		  <tr>
+                      <th width="16%" rowspan="4" align="left" valign="top">
+                          <?php
+                            if($mostrar_logo=='1'){
+                               echo "<img src=\"".core::getInstancePath()."public/img/$logo\" width=\"125px\" />";
+                            }
+                            ?>    </th>
+              <th colspan="3" rowspan="4" align="center" scope="col">
+					  			<?php if($regimen == 1 ){ echo "$nombre_empresa"; }else{ echo $nombre_empresa; } ?><br />
+                                <?php if($regimen == 1 ){ echo "C.C ".$nit; }else{ echo "NIT ".$nit; } ?><br />
+                                <?php echo $direccion;  ?><br />             
+                                <?php echo "TEL: ".$telefonos." CEL: ".$celular; ?><br /> 
+								<?php $w = '';
+                                    if( $web != ''){
+                                        $w=" WEB: ".$web;
+                                    }
+                                    if( $correo !=''){
+                                        $w=" CORREO: ".$correo;
+                                    }
+                                    echo $w;?><br />                         </th>
+                      <th width="21%" scope="col">DEVOLUCION NUMERO</th>
+                    </tr>
+                    <tr>
+                      <th align="center"><?php echo $consecutivo; ?></th>
+                    </tr>
+                    <tr>
+                      <th>&nbsp;</th>
+                    </tr>
+                    <tr>
+                      <th>&nbsp;</th>
+                    </tr>
+          </table>      </td>
+    </tr>
+  <tr>
+    <th colspan="7" scope="row">&nbsp;</th>
+  </tr>
+  <tr>
+    <th width="11%" scope="row" align="right">SE&Ntilde;OR(ES)</th>
+    <td colspan="2"><?php echo  " ".$razon_social;?></td>
+    <td width="5%">CEDULA</td>
+    <td colspan="3"><?php echo  " ".$nit_cliente;?></td>
+    </tr>
+  <tr>
+    <th scope="row" align="right">DIRECCION</th>
+    <td colspan="6"><?php echo $direccion_ciente;?></td>
+  </tr>
+  <tr>
+    <th scope="row" align="right">TELEFONO</th>
+    <td colspan="2"><?php echo $telefonos_cliente;?></td>
+    <td colspan="4">FECHA<?php echo $fecha;?></td>
+    </tr>
+  <tr>
+    <th colspan="7" scope="row">&nbsp;</th>
+  </tr>
+  </thead>
+  <tbody>
+  <tr>
+    <th nowrap="nowrap" scope="row">CODIGO</th>
+    <th colspan="4" nowrap="nowrap">DESCRIPCION</th>
+    <th nowrap="nowrap">CANTIDAD</th>
+    <th nowrap="nowrap">&nbsp;</th>
+  </tr>
+<?php 
+    $i=0;
+	$c=0;
+	$a1 = 0;
+	$a2 = 0;
+	$a3 = 0;
+	$s = 0;
+
+	$k = new Kardex();
+	
+if($totalizar==''){	
+	foreach($paginate->items as $det):
+	$c++;
+		$kardex = $k->findFirst(" id ='$det->kardex_id' ");
+		
+		if($kardex->codigo != 'TRANS'){
+		$i++; 
+?>  
+  <tr>
+    <th scope="row"><?php echo $kardex->codigo;  ?></th>
+    <td colspan="4" align="left"><?php echo $kardex->nombre_producto; ?></td>
+    <td align="center"><?php echo $det->devueltos; ?></td>
+    <td align="right">&nbsp;</td>
+  </tr>
+<?php 
+   } 
+   	
+endforeach;
+
+}		
+ ?>  
+<?php
+/*if($i<=$limite-2){
+		for($j=$i;$j<$limite-2;$j++){*/
+?>
+<!--<tr>
+    <th scope="row">&nbsp;</th>
+    <td colspan="3" align="left">&nbsp;</td>
+    <td width="13%" align="center">&nbsp;</td>
+    <td align="center">&nbsp;</td>
+    <td align="right">&nbsp;</td>
+  </tr>-->
+<?php	
+	//	}
+//	}	   
+  
+
+if ($i+2<$limite){
+
+$entro = 1;
+foreach($detalles as $det):
+		$kardex = $k->findFirst(" id ='$det->kardex_id' ");
+		if($kardex->codigo != "TRANS"){
+				$a1 += $det->valor_diario;
+				$a2 += $det->iva;
+				$a3 += $det->total;
+				$s  += 0;
+			}else{
+				$a1 += 0;
+				$a2 += 0;
+				$a3 += 0;
+				$s  += $det->total;
+		}
+		
+endforeach;
+ ?>
+  <tr>
+    <td colspan="5" align="right" scope="row" >&nbsp;</td>
+    <td align="right" scope="row" >TRANSPORTE &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<?php echo "$".number_format($s,0,",","."); ?></td>
+    <td align="right" scope="row" >&nbsp;</td>
+  </tr>
+  <tr>
+    <th colspan="7" align="left" scope="row">OBSERVACIONES<?php echo $observaciones;?></th>
+    </tr>
+<?php } ?>  
+
+<?php 
+
+if ($totalizar==true && $entro==''){
+
+$entro = 1;
+
+foreach($detalles as $det):
+		$kardex = $k->findFirst(" id ='$det->kardex_id' ");
+		if($kardex->codigo != "TRANS"){
+				$a1 += $det->valor_diario;
+				$a2 += $det->iva;
+				$a3 += $det->total;
+				$s  += 0;
+			}else{
+				$a1 += 0;
+				$a2 += 0;
+				$a3 += 0;
+				$s  += $det->total;
+		}
+		
+endforeach;
+ ?>
+  <tr>
+    <td colspan="5" align="right" scope="row" >&nbsp;</td>
+    <td align="right" scope="row" >TRANSPORTE &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <?php echo "$".number_format($s,0,",","."); ?></td>
+    <td align="right" scope="row" >&nbsp;</td>
+  </tr>
+  <tr>
+    <th colspan="7" align="left" scope="row">OBSERVACIONES<?php echo $observaciones;?></th>
+    </tr>
+<?php } ?>
+
+<?php 
+if( $entro == '' && $paginate->current == $paginate->total_pages ){ $totalizar = 'true'; }else{ $totalizar = ''; }
+
+?>  
+  </tbody>
+</table>
+<div align="center" class="oculto">
+<table border="1" cellpadding="1" cellspacing="2">
+	<tr>
+    	<?php for($i=1;$i<$paginate->total_pages;$i++){ ?>
+        	<th style="border:#000000 1px solid;"><?php echo Tag::linkTo("print/devoluciones_html/$encabezado->id/?pagina=$i&totalizar=$totalizar"," ---   Pagina $i"); ?> </th>
+    	<?php } ?>
+        <th style="border:#000000 1px solid;"><?php echo Tag::linkTo("print/devoluciones_html/$encabezado->id/?pagina=".$paginate->last."&totalizar=$totalizar"," ---   Pagina $paginate->last "); ?></th>
+    </tr>
+    <tr>
+    	<td colspan="<?php echo $paginate->total_pages; + 1 ?>"><?php echo $paginate->current; ?> PAGINA DE <?php echo $paginate->total_pages; ?></td>
+    </tr>
+    <tr>
+      <td colspan="<?php echo $paginate->total_pages; + 1 ?>" align="center"><?php echo Tag::button("Imprimir","onClick: window.print();"); ?><?php echo Tag::button("Regresar","onClick: window.close();"); ?></td>
+    </tr>
+</table>    
+</div>
+<?php echo view::getContent(); ?>
+</body>
+</html>

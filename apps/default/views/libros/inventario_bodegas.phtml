@@ -1,0 +1,140 @@
+<br />
+
+<table width="800px" border="0" align="center" cellpadding="2" cellspacing="4">
+ <tr>
+            <th colspan="5" class="ui-jqgrid-titlebar ui-widget-header ui-corner-top ui-helper-clearfix" align="left">
+           		Listado de Pedidos Liquidados            </th>
+        </tr>
+  
+  <tr>
+    <td width="14%" align="right" valign="top">BODEGAS</td>
+    <td colspan="2" align="left" valign="top">
+		<?php echo Tag::textField("bodegas_id","size: 4","readOnly: readOnly","style: background: #cccccc;"); ?>
+		<?php echo Tag::textField("nombre_bodegas","size: 50","readOnly: readOnly","style: background: #cccccc;"); ?>
+        <button id="buscar_bodegas" type="button">Buscar</button>
+
+   	</td>
+  </tr>
+  <tr>
+    <td align="right" valign="top">CORTE</td>
+    <td width="17%" align="left" valign="top"><input type="text" size="15" id="fecha" name="fecha" value="<?php echo date("Y-m-d"); ?>" /></td>
+    <td width="14%" align="left" >&nbsp;</td>
+    </tr>
+  <tr>
+    <td colspan="3" align="center" valign="top"><button id="enviar">Enviar</button></td>
+  </tr>
+</table>
+
+<br />
+<table id="grid_inventario_general"></table>
+<div id="pag_inventario_general"></div>
+ 
+ <br />
+ 
+ <table align="center" cellpadding="2" cellspacing="2">
+ 	<tr class="ui-jqgrid-titlebar ui-widget-header ui-corner-top ">
+    	<th>REGRESAR</th>
+        <th>EXPORTAR PDF</th>
+       <!-- <th>EXPORTAR EXCEL<th>
+        <th>EXPORTAR WORD<th> -->
+    </tr>
+    <tr>
+    	<td align="center"><a href="<?php echo core::getInstancePath(); ?>menu" target="_self"><?php echo Tag::image("iconos/inicio.png"); ?></a></td>
+        <td align="center"><a href="<?php echo core::getInstancePath(); ?>libros/inventario_bodegas_pdf/" id="exportar_pdf" target="_blank"><?php echo Tag::image("iconos/pdf.png"); ?></a></td>
+        <!--<td><a href="<?php echo core::getInstancePath(); ?>inventario/general_excel/" target="_blank"><?php echo Tag::image("iconos/excel.png"); ?></a></td>
+        <td><a href="<?php echo core::getInstancePath(); ?>inventario/general_word/" target="_blank"><?php echo Tag::image("iconos/word.png"); ?></a></td> -->
+    </tr>
+ </table>
+ 
+
+ 
+<script>
+
+
+jQuery(document).ready(function(){
+
+jQuery("#progressbar").attr('style','display:none;');
+jQuery("#progressbarWrapper").attr('style','display:none;');
+
+detalles = '';
+
+jQuery("#exportar_pdf").click(function(){ 
+		 event.preventDefault();  //detenemos el comportamiento por default
+		  var url = $(this).attr('href');  
+		  url += "?";
+		  url += "bodegas_id" + jQuery("bodegas_id").val();
+		  url += "&fecha" + jQuery("fecha").val();
+		  //url += "bodegas_id" + jQuery("bodegas_id").val;
+		  if(jQuery("#bodegas_id").val()!='' && jQuery("#fecha").val()!=''){
+		  	window.open(url);
+		  }else{
+			  jQuery("#bodegas_id").html("");
+			   jQuery("#bodegas_id").html("Error Escoja Una Bodega y la Fecha");
+			    jQuery("#bodegas_id").dialog("open");
+		  }
+});
+
+jQuery("#enviar").click(function(){ 
+	
+	if(jQuery("#fecha").val()!='' && jQuery("#bodegas_id").val() !='' ){
+		jQuery("#grid_inventario_general").jqGrid('setGridParam',
+			{ 	datatype: 'json'
+				,ajaxGridOptions : {	
+					type:"POST"
+					}
+				,url:"<?php echo core::getInstancePath(); ?>libros/inventario_bodegas_json/?fecha="+jQuery("#fecha").val()+"&bodegas_id="+jQuery("#bodegas_id").val()
+				 
+				
+			}).trigger("reloadGrid");
+			
+	}else{
+			jQuery("#dialogo_mensajes").html("");
+			jQuery("#dialogo_mensajes").html("Ojo Escriba la fecha de corte y/o Escoja Una Bodega Valida");
+			jQuery("#dialogo_mensajes").dialog("open");
+		}
+	
+	
+	
+	});
+
+/*grib maestros de clientes*/
+function config_gridCompras(){
+		grid_fndCompras = jQuery("#grid_inventario_general").jqGrid({
+		datatype:"json",
+		data: detalles,
+		height:400,
+		rowNum:500,
+		autowidth:true,
+		pager:"#pag_inventario_general",
+		
+		colNames:['Kardex id','Referencia','Nombre','Costo','Cantidad','Total'],
+		colModel:[
+		{   name:'kardex_id',   index:'kardex_id',          sorttype:'text'                        },
+		{	name:'referencia',	index:'referencia',	 sorttype:'text'	                    },
+		{	name:'nombre',		index:'nombre',		 sorttype:'text',   width: 300          },
+		{	name:'costo',		index:'costo',       sorttype:'double',	 formatter:"number" },
+		{	name:'cantidad',    index:'cantidad',    sorttype:'integer', formatter:"number" },
+		{	name:'total',	    index:'total',   sorttype:'integer', formatter:"number" }
+		
+		],
+		multiselect:false,
+		caption:"Inventario por Bodegas",
+		sortname: 'id', 
+		viewrecords: true, 
+		sortorder: "desc",
+			footerrow : true, 
+			userDataOnFooter : true,
+		ondblClickRow:function(rowid,iRow,iCol,e){
+		
+		}
+	});
+}
+	
+config_gridCompras();
+
+	
+
+
+});	
+	
+</script>

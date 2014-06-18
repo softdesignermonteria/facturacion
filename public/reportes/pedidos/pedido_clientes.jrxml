@@ -1,0 +1,468 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="pedido_clientes" language="groovy" pageWidth="612" pageHeight="792" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="47aa8bcb-a031-455e-aeb4-38db7335e853">
+	<property name="ireport.zoom" value="1.5"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<parameter name="inicio" class="java.util.Date">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="fin" class="java.util.Date">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[SELECT
+     pedido_clientes.`id`,
+     pedido_clientes.`empresa_id`,
+     pedido_clientes.`tipo_documento_id`,
+     pedido_clientes.`prefijo`,
+     pedido_clientes.`consecutivo`,
+     pedido_clientes.`fecha`,
+     pedido_clientes.`centro_produccion_id`,
+     pedido_clientes.`bodegas_id`,
+     pedido_clientes.`hora_entrada`,
+     pedido_clientes.`hora_salida`,
+     pedido_clientes.`placa`,
+     pedido_clientes.`color`,
+     pedido_clientes.`clase_vehiculo_id`,
+     pedido_clientes.`tipo_auto_id`,
+     pedido_clientes.`anulado`,
+     pedido_clientes.`liquidado`,
+     detalle_pedido_clientes.`id`,
+     detalle_pedido_clientes.`kardex_id`,
+     detalle_pedido_clientes.`pedido_clientes_id`,
+     detalle_pedido_clientes.`valor`,
+     detalle_pedido_clientes.`cantidad`,
+     detalle_pedido_clientes.`total`,
+     detalle_pedido_clientes.`anulado` AS detalle_pedido_clientes_anulado,
+     pedido_clientes.`liquidado` AS detalle_pedido_clientes_anulado,
+     empresa.`id` AS empresa_id,
+     empresa.`nombre_corto` AS empresa_nombre_corto,
+     empresa.`nombre_empresa` AS empresa_nombre_empresa,
+     empresa.`nit` AS empresa_nit,
+     empresa.`direccion` AS empresa_direccion,
+     empresa.`logo` AS empresa_logo,
+     empresa.`regimen_id` AS empresa_regimen_id,
+     empresa.`telefonos` AS empresa_telefonos,
+     empresa.`celular` AS empresa_celular,
+     empresa.`web` AS empresa_web,
+     empresa.`correo` AS empresa_correo,
+     empresa.`activo` AS empresa_activo,
+     empresa.`kardex_id_default` AS empresa_kardex_id_default,
+     empresa.`tipo_costeo` AS empresa_tipo_costeo,
+     empresa.`valor_caja_defecto` AS empresa_valor_caja_defecto,
+     empresa.`cobro_tarifa` AS empresa_cobro_tarifa,
+     clase_vehiculo.`id` AS clase_vehiculo_id,
+     clase_vehiculo.`clase_vehiculo` AS clase_vehiculo_clase_vehiculo,
+     tipo_auto.`id` AS tipo_auto_id,
+     tipo_auto.`tipo_auto` AS tipo_auto_tipo_auto,
+     centro_produccion.`id` AS centro_produccion_id,
+     centro_produccion.`centro_produccion` AS centro_produccion_centro_produccion,
+     centro_produccion.`tipo_centro_produccion_id` AS centro_produccion_tipo_centro_produccion_id,
+     centro_produccion.`tipo_habitacion_id` AS centro_produccion_tipo_habitacion_id,
+     centro_produccion.`bodegas_id` AS centro_produccion_bodegas_id
+FROM
+     `pedido_clientes` pedido_clientes INNER JOIN `detalle_pedido_clientes` detalle_pedido_clientes ON pedido_clientes.`id` = detalle_pedido_clientes.`pedido_clientes_id`
+     INNER JOIN `empresa` empresa ON pedido_clientes.`empresa_id` = empresa.`id`
+     INNER JOIN `clase_vehiculo` clase_vehiculo ON pedido_clientes.`clase_vehiculo_id` = clase_vehiculo.`id`
+     INNER JOIN `centro_produccion` centro_produccion ON pedido_clientes.`centro_produccion_id` = centro_produccion.`id`
+     INNER JOIN `tipo_auto` tipo_auto ON pedido_clientes.`tipo_auto_id` = tipo_auto.`id`
+WHERE
+     detalle_pedido_clientes.anulado = 0
+     and pedido_clientes.anulado = 0
+     and pedido_clientes.fecha >= $P{inicio}
+     and pedido_clientes.fecha <= $P{fin}
+GROUP BY
+     pedido_clientes.id
+ORDER BY
+     pedido_clientes.prefijo ASC,
+     pedido_clientes.consecutivo ASC]]>
+	</queryString>
+	<field name="id" class="java.lang.Integer">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="empresa_id" class="java.lang.Integer">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="tipo_documento_id" class="java.lang.Integer">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="prefijo" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="consecutivo" class="java.lang.Long">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="fecha" class="java.sql.Date">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="centro_produccion_id" class="java.lang.Integer">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="bodegas_id" class="java.lang.Integer">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="hora_entrada" class="java.sql.Timestamp">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="hora_salida" class="java.sql.Timestamp">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="placa" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="color" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="clase_vehiculo_id" class="java.lang.Integer">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="tipo_auto_id" class="java.lang.Integer">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="anulado" class="java.lang.Integer">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="liquidado" class="java.lang.Integer">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="kardex_id" class="java.lang.Long">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="pedido_clientes_id" class="java.lang.Long">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="valor" class="java.lang.Double">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="cantidad" class="java.lang.Integer">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="total" class="java.lang.Double">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="detalle_pedido_clientes_anulado" class="java.lang.Boolean"/>
+	<field name="empresa_nombre_corto" class="java.lang.String"/>
+	<field name="empresa_nombre_empresa" class="java.lang.String"/>
+	<field name="empresa_nit" class="java.lang.String"/>
+	<field name="empresa_direccion" class="java.lang.String"/>
+	<field name="empresa_logo" class="java.lang.String"/>
+	<field name="empresa_regimen_id" class="java.lang.Boolean"/>
+	<field name="empresa_telefonos" class="java.lang.String"/>
+	<field name="empresa_celular" class="java.lang.String"/>
+	<field name="empresa_web" class="java.lang.String"/>
+	<field name="empresa_correo" class="java.lang.String"/>
+	<field name="empresa_activo" class="java.lang.Boolean"/>
+	<field name="empresa_kardex_id_default" class="java.lang.Integer"/>
+	<field name="empresa_tipo_costeo" class="java.lang.String"/>
+	<field name="empresa_valor_caja_defecto" class="java.lang.Double"/>
+	<field name="empresa_cobro_tarifa" class="java.lang.String"/>
+	<field name="clase_vehiculo_clase_vehiculo" class="java.lang.String"/>
+	<field name="tipo_auto_tipo_auto" class="java.lang.String"/>
+	<field name="centro_produccion_centro_produccion" class="java.lang.String"/>
+	<field name="centro_produccion_tipo_centro_produccion_id" class="java.lang.Integer"/>
+	<field name="centro_produccion_tipo_habitacion_id" class="java.lang.Integer"/>
+	<field name="centro_produccion_bodegas_id" class="java.lang.Integer"/>
+	<variable name="SumaCantidad" class="java.lang.Integer" calculation="Sum">
+		<variableExpression><![CDATA[$F{cantidad}]]></variableExpression>
+		<initialValueExpression><![CDATA[]]></initialValueExpression>
+	</variable>
+	<variable name="SumaTotal" class="java.lang.Double" calculation="Sum">
+		<variableExpression><![CDATA[$F{total}]]></variableExpression>
+	</variable>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<pageHeader>
+		<band height="121" splitType="Stretch">
+			<textField pattern="EEEEE dd MMMMM yyyy">
+				<reportElement uuid="e970f1a0-9d28-4caf-b6af-17944f6a9078" x="411" y="58" width="132" height="19"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font size="6"/>
+				</textElement>
+				<textFieldExpression><![CDATA[new java.util.Date()]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement uuid="76c95b5b-0c44-4f66-b3e7-729cd1e34ed3" x="293" y="58" width="119" height="19"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font size="6"/>
+				</textElement>
+				<text><![CDATA[Reporte Generado el Dia]]></text>
+			</staticText>
+			<textField>
+				<reportElement uuid="0a7c218e-a34c-4097-ac3a-a47f8d7ae357" x="21" y="37" width="522" height="20"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="8" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{empresa_direccion}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="0a7c218e-a34c-4097-ac3a-a47f8d7ae357" x="21" y="19" width="522" height="19"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="8" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{empresa_nit}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="bbf6e70c-2c6c-47f4-8eca-b2ae850e5610" x="21" y="0" width="522" height="20"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="14" isBold="true" isItalic="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{empresa_nombre_empresa}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement uuid="24c98b23-ee55-41bf-b3bf-7b942f054c8c" x="1" y="98" width="31" height="20"/>
+				<box>
+					<pen lineWidth="1.0"/>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[PREFIJO]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="24c98b23-ee55-41bf-b3bf-7b942f054c8c" x="32" y="98" width="51" height="20"/>
+				<box>
+					<pen lineWidth="1.0"/>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[NUMERO]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="24c98b23-ee55-41bf-b3bf-7b942f054c8c" x="82" y="98" width="103" height="20"/>
+				<box>
+					<pen lineWidth="1.0"/>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[CENTRO PRODUCCION]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="24c98b23-ee55-41bf-b3bf-7b942f054c8c" x="184" y="98" width="44" height="20"/>
+				<box>
+					<pen lineWidth="1.0"/>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[PLACA]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="24c98b23-ee55-41bf-b3bf-7b942f054c8c" x="227" y="98" width="58" height="20"/>
+				<box>
+					<pen lineWidth="1.0"/>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[TIPO VEHICULO]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="24c98b23-ee55-41bf-b3bf-7b942f054c8c" x="357" y="98" width="80" height="20"/>
+				<box>
+					<pen lineWidth="1.0"/>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[COLOR]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="24c98b23-ee55-41bf-b3bf-7b942f054c8c" x="284" y="98" width="74" height="20"/>
+				<box>
+					<pen lineWidth="1.0"/>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[CLASE VEHICULO	]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="24c98b23-ee55-41bf-b3bf-7b942f054c8c" x="436" y="98" width="54" height="20"/>
+				<box>
+					<pen lineWidth="1.0"/>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[LIQUIDADO]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="24c98b23-ee55-41bf-b3bf-7b942f054c8c" x="489" y="98" width="82" height="20"/>
+				<box>
+					<pen lineWidth="1.0"/>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[TOTAL]]></text>
+			</staticText>
+			<textField>
+				<reportElement uuid="9b7d04f3-c1ae-4a34-bc24-ae056ef35ef5" x="80" y="57" width="32" height="20"/>
+				<textElement verticalAlignment="Middle">
+					<font size="6"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+			<textField evaluationTime="Report">
+				<reportElement uuid="a913d4bd-931e-454b-8c93-3a1641ffe3cc" x="146" y="57" width="39" height="20"/>
+				<textElement verticalAlignment="Middle">
+					<font size="6"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement uuid="cd71facb-f8e1-4e5a-a793-98f8e74b41d1" x="112" y="57" width="34" height="20"/>
+				<textElement verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[De]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="f9735ca6-b861-4c37-9ccf-4301820688f0" x="21" y="57" width="59" height="20"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[Pagina]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="4fc08b8a-7f09-4038-bf4d-364958df1678" x="21" y="77" width="522" height="20"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[REPORTE DE INGRESOS POR PEDIDO DE CLIENTES]]></text>
+			</staticText>
+		</band>
+	</pageHeader>
+	<detail>
+		<band height="23" splitType="Stretch">
+			<rectangle>
+				<reportElement uuid="b0e2c2c6-24cd-411b-a6dd-de8704fdd6e1" x="0" y="2" width="572" height="20"/>
+			</rectangle>
+			<textField>
+				<reportElement uuid="3c0450e9-b06c-4417-ad39-0813ecc0d9e5" x="1" y="3" width="31" height="19"/>
+				<textElement verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{prefijo}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="e254591f-dd03-4ddc-8ead-81ecb69105f0" x="32" y="3" width="51" height="19"/>
+				<textElement verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{consecutivo}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="f39d840d-541a-4dec-9fc8-3229f68ec795" x="83" y="2" width="102" height="20"/>
+				<textElement verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{centro_produccion_centro_produccion}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="2d6709a5-4f39-4d5a-9d69-102ef2973ab7" x="185" y="1" width="45" height="20"/>
+				<textElement verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{placa}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="af97f967-6427-4e8e-804d-b4fc0171894a" x="230" y="3" width="57" height="20"/>
+				<textElement verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{tipo_auto_id}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="25350e41-ebc2-430d-9b2d-b86d1f1ccb9c" x="490" y="2" width="82" height="20"/>
+				<textElement verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{total}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="b18026d8-b0b2-4c6e-b1f1-0b8678684dd4" x="286" y="1" width="71" height="20"/>
+				<textElement verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{clase_vehiculo_clase_vehiculo}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="b2deb396-a4ab-45f6-acd0-367832aaa523" x="437" y="2" width="53" height="20"/>
+				<textElement verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{liquidado}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="c2786466-53e9-4aa2-b2ad-9999452c4ef8" x="357" y="2" width="80" height="20"/>
+				<textElement verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{color}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<pageFooter>
+		<band height="23" splitType="Stretch">
+			<staticText>
+				<reportElement uuid="9b1fba5b-d10d-41a2-a956-cd50157d7dd7" x="42" y="5" width="486" height="15"/>
+				<textElement textAlignment="Center"/>
+				<text><![CDATA[Motel Paraiso de los Angeles Copyrigth @ 2013 - Ing Alejandro Betancourt aldabear@hotmail.com]]></text>
+			</staticText>
+		</band>
+	</pageFooter>
+	<summary>
+		<band height="28" splitType="Stretch">
+			<rectangle>
+				<reportElement uuid="fcc10207-0572-4b3d-97ec-60fc6decb9eb" x="0" y="3" width="572" height="20"/>
+			</rectangle>
+			<staticText>
+				<reportElement uuid="ed8e382c-eaef-4487-bfc8-9cb9e70327e1" x="0" y="3" width="291" height="20"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[TOTALES]]></text>
+			</staticText>
+		</band>
+	</summary>
+</jasperReport>

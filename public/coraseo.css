@@ -1,0 +1,31 @@
+@charset "utf-8";
+/* CSS Document */
+
+.formularios{
+ background:#FFFFFF;
+ }
+
+.formularios thead th{
+background-color:#0EB605;
+color:#FFFFFF;
+height:25px;
+font-weight:bold;
+
+}
+
+
+.formularios tbody th{
+background-color:#0EB605;
+color:#FFFFFF;
+height:25px;
+font-weight:bold;
+
+}
+
+.formularios tbody td{
+/*background-color:#0EB605;
+color:#FFFFFF;*/
+min-height:30px;
+
+
+}

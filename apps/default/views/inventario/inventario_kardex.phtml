@@ -1,0 +1,164 @@
+<h1>INVENTARIO DETALLADO POR REFERENCIA</h1>
+<?php 
+ $grupos = new Grupos();
+ $alq = new SaldoRemisiones();
+ $alq2 = new SaldoRemisiones();
+ $pro = new Proveedores();
+$query = new ActiveRecordJoin(array(
+						"entities" => array("EntradasEspeciales","DetalleEntradasEspeciales","Proveedores"),
+						"conditions"=>("{#DetalleEntradasEspeciales}.kardex_id = '$inventario->id' ")));
+//$result = 	$query->getResultSet();
+//$pnom = $result->getLast()->razon_social;	
+foreach($query->getResultSet() as $detalles):
+	$pnom = $detalles->razon_social;	
+endforeach;				
+ $alquilados = $alq->sum("cantidad-devueltos","conditions: kardex_id = '$inventario->id' and anulado = '0' and cantidad-devueltos <> 0 "); 
+	Flash::notice($query->getSqlQuery());		
+?>
+<table border="0" cellpadding="1" id="inventario" width="100%">
+	<tr>
+	  <th colspan="4">INVENTARIO DETALLADO POR REFERENCIA</th>
+    </tr>
+	<tr>
+	  <th width="19%" height="22" align="right">CODIGO</th>
+      <th width="27%" align="left"><?php echo $inventario->codigo; ?></th>
+      <th width="17%" align="right">NOMBRE PRODUCTO</th>
+      <th width="37%" align="left"><?php echo $inventario->nombre_producto; ?></th>
+  </tr>
+	<tr>
+	  <th align="right">ULTIMO PROOVEDOR</th>
+	  <th align="left"><?php if($pnom != ''){ echo $pom; }else{ $p = $pro->findFirst("id = '$inventario->proveedores_id'"); echo $p->razon_social; } //echo $grupos->findFirst("id = '$inventario->grupos_id'")->nombre_grupo; ?></th>
+	  <th align="right">NOMBRE CORTO</th>
+	  <th align="left"><?php echo $inventario->nombre_corto; ?></th>
+  </tr>
+	<tr>
+	  <th align="right">SALDO INICIAL</th>
+      <th align="left"><?php echo $inventario->saldo_inicial; ?></th>
+      <th align="right">DISPONIBLES</th>
+      <th align="left"><?php echo $inventario->disponibles; ?></th>
+  </tr>
+	<tr>
+	  <th align="right">ALQUILADAS</th>
+      <th align="left"><?php echo $alquilados; ?></th>
+      <th align="right">TOTAL REFERNCIA</th>
+      <th align="left"><?php echo $alquilados+$inventario->disponibles; ?></th>
+  </tr>
+</table>
+<br />
+
+
+<?php foreach($empresas as $emp): ?>
+
+<table border="0" cellpadding="1" id="remisiones" width="100%">
+   <tr>
+	  <th align="right" width="30%">NOMBRE EMPRESA</th>
+      <th align="left"><?php echo $emp->nombre_empresa; ?></th>
+  </tr>
+</table>
+
+<br />
+
+<table border="0" cellpadding="1" id="remisiones" width="100%">
+   <tr>
+    <th width="10%">REMISION</th>
+    <th width="10%">FECHA</th>
+    <th width="10%">IDENT.</th>
+    <th width="40%">NOMBRE</th>
+    <th width="10%">VALOR <br />DIARIO</th>
+    <th width="10%">ALQ</th>
+    <th width="10%">TOTAL</th>
+    <th width="10%">VER</th>
+  </tr>
+        <?php 
+		 $i=0;	
+//		 Flash::error($idt);
+			$query = new ActiveRecordJoin(array(
+						"entities" => array("SaldoRemisiones","Clientes","Empresa","Remisiones"),
+						"minimum" =>array(	"{#Remisiones}.fecha",
+											"{#SaldoRemisiones}.valor_diario",
+											"{#SaldoRemisiones}.id",
+											"{#Remisiones}.prefijo",
+											"{#Remisiones}.consecutivo"),
+						"groupFields" => array(
+										"{#Clientes}.razon_social",
+										"{#Clientes}.nit",
+										"{#SaldoRemisiones}.clientes_id"
+										),
+						"sumatory" => array("{#SaldoRemisiones}.cantidad","{#SaldoRemisiones}.devueltos","{#SaldoRemisiones}.iva"),
+						
+					 					/*
+										"fields"=>array(
+										"{#Remisiones}.fecha",
+										"{#Clientes}.razon_social",
+										"{#SaldoRemisiones}.id",
+										"{#Remisiones}.prefijo",
+										"{#Remisiones}.consecutivo",
+										"{#SaldoRemisiones}.cantidad",
+										"{#SaldoRemisiones}.devueltos",
+										"{#SaldoRemisiones}.iva",
+										"{#SaldoRemisiones}.valor_diario",
+										"{#Clientes}.nit",
+										"{#SaldoRemisiones}.clientes_id"
+										),
+										*/
+						"conditions"=>("{#SaldoRemisiones}.anulado = '0' 
+								and {#SaldoRemisiones}.empresa_id = '$emp->id' 
+								and {#SaldoRemisiones}.kardex_id = '$idt' 
+								and {#SaldoRemisiones}.cantidad-{#SaldoRemisiones}.devueltos <> 0
+								")
+				));
+		
+		//Flash::notice($query->getSqlQuery());		
+		foreach($query->getResultSet() as $detalles):		
+		 
+		 ?>  
+          <tr>
+            <td><?php echo $detalles->prefijo.$detalles->consecutivo; ?></td>
+            <td><?php echo $detalles->fecha;  ?></td>
+            <td><?php echo $detalles->nit;  ?></td>
+            <td><?php echo utf8_encode($detalles->razon_social);  ?></td>
+            <td>$ <?php echo number_format($detalles->valor_diario +  $detalles->iva,0);  ?></td>
+            <td><?php echo $detalles->cantidad-$detalles->devueltos;  ?></td>
+            <td>$ <?php echo number_format(($detalles->cantidad-$detalles->devueltos)*($detalles->valor_diario +  $detalles->iva),0);  ?></td>
+            <td><?php echo Tag::linkTo("inventario/inventario_cliente/$detalles->clientes_id",Tag::image("64x64/Folder.png",'width: 25px'),"target: _blank");  ?></td>
+          </tr>
+        <?php $i++;  endforeach; ?> 
+          <tr>
+            <th colspan="4">TOTALES</th>
+            <th>&nbsp;</th>
+            <th><?php echo number_format($alq2->sum("cantidad - devueltos","conditions: anulado = 0  and empresa_id = '$emp->id' and kardex_id = '$idt' and cantidad - devueltos <> 0"),0); ?></th>
+            <th>$ <?php echo number_format($alq2->sum("(cantidad-devueltos)*(valor_diario + iva)","conditions: anulado = 0  and empresa_id = '$emp->id' and kardex_id = '$idt' and cantidad - devueltos <> 0"),0); ?></th>
+            <th>VER</th>
+          </tr>
+ </table>
+<br />
+<?php endforeach; ?>
+
+<?php ?>
+
+<table width="100%">
+
+  <tr>
+    <th colspan="3" width="60%">TOTAL GENERAL CONSOLIDADO</th>
+    <th width="10%">&nbsp;</th>
+    <th width="10%"><?php echo number_format($alq2->sum("cantidad - devueltos","conditions: anulado = 0  and kardex_id = '$idt' and cantidad - devueltos <> 0"),0); ?></th>
+    <th width="10%">$ <?php echo number_format($alq2->sum("(cantidad-devueltos)*(valor_diario + iva)","conditions: anulado = 0 and kardex_id = '$idt' and cantidad - devueltos <> 0"),0); ?></th>
+    <th width="10%">&nbsp;</th>
+  </tr>
+
+</table>
+<div align="center">
+  <table border="0" cellpadding="2" id="remisiones2"  cellspacing="2">
+    <tr>
+      <td align="center"><?php echo Tag::linkTo("#", Tag::image("64x64/Back.png",'width: 32px'),"onClick: window.close();") ?></td>
+      <td align="center"><?php echo Tag::linkTo("menu/", Tag::image("iconos/inicio.png",'width: 32px')); ?></td>
+      <!-- <td align="center"><?php //echo Tag::linkTo("print/remisiones/$rem->id", Tag::image("iconos/pdf.png",'width: 32px'),"target: _blank");s ?></td> -->
+    </tr>
+    <tr>
+      <td align="center">Regresar</td>
+      <td align="center">Inicio</td>
+      <!--<td align="center">Pdf</td>-->
+    </tr>
+  </table>
+</div>
+<p>&nbsp;</p>

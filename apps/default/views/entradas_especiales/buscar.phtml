@@ -1,0 +1,62 @@
+<br />
+
+<form id="buscar_entradas">
+
+<table width="700px" border="0" cellpadding="1"  cellspacing="1" id="r1" align="center">
+
+  <tr>
+    <th colspan="4" align="center" class="ui-jqgrid-titlebar ui-widget-header ui-corner-top ui-helper-clearfix">BUSCAR ENTRADAS ESPECIALES DE MERCANCIA</th>
+  </tr>
+  <tr>
+    <td align="right"><strong>PROVEEDOR</strong></td>
+    <td colspan="2"><?php echo Tag::textField("proveedores_id","size: 4","readOnly: readOnly","style: background: #cccccc;"); ?><?php echo Tag::textField("nombre_proveedores","size: 50","readOnly: readOnly","style: background: #cccccc;"); ?></td>
+    <td><button id="buscar_proveedor" type="button">Buscar</button></td>
+  </tr>
+  <tr>
+    <td width="15%" align="right"><div align="right"><strong>DESDE</strong></div></td>
+    <td width="10%"><?php echo Tag::textField("fecha_inicio","size: 15") ?></td>
+    <td width="19%" align="left"><strong> HASTA<?php echo Tag::textField("fecha_fin","size: 15") ?></strong></td>
+    <td width="10%">&nbsp;</td>
+  </tr>
+
+  <tr>
+    <td colspan="4" align="center"><button id="enviar" type="submit">Enviar</button></td>
+  </tr>
+</table>
+<br /><br /><br />
+<div id="mensajes"></div>
+<br />
+</form>
+<script>
+jQuery(function() {
+	jQuery("#progressbar").attr('style','display:none;');
+	jQuery("#progressbarWrapper").attr('style','display:none;');
+	
+	jQuery('#buscar_entradas').submit(function(event){ //alert("entro");
+	//en el evento submit del fomulario
+		  //event.isDefaultPrevented();
+		  event.preventDefault();  //detenemos el comportamiento por default
+		
+		  //var url = $(this).attr('action');  //la url del action del formulario
+		  var url = "<?php echo core::getInstancePath(); ?>entradas_especiales/detalle_buscar";
+		  var datos = $(this).serialize(); // los datos del formulario
+			 var jqXHR = jQuery.ajax({
+				  type: 'POST',
+				  url: url,
+				  data: datos,
+				 /* beforeSend: mostrarLoader, //funciones que definimos más abajo */
+				  success: function(data) {
+				  
+						jQuery( '#mensajes' ).html("");
+						jQuery( '#mensajes' ).html(data);
+						
+					}  //funciones que definimos más abajo
+			   });
+			   
+			   jqXHR.done(function(data){
+					//mostrarRespuesta(data);
+				});
+	});	
+	
+});
+</script>

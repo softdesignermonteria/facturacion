@@ -1,0 +1,46 @@
+<table id="tablabancos"></table>
+<div id="pagerbancos"></div>
+<script>
+jQuery(document).ready(function(){
+
+		
+		jQuery("#tablabancos").jqGrid(
+		{ 
+			ajaxGridOptions : {type:"POST"},
+			url:'<?php echo core::getInstancePath(); ?>bancos/find_detalle_buscar', 
+			datatype: "json", 
+			colNames:['Id','Bancos'], 
+			colModel:[ 
+				{ name:'id',index:'id', width:20}, 
+				{ name:'bancos',index:'banco', width:90}
+			], 
+			autoWidth:true,
+			width: 550,
+			height: 250,
+			rowNum:10, 
+			rowList:[10,20,30,40,50], 
+			pager: '#pagerbancos', 
+			sortname: 'banco', 
+			/*shrinkToFit :false,*/
+			viewrecords: true, 
+			sortorder: "asc", 
+			caption:"listado de bancos",
+			ondblClickRow:function(rowid,iRow,iCol,e){
+				
+				var fila = jQuery(this).jqGrid('getRowData',rowid);
+					
+					jQuery("#bancos_id").val(fila['id']);
+					jQuery("#nombre_banco").val(fila['bancos']);
+					jQuery("#dialogo_bancos").dialog("close");
+       		 }
+		}); 
+		jQuery("#tablabancos").jqGrid('navGrid','#pagerbancos',{edit:false,add:false,del:false}); 
+		jQuery("#tablabancos").jqGrid('navButtonAdd','#pagerbancos',{
+		caption: "Columnas",
+		title: "Reordena Columnas",
+		onClickButton : function (){
+			jQuery("#tablabancos").jqGrid('columnChooser');
+		}
+	});
+});
+</script>

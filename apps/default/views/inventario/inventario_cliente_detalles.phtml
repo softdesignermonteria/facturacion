@@ -1,0 +1,88 @@
+<h1>INVENTARIO DETALLADO POR REFERENCIA</h1>
+<?php 
+ $grupos = new Grupos();
+ $alq = new SaldoRemisiones();
+ $alq2 = new SaldoRemisiones();
+ //$direccion = new Direccion();
+ 
+
+ 
+ $alquilados = $alq->sum("cantidad-devueltos","conditions: kardex_id = '$inventario->id' and anulado = '0' and cantidad-devueltos <> 0 "); 
+
+?>
+
+
+<table border="0" cellpadding="1" id="remisiones" width="100%" style="font-size:12pt;">
+   <tr>
+    <th width="10%">REMISION</th>
+    <th width="10%">FECHA</th>
+    <th width="10%">CODIGO</th>
+    <th width="40%">NOMBRE</th>
+    <th width="10%">VALOR <br />DIARIO</th>
+    <th width="10%">ALQ</th>
+    <th width="10%">TOTAL</th>
+
+  </tr>
+        <?php 
+		 $i=0;	
+		 
+		 //listado de clientes 
+//		 Flash::error($idt);
+			$query = new ActiveRecordJoin(array(
+						"entities" => array("SaldoRemisiones","Clientes","Empresa","Remisiones","Direccion","Kardex"),
+						//"groupFields" => array("{#SaldoRemisiones}.clientes_id"),
+						"groupFields"=>array(
+										"{#Clientes}.razon_social",
+										"{#SaldoRemisiones}.id",
+										"{#Remisiones}.prefijo",
+										"{#Remisiones}.consecutivo",
+										"{#Remisiones}.direccion_id",
+										"{#Remisiones}.fecha",
+										"{#Kardex}.nombre_producto",
+										"{#Kardex}.codigo",
+										"{#SaldoRemisiones}.kardex_id",
+										
+										
+										"{#SaldoRemisiones}.iva",
+										"{#SaldoRemisiones}.valor_diario",
+										"{#Clientes}.nit",
+										"{#SaldoRemisiones}.clientes_id"
+										),
+						"sumatory" => array("{#SaldoRemisiones}.cantidad","{#SaldoRemisiones}.devueltos"),
+					 	
+						"conditions"=>("
+								{#SaldoRemisiones}.anulado = '0' 
+								and {#SaldoRemisiones}.empresa_id = '$empresa->id' 
+								and {#SaldoRemisiones}.kardex_id = '$kardex->id' 
+								and {#Direccion}.id = '$direccion->id' 
+								and {#Kardex}.tipo_kardex_id = '1' 
+								and {#Clientes}.id = '$cliente->id'
+								and {#SaldoRemisiones}.cantidad-{#SaldoRemisiones}.devueltos <> 0")
+				));
+		
+		//Flash::notice($query->getSqlQuery());		
+		$t_empresa = 0;
+		$t_valor_empresa = 0;
+		foreach($query->getResultSet() as $detalles):		
+		 
+		 ?>  
+         
+          <tr>
+           <td><?php echo $detalles->prefijo.$detalles->consecutivo; ?></td> 
+           <td><?php echo $detalles->fecha;  ?></td> 
+            <td><?php echo $detalles->codigo;  ?></td>
+            <td><?php echo $detalles->nombre_producto;  ?></td>
+            <td>$<?php echo number_format($detalles->valor_diario,0);  ?></td>
+            <td><?php echo $detalles->cantidad-$detalles->devueltos; $t_empresa += ($detalles->cantidad-$detalles->devueltos); ?></td>
+            <td>$<?php echo number_format(($detalles->cantidad-$detalles->devueltos)*($detalles->valor_diario),0); $t_valor_empresa += ( ($detalles->cantidad-$detalles->devueltos)*$detalles->valor_diario); ?></td>
+           
+          </tr>
+        <?php $i++;  endforeach; ?> 
+          <tr>
+            <th colspan="4">TOTALES</th>
+            <th><?php //echo number_format($alq2->sum("valor_diario","conditions: anulado = 0  and empresa_id = '$emp->id' and direccion_id = '$dir->id' and clientes_id = '$cliente->id' and cantidad - devueltos <> 0"),0); ?></th>
+            <th><?php echo number_format($t_empresa,0);  //echo number_format($alq2->sum("cantidad - devueltos","conditions: anulado = 0  and empresa_id = '$emp->id' and direccion_id = '$dir->id' and clientes_id = '$cliente->id' and cantidad - devueltos <> 0"),0); ?></th>
+            <th>$<?php echo number_format($t_valor_empresa,0); //echo number_format($alq2->sum("(cantidad-devueltos)*(valor_diario)","conditions: anulado = 0  and empresa_id = '$emp->id' and direccion_id = '$dir->id' and clientes_id = '$cliente->id' and cantidad - devueltos <> 0"),0); ?></th>
+          </tr>
+ </table>
+<br />

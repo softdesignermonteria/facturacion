@@ -1,0 +1,53 @@
+<table id="tablamunicipios"></table>
+<div id="pager_municipios"></div>
+<script>
+jQuery(document).ready(function(){
+
+		//var datos = " dpto= " +  jQuery("#departamentos_id").val();
+		jQuery("#tablamunicipios").jqGrid(
+		{ 
+			ajaxGridOptions : {type:"POST"},
+			url:'<?php echo core::getInstancePath(); ?>municipios/find_detalle_buscar/?dpto='+jQuery("#departamentos_id").val(), 
+	
+			datatype: "json", 
+			colNames:['Id','Codigo Dpto','Departamento','Municipio','Codigo Dane'], 
+			colModel:[ 
+				{ name:'id',index:'id', width:20}, 
+				{ name:'departamentos_id',index:'departamentos_id', width:20},
+				{ name:'departamento',index:'departamento', width:90},
+				{ name:'municipio',index:'municipio', width:90},
+				{ name:'dane',index:'dane', width:90}
+			], 
+			autoWidth:true,
+			width: 550,
+			height: 250,
+			rowNum:10, 
+			rowList:[10,20,30,40,50], 
+			pager: '#pager_municipios', 
+			sortname: 'municipio', 
+			/*shrinkToFit :false,*/
+			viewrecords: true, 
+			sortorder: "asc", 
+			caption:"listado de Municipios",
+			ondblClickRow:function(rowid,iRow,iCol,e){
+				
+				var fila = jQuery(this).jqGrid('getRowData',rowid);
+					
+					jQuery("#municipios_id").val("");
+					jQuery("#municipio").val("");
+					jQuery("#municipios_id").val(fila['id']);
+					jQuery("#municipio").val(fila['municipio']);
+					
+					jQuery("#dialogo_municipios").dialog("close");
+       		 }
+		}); 
+		jQuery("#tablamunicipios").jqGrid('navGrid','#pager_municipios',{edit:false,add:false,del:false}); 
+		jQuery("#tablamunicipios").jqGrid('navButtonAdd','#pager_municipios',{
+		caption: "Columnas",
+		title: "Reordena Columnas",
+		onClickButton : function (){
+			jQuery("#tablamunicipios").jqGrid('columnChooser');
+		}
+	});
+});
+</script>

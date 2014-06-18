@@ -1,0 +1,659 @@
+<?php echo view::getContent();
+//Flash::notice(Session::get("role")); ?>
+<form id="fx" name="fx">
+<table width="100%" border="0" align="center" cellpadding="2" cellspacing="4">
+ <tr>
+    <th colspan="4" class="ui-jqgrid-titlebar ui-widget-header ui-corner-top ui-helper-clearfix" align="left">
+
+        <?php echo "Documento: ". $tipo_documento; echo " - "; echo $tipo_documento_nombre;  ?> <b id="numero"></b>
+        
+        <?php echo Tag::hiddenField("id"); ?> 
+        <?php echo Tag::hiddenField("tipo_documento_id"); ?> 
+        <?php echo Tag::hiddenField("detalle_consecutivos_id"); ?>
+        <?php echo Tag::hiddenField("empresa_id"); ?> 
+        <?php echo Tag::hiddenField("prefijo"); ?> 
+        <?php echo Tag::hiddenField("consecutivo"); ?> 
+        
+        <?php echo Tag::textField("nombre_empresa","size: 30","readOnly: readOnly","style: background: #cccccc;"); ?>
+
+      USUARIO:  <?php echo Tag::hiddenField("admin_id"); ?><?php echo Session::get("nombre_empleado"); ?> </th>
+
+	</tr>
+   
+    <tr>
+      <td align="right" valign="top">Bodegas</td>
+   	  <td>
+		<!--<?php //echo Tag::textField("bodegas_id","size: 4","readOnly: readOnly","style: background: #cccccc;"); ?>
+		<?php //echo Tag::textField("nombre_bodegas","size: 50","readOnly: readOnly","style: background: #cccccc;"); ?>
+	    <button id="buscar_bodegas" type="button">Buscar</button>-->
+        <?php echo Tag::textFieldExt("bodegas","size: 10"); ?>
+	</td>
+	</tr>
+     <tr>
+      <td align="right" valign="top">Proveedores</td>
+   	  <td>
+		<!--<?php //echo Tag::textField("clientes_id","size: 4"); ?>
+		<?php //echo Tag::textField("nombre_clientes","size: 50","readOnly: readOnly","style: background: #cccccc;"); ?>
+	    <button id="buscar_clientes" type="button">Buscar</button>-->
+        <?php echo Tag::textFieldExt("proveedores","size: 10"); ?>
+	</td>
+	</tr>
+    <tr>
+   	  <td align="right" valign="top">Fecha</td>
+   	  <td> <?php echo Tag::textField("fecha"); ?> VENCIMIENTO <?php echo Tag::textField("vencimiento"); ?> </td>
+    </tr>
+    <tr>
+      <td align="right" valign="top">Factura</td>
+      <td><?php echo Tag::textField("factura"); ?></td>
+    </tr>
+</table>
+
+<table id="grid_fx"></table>
+
+<div id="pagfx"></div>
+  <button id="agregar_item" type="button">Agregar</button>
+  <!--<button id="buscar_item" type="button">Buscar</button>-->
+  <button id="modificar_item" type="button">Modificar</button>
+  <button id="borrar_item" type="button">Borrar</button>
+ <br />
+<table width="100%" border="0" align="center" cellpadding="0" cellspacing="0" id="f3">
+  <tr>
+    <td width="82%" align="right">SUBTOTAL</td>
+    <td width="18%" align="left"><?php echo Tag::textField("subtotal","size: 40","readonly: readonly"); ?></td>
+  </tr>
+  <tr>
+    <td align="right">DESCUENTO</td>
+    <td align="left"><?php echo Tag::textField("descuento","size: 40","readonly: readonly"); ?></td>
+  </tr>
+  <tr>
+    <td align="right">IVA</td>
+    <td align="left"><?php echo Tag::textField("iva","size: 40","readonly: readonly"); ?></td>
+  </tr>
+  <tr>
+    <td align="right">TOTAL </td>
+    <td align="left"><?php echo Tag::textField("total","size: 40","readonly: readonly"); ?></td>
+  </tr>
+</table>
+
+<div align="center">
+    <button id="guardar" type="button">Guardar</button>
+      <button id="cancelar" type="button">Cancelar</button>
+      
+</div>
+
+<div id="mensajes"></div>
+
+</form>
+
+<div title="Agergar Producto a la Compra" id="dialogo_agregar_item">
+   <table width="90%" cellpadding="2" cellspacing="2" align="center">
+    
+        <tr>
+   	       <td>Referencia</td>
+            <td>
+            	 <input type="text" readonly="readonly" size="2" id="tmp_kardex_id" name="tmp_kardex_id" />
+           		 <input type="hidden"  id="tmp_referencia" name="tmp_referencia" />
+            </td>
+            <td><input type="text"  id="tmp_nombre" name="tmp_nombre" size="50" placeholder="Escriba Referencia a Buscar" /></td>
+        </tr>
+		
+        <tr>
+       	    <td>Cantidad(Und)</td>
+            <td colspan="2"><input type="text"  id="tmp_cantidad" value="1" name="tmp_cantidad"/></td>
+        </tr>
+       
+        <tr>
+       	    <td>Tarifa iva</td>
+            <td colspan="2">
+            
+            	<?php 
+					if(Session::get("role")=="administrador" ){
+						$tiva = new TarifaIva();
+						echo Tag::select('tmp_tarifa_iva_id' ,$tiva->find(), 'using: id,tarifa_iva', 'useDummy: yes');
+					}else{ 
+                    	$tiva = new TarifaIva();
+						echo Tag::select('tmp_tarifa_iva_id' ,$tiva->find(), 'using: id,tarifa_iva', 'useDummy: yes','disabled: disabled');
+					}  ?>
+            </td>
+        </tr>
+        
+        <tr>
+       	    <td>Descuento</td>
+            <td colspan="2">
+              <input type="text"  id="tmp_descuento"  name="tmp_descuento" value="0" maxlength="2"  />
+             
+            </td>
+        </tr>
+		
+        <tr>
+       	    <td>Valor</td>
+            <td colspan="2"><input type="text"  id="tmp_valor"  name="tmp_valor" value="0"/></td>
+        </tr>
+  </table>
+</div>
+
+<div title="Modificar Producto de la Compra" id="dialogo_modificar_item">
+   <table width="90%" cellpadding="2" cellspacing="2" align="center">
+  		 <tr>
+   	       <td>id</td>
+            <td colspan="2">
+            	 <input type="text" readonly="readonly" size="30" id="tmp_id_mod" name="tmp_id_mod" />
+                 <input type="hidden"  id="tmp_referencia_mod" name="tmp_referencia_mod" />
+            </td>
+        </tr>
+        <tr>
+   	       <td>Referencia</td>
+            <td>
+            	 <input type="text" readonly="readonly" size="2" id="tmp_kardex_id_mod" name="tmp_kardex_id_mod" />
+           		 <input type="hidden"  id="tmp_referencia_mod" name="tmp_referencia_mod" />
+            </td>
+            <td><input type="text"  id="tmp_nombre_mod" name="tmp_nombre_mod" size="50" placeholder="Escriba Referencia a Buscar" /></td>
+        </tr>
+		
+        <tr>
+       	    <td>Cantidad(Und)</td>
+            <td colspan="2"><input type="text"  id="tmp_cantidad_mod" value="1" name="tmp_cantidad_mod"/></td>
+        </tr>
+       
+        <tr>
+       	    <td>Tarifa iva</td>
+            <td colspan="2">
+            
+            	<?php 
+					if(Session::get("role")=="administrador" ){
+						$tiva = new TarifaIva();
+						echo Tag::select('tmp_tarifa_iva_id_mod' ,$tiva->find(), 'using: id,tarifa_iva', 'useDummy: yes');
+					}else{ 
+                    	$tiva = new TarifaIva();
+						echo Tag::select('tmp_tarifa_iva_id_mod' ,$tiva->find(), 'using: id,tarifa_iva', 'useDummy: yes','disabled: disabled');
+					}  ?>
+            </td>
+        </tr>
+        
+        <tr>
+       	    <td>Descuento</td>
+            <td colspan="2">
+             <input type="text"  id="tmp_descuento_mod"  name="tmp_descuento_mod" value="0" maxlength="2"  />
+             
+            </td>
+        </tr>
+		
+        <tr>
+       	    <td>Valor</td>
+            <td colspan="2"><input type="text"  id="tmp_valor_mod"  name="tmp_valor_mod" value="0"/></td>
+        </tr>
+  </table>
+</div>
+
+
+
+<script type="text/javascript">
+
+jQuery(document).ready(function(){
+
+var detalles = [];
+
+function totalizar(){
+	
+	var subtotal = 0;
+	var descuento = 0;
+	var iva = 0;
+	var total = 0;
+	for(i=0;i<detalles.length;i++) {  
+		if(detalles[i].anulado=='NO'){
+			subtotal  += parseFloat(detalles[i].valor);	
+			descuento += parseFloat(detalles[i].total_descuento);	
+			iva       += parseFloat(detalles[i].iva);	
+			total     += ( parseFloat(detalles[i].valor) - parseFloat(detalles[i].total_descuento) + parseFloat(detalles[i].iva) );	
+		}
+	}
+	jQuery("#subtotal").val(subtotal.toFixed());
+	jQuery("#descuento").val(descuento.toFixed());
+	jQuery("#iva").val(iva.toFixed());
+	jQuery("#total").val(total.toFixed());
+}
+
+
+/*-----------------------------------------------Guardar Pedido---------------------------------------------------------------*/
+
+jQuery("#guardar").click(function(){
+	guardar_pedido();
+});
+
+function guardar_pedido(){
+	var datos = "";
+	//creating a json object
+	var jObject={};
+	for(i in detalles){ jObject[i] = detalles[i]; }
+	var srv = JSON.stringify(detalles);
+	jQuery( "#progressbar" ).progressbar({ value: 50 });	
+	jQuery("#guardar").attr("disabled","disabled");
+		//$('#resumen').html('Cargando....');
+	var jqXHR = jQuery.ajax({
+			type: "POST",
+			url: "<?php echo core::getInstancePath(); ?>compras/add",
+			data: {
+					id:                   jQuery("#id").val(),
+					tipo_documento_id:    jQuery("#tipo_documento_id").val(),
+					detalle_consecutivos_id:    jQuery("#detalle_consecutivos_id").val(),
+					centro_produccion_id: jQuery("#centro_produccion_id").val(),
+					bodegas_id:           jQuery("#bodegas_id").val(),
+					admin_id:             jQuery("#admin_id").val(),
+					empresa_id:           jQuery("#empresa_id").val(),
+					proveedores_id:          jQuery("#proveedores_id").val(),
+					fecha:                jQuery("#fecha").val(),
+					vencimiento:          jQuery("#vencimiento").val(),
+					factura:              jQuery("#factura").val(),
+					prefijo:              jQuery("#prefijo2").val(),
+					consecutivo:          jQuery("#consecutivo").val(),
+					subtotal:             jQuery("#subtotal").val(),
+					descuento:            jQuery("#descuento").val(),
+					iva:                  jQuery("#iva").val(),
+					total:                jQuery("#total").val(),
+					detalles: srv
+
+			},
+			success: function(data) {
+				jQuery( '#mensajes' ).html("");
+				jQuery( "#progressbar" ).progressbar({ value: 90 });
+				jQuery( '#mensajes' ).html(data);
+			},
+			error: function(data) {
+				jQuery('#dialogo_mensajes').html("Error Enviando parametros....." + data);
+				jQuery( "#progressbar" ).progressbar({ value: 0 });
+				jQuery('#dialogo_mensajes').dialog("open");
+				jQuery("#guardar").removeAttr("disabled");
+			}
+
+		});
+
+		 jqXHR.done(function(data){
+			jQuery( "#progressbar" ).progressbar({ value: 0 });
+		});
+}
+
+/*-----------------------------------------------------Agregar Item--------------------------------------------------------------------------------*/
+
+var grid = jQuery("#grid_fx"),
+		delSettings = {
+			afterShowForm: function (jQueryform) {
+				// delete button: "#dData", cancel button: "#eData"
+				jQuery("#dData", jQueryform.parent()).click();
+			},
+			// because I use "local" data I don't want to send the changes to the server
+			// so I use "processing:true" setting and delete the row manually in onclickSubmit
+			onclickSubmit: function (options) {
+				var gridId = grid[0].id,
+					gridP = grid[0].p,
+					newPage = gridP.page,
+					rowids = gridP.multiselect ? gridP.selarrrow : [gridP.selrow];
+				// reset the value of processing option to true
+				// because the value can be changed by jqGrid
+				options.processing = true;
+				// delete the row
+				jQuery.each(rowids, function () {
+					grid.jqGrid('delRowData', this);
+				});
+
+				jQuery.jgrid.hideModal("#delmod" + gridId,
+						{ 
+						 gb: "#gbox_" + gridId,
+  						 jqm: options.jqModal,
+  						onClose: options.onClose 
+				});
+
+				if (gridP.lastpage > 1) {// on the multipage grid reload the grid
+					if (gridP.reccount === 0 && newPage === gridP.lastpage) {
+						// if after deliting there are no rows on the current page
+						// which is the last page of the grid
+						newPage -= 1; // go to the previous page
+					}
+					// reload grid to make the row from the next page visable.
+					grid.trigger("reloadGrid", [{ page: newPage}]);
+				}
+				return true;
+			},
+			processing: true
+		};
+
+
+	jQuery("#dialogo_agregar_item").dialog(
+		{ 
+			autoOpen:false
+			, width:600 
+			, heigth:600 
+			,modal: true
+			,buttons:[
+				{
+					text:  "Escoger"
+					,click: function(){
+							var datos;
+							var jqXHR = jQuery.ajax({
+									url:"<?php echo core::getInstancePath(); ?>compras/agregar_item/",
+									type:"POST",
+									dataType:"json",
+									data:{
+											tmp_kardex_id       :  jQuery("#tmp_kardex_id").val(),
+											tmp_referencia      :  jQuery("#tmp_referencia").val(),
+											tmp_nombre          :  jQuery("#tmp_nombre").val(),
+											tmp_cantidad        :  jQuery("#tmp_cantidad").val(),
+											tmp_descuento       :  jQuery("#tmp_descuento").val(),
+											tmp_tarifa_iva_id   :  jQuery("#tmp_tarifa_iva_id").val(),
+											tmp_valor           :  jQuery("#tmp_valor").val()
+										},fail:function(){
+											alert("error");
+											jQuery("#guardar").removeAttr("disabled");
+										},error:function(jqXHR,textStatus,errorThrown){
+											alert("error "+textStatus+"\n"+jqXHR+"\n"+errorThrown);
+											jQuery("#guardar").removeAttr("disabled");
+										}
+							});
+
+							
+
+							jqXHR.done(function(data){
+								agregar_item(data);
+								
+							});
+
+								jQuery("#tmp_kardex_id").val("");
+								jQuery("#tmp_referencia").val("");
+								jQuery("#tmp_nombre").val("");
+								jQuery("#tmp_cantidad").val("1");
+								jQuery("#tmp_valor").val("");
+								jQuery(this).dialog("close"); 
+
+						}	
+
+				}
+
+			]
+
+		});
+
+	
+
+ jQuery("#agregar_item").click(function(){
+		 	jQuery("#dialogo_agregar_item").dialog("open");
+		 });		
+	
+
+//agregar un item al vector json de items
+
+function agregar_item(data){
+	detalles.push(
+		{
+			id:             data["id"]
+			,kardex_id:     data["kardex_id"]
+			,referencia:    data["referencia"]
+			,nombre:        data["nombre"]
+			,cantidad:      data["cantidad"]
+			,valor:         data["valor"]
+			,descuento:     data["descuento"]
+			,total_descuento: data["total_descuento"]
+			,tarifa_iva_id: data["tarifa_iva_id"]
+			,iva:           data["iva"]
+			,valor_iva:     data["valor_iva"]
+			,total:         data["total"]
+			,anulado:       data["anulado"]
+		}
+	);
+	reload_grid();
+}
+
+
+
+
+
+//autocomplete con json	
+
+jQuery( "#tmp_nombre" ).autocomplete({
+	source: "<?php echo core::getInstancePath(); ?>kardex/autocompletejson",
+	minLength: 1,
+	select: function( event, ui ) {
+		 //alert("Has seleccionado: " + ui.item.value);
+		 jQuery("#tmp_nombre").val(ui.item.nombre)
+		 jQuery("#tmp_kardex_id").val(ui.item.id);
+		 jQuery("#tmp_referencia").val(ui.item.referencia);
+		 jQuery("#tmp_tarifa_iva_id").val(ui.item.tarifa_iva_id);
+		 jQuery("#tmp_valor").val(ui.item.valor_venta);
+	}
+});
+
+
+/*-----------------------------------------------------Borrar Item-----------------------------------------------------------------------------------*/
+
+	
+
+//cuadro de dialogo de agregar item...	 
+
+jQuery("#borrar_item").click(function(){
+	//jQuery("#dialogo_agregar_item").dialog("open");
+	if(confirm("Realmente Desea Borrar o Anular el Registro")){
+		//var gr = jQuery("#grid_compras").jqGrid('getGridParam','selrow');
+		//jQuery("#grid_compras").find("#"+gr).remove();
+		toDelete = jQuery("#grid_fx").jqGrid('getGridParam','selrow');
+		var sw = 0;
+		for(i=0;i<detalles.length;i++){
+			if(detalles[i].id==toDelete){
+				//alert("Lo Encontre: "+detalles[i].id + " SUBSTRING TEMP " + detalles[i].id.substring(0,4));
+				if( detalles[i].id.substring(0,4) == 'temp' ){
+					//alert("linea temporarl borrar");
+					sw=0;
+				}else{
+					//alert("liena guardada en la base de datos anular");
+					sw=1;
+					detalles[i].anulado = "SI";
+				}
+
+			}
+
+		}
+		//alert(detalles["id"][toDelete]);
+      	//jQuery("#grid_compras").jqGrid('delGridRow',toDelete,myDelOptions);
+		if(sw==0){
+			if( toDelete != null ) {
+				if(jQuery("#grid_fx").delGridRow(toDelete,delSettings)){
+					detalles = jQuery.grep(
+								detalles, 
+								function (item,index) { 
+								  return item.id !=  toDelete; 
+								});
+				}else{
+						alert("no borro nada");
+					}
+				//getSelectedRow();
+			}else{ alert("Por favor seleccione una fila para borrar!"); }
+		}else{
+				//alert("anular");
+				reload_grid();
+		}
+		//reload_grid();
+	}
+
+});
+
+/*------------------------------------------------Modificar Item-----------------------------------------------------------------*/	 
+
+//agregar un item al vector json de items
+function modificar_item(data,mod_id){
+	for(i=0;i<detalles.length;i++){
+
+			if(detalles[i].id==mod_id){
+				detalles[i].id          = data["id"];
+				detalles[i].kardex_id   = data["kardex_id"];
+				detalles[i].referencia  = data["referencia"];
+				detalles[i].nombre      = data["nombre"];
+				detalles[i].cantidad    = data["cantidad"];
+				detalles[i].valor       = data["valor"];
+				detalles[i].descuento   = data["descuento"];
+				detalles[i].total_descuento   = data["total_descuento"];
+				detalles[i].tarifa_iva_id     = data["tarifa_iva_id"];
+				detalles[i].iva         = data["iva"];
+				detalles[i].valor_iva   = data["valor_iva"];
+				detalles[i].total       = data["total"];
+				detalles[i].anulado     = data["anulado"];
+			}
+
+	}
+
+	reload_grid();
+
+
+
+}
+
+
+
+
+
+//cuadro de dialogo de agregar item...	 
+
+jQuery("#modificar_item").click(function(){
+	toMod = jQuery("#grid_fx").jqGrid('getGridParam','selrow');
+		var sw = 0;
+		for(i=0;i<detalles.length;i++){
+			if(detalles[i].id==toMod){
+				//alert("Lo Encontre: "+detalles[i].id + " SUBSTRING TEMP " + detalles[i].id.substring(0,4));
+				if( detalles[i].anulado == "SI" ){
+					alert("Elemento Anulado no se Puede Modificar");
+					sw=1;
+				}else{
+					//alert("liena guardada en la base de datos anular");
+					jQuery("#tmp_id_mod").val(detalles[i].id);
+					jQuery("#tmp_kardex_id_mod").val(detalles[i].kardex_id);
+					jQuery("#tmp_tarifa_iva_id_mod").val(detalles[i].tarifa_iva_id);
+					jQuery("#tmp_nombre_mod").val(detalles[i].nombre);
+					jQuery("#tmp_referencia_mod").val(detalles[i].referencia);
+					jQuery("#tmp_cantidad_mod").val(detalles[i].cantidad);
+					jQuery("#tmp_valor_mod").val( parseFloat(detalles[i].valor).toFixed() );
+					jQuery("#tmp_descuento_mod").val(detalles[i].descuento);
+					sw=0;
+					}
+			}
+
+		}
+
+		if(sw==0){
+			jQuery("#dialogo_modificar_item").dialog("open");
+		}
+	//reload_grid();
+});
+
+
+
+
+
+jQuery("#dialogo_modificar_item").dialog(
+{ 
+	autoOpen:false
+	, width:600 
+	, heigth:400 
+	,modal: true
+	,buttons:[
+		{
+			text:  "Escoger"
+			,click: function(){
+					var mod_id =         jQuery("#tmp_id_mod").val();
+					//alert(mod_id);
+					var jqXHR = jQuery.ajax({
+							url:"<?php echo core::getInstancePath(); ?>compras/agregar_item/",
+							type:"POST",
+							dataType:"json",
+							data:{
+									id:                jQuery("#tmp_id_mod").val(),
+									tmp_kardex_id:     jQuery("#tmp_kardex_id_mod").val(),
+									tmp_referencia:    jQuery("#tmp_referencia_mod").val(),
+									tmp_nombre:        jQuery("#tmp_nombre_mod").val(),
+									tmp_cantidad:      jQuery("#tmp_cantidad_mod").val(),
+									tmp_descuento:     jQuery("#tmp_descuento_mod").val(),
+									tmp_tarifa_iva_id: jQuery("#tmp_tarifa_iva_id_mod").val(),
+									tmp_valor:         jQuery("#tmp_valor_mod").val()
+								}
+								,fail:function(){
+									alert("error");
+								},
+								error:function(jqXHR,textStatus,errorThrown){
+									alert("error "+textStatus+"\n"+jqXHR+"\n"+errorThrown);
+								}
+					});
+					 jqXHR.done(function(data){
+						modificar_item(data,mod_id);
+					});
+					jQuery(this).dialog("close"); 
+				}	
+
+		}
+
+	]
+
+});
+
+/*-----------------------------------------------------Buscar Item----------------------------------------------------------------*/	 
+
+jQuery("#buscar_item").click(function(){
+	jQuery("#dialogo_agregar_item").dialog("open");
+	reload_grid();
+});	 
+
+/*---------------------------------------------Configura Autocomplete para Color y Placa-------------------------------------------------*/
+
+//detalles.push({id:1,referencia:123,nombre:"prueba",costo:10000,tarifaiva:16,iva:16000,descuento:20000,porc_desc:20,total:80000});
+
+function reload_grid(){
+		jQuery("#grid_fx").jqGrid('setGridParam',
+			{ 	datatype: 'local',
+				data:detalles
+			}).trigger("reloadGrid");
+			
+			totalizar();
+}
+
+/*---------------------------------------------Configurar Grilla Pedidos Clientes---------------------------------------------------------*/
+/*grib maestros de clientes*/
+
+function config_gridfx(){
+
+	grid_fndfx = jQuery("#grid_fx").jqGrid({
+			datatype:"local",
+			data: detalles,
+			height:200,
+			rowNum:25,
+			autowidth:true,
+			pager:"#pagfx",
+			colNames:['Id',"Kardex id",'Referencia','Nombre','Cantidad','Valor','Porc. Desc','Descuento','TarifaIva','Iva','Total','Anulado'],
+			colModel:[
+				{   name:'id',          index:'id',          sorttype:'text'                        },
+				{	name:'kardex_id',	index:'kardex_id',	 sorttype:'text'	                    },
+				{	name:'referencia',	index:'referencia',	 sorttype:'text'	                    },
+				{	name:'nombre',		index:'nombre',		 sorttype:'text',   width: 200          },
+				{	name:'cantidad',    index:'cantidad',    sorttype:'integer', formatter:"number" },
+				{	name:'valor',		index:'valor',       sorttype:'double',	 formatter:"number" },
+				{	name:'descuento',	index:'descuento',   sorttype:'integer', formatter:"number" },
+				{	name:'total_descuento',	index:'total_descuento',       sorttype:'double',	 formatter:"number" },
+				{	name:'tarifa_iva_id',  	index:'tarifa_iva_id',         sorttype:'double',	 formatter:"number" },
+				{	name:'iva',	    	index:'iva',         sorttype:'double',	 formatter:"number" },
+				{	name:'total',		index:'total',    	 sorttype:'double',	 formatter:"number" },
+				{	name:'anulado',		index:'anulado',  	 sorttype:'text'                        }
+			],
+			multiselect:false,
+			caption:"Detalle Pedidos Clientes",
+			sortname: 'id', 
+			viewrecords: true, 
+			sortorder: "id",
+			ondblClickRow:function(rowid,iRow,iCol,e){
+				/*var fila = $(this).jqGrid('getRowData',rowid);
+				$("#cod_medico").val(fila['codigo'])
+				$("#desc_medico").val(fila['nombres']+" "+fila['apellidos'])
+				diag_fndMedicos.dialog("close")*/
+			}
+
+	});
+
+}
+
+config_gridfx();
+
+});
+
+</script>

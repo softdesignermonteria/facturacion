@@ -1,0 +1,53 @@
+<table id="tablaempleados"></table>
+<div id="pagerempleados"></div>
+<script>
+jQuery(document).ready(function(){
+
+		
+		jQuery("#tablaempleados").jqGrid(
+		{ 
+			ajaxGridOptions : {type:"POST"},
+			url:'<?php echo core::getInstancePath(); ?>empleados/find_detalle_buscar', 
+			datatype: "json", 
+			colNames:['Id','Cedula','Nombres y Apellidos'], 
+			colModel:[ 
+				{ name:'id'           ,index:'id'           , width:10}, 
+				{ name:'cedula'          ,index:'cedula'          , width:50}, 
+				{ name:'nombre_completo'  ,index:'nombre_completo'       , width:150}
+			], 
+			autoWidth:true,
+			width: 750,
+			height: 250,
+			rowNum:10, 
+			rowList:[10,20,30,40,50], 
+			pager: '#pagerempleados', 
+			sortname: 'nombre_completo', 
+			/*shrinkToFit :false,*/
+			viewrecords: true, 
+			sortorder: "asc", 
+			caption:"listado de Empleados",
+			ondblClickRow:function(rowid,iRow,iCol,e){
+				
+				var fila = jQuery(this).jqGrid('getRowData',rowid);
+					
+					
+					jQuery("#empleados_id").val("");
+					jQuery("#empleados").val("");
+					
+										
+					jQuery("#empleados_id").val(fila['id']);
+					jQuery("#empleados").val(fila['nombre_completo']);
+					
+					jQuery("#dialogo_<?php echo Router::getController(); ?>").dialog("close");
+       		 }
+		}); 
+		jQuery("#tablaempleados").jqGrid('navGrid','#pagerempleados',{edit:false,add:false,del:false}); 
+		jQuery("#tablaempleados").jqGrid('navButtonAdd','#pagerempleados',{
+		caption: "Columnas",
+		title: "Reordena Columnas",
+		onClickButton : function (){
+			jQuery("#tablaempleados").jqGrid('columnChooser');
+		}
+	});
+});
+</script>

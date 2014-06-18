@@ -1,0 +1,107 @@
+<h4>MODIFICAR CONSECUTIVOS DEL SISTEMA</h4>
+
+<?php echo Tag::formRemote("consecutivos/update", "update: mensajes", "id: fx","name: fx"); ?>
+
+<table border="0" width="100%" cellpadding="1" cellspacing="1">
+<td width="10%"></td>
+<tr>
+  <td height="0">&nbsp;</td>
+  <td width="19%" height="0" align="right">DESCRIPCION</td>
+  <td width="58%" height="0"><?php echo Tag::hiddenField("id") ?><?php echo Tag::textUpperField("descripcion", "size: 50","maxlength: 50") ?></td>
+  <td width="13%" height="0">&nbsp;</td>
+</tr>
+<tr>
+  <td height="0">&nbsp;</td>
+    <td height="0" align="right">FECHA</td>
+    <td height="0"><?php echo Tag::textField("fecha") ?></td>
+    <td height="0">&nbsp;</td>
+</tr>
+<tr>
+  <td height="0">&nbsp;</td>
+  <td height="0" align="right">PREFIJO</td>
+  <td height="0"><?php echo Tag::textUpperField("prefijo", "size: 10","maxlength: 10") ?></td>
+  <td height="0">&nbsp;</td>
+</tr>
+<tr>
+  <td height="0">&nbsp;</td>
+  <td height="0" align="right">DESDE</td>
+  <td height="0"><?php echo Tag::numericField("desde", "size: 15","maxlength: 15") ?></td>
+  <td height="0">&nbsp;</td>
+</tr>
+<tr>
+  <td height="0">&nbsp;</td>
+  <td height="0" align="right">HASTA</td>
+  <td height="0"><?php echo Tag::numericField("hasta", "size: 15","maxlength: 15") ?></td>
+  <td height="0">&nbsp;</td>
+</tr>
+<tr>
+  <td height="0">&nbsp;</td>
+  <td height="0" align="right">RESOLUCION DIAN</td>
+  <td height="0"><?php echo Tag::textField("resolucion_dian", "size: 40","maxlength: 50") ?></td>
+  <td height="0">&nbsp;</td>
+</tr>
+<tr>
+  <td height="0">&nbsp;</td>
+  <td height="0" align="right">TIPO DOCUMENTO</td>
+  <td height="0"><?php 
+  		$tp = new TipoDocumento();
+  echo Tag::select("tipo_documento_id",$tp->find("empresa_id = '".Session::get("id_empresa")."'"),'using: id,nombre','useDummy=yes' ) ?></td>
+  <td height="0">&nbsp;</td>
+</tr>
+<tr>
+  <td height="0">&nbsp;</td>
+  <td height="0" align="right">ACTIVO</td>
+  <td height="0"><?php echo Tag::selectStatic("activo",array("0"=>"SI","1"=>"NO")) ?></td>
+  <td height="0">&nbsp;</td>
+</tr>
+<tr>
+  <td height="0">&nbsp;</td>
+  <td height="0" align="right">&nbsp;</td>
+  <td height="0">&nbsp;</td>
+  <td height="0">&nbsp;</td>
+</tr>
+<tr>
+    <td height="0" colspan="4" align="center"><button type="submit" id="guardar" name="guardar">Modificar</button>
+     <button type="button" id="cancelar" name="cancelar" onclick="doccancelar('<?php echo core::getInstancePath(); ?>','<?php echo Router::getController(); ?>');">Cancelar</button>
+    </td>
+</tr>    
+</td>
+</table>
+
+<div id="mensajes">
+
+<br/>
+<script type="text/javascript">
+	
+	jQuery("#total_credito").attr("readOnly","ReadOnly");
+	
+	jQuery(function() {
+	
+	jQuery( "#fecha" ).datepicker();
+	
+	jQuery.datepicker.regional['es'] = {
+                closeText: 'Cerrar',
+                prevText: '&#x3c;Ant',
+                nextText: 'Sig&#x3e;',
+                currentText: 'Hoy',
+                monthNames: ['Enero','Febrero','Marzo','Abril','Mayo','Junio',
+                'Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre'],
+                monthNamesShort: ['Ene','Feb','Mar','Abr','May','Jun',
+                'Jul','Ago','Sep','Oct','Nov','Dic'],
+				
+				dayNames: ['Domingo','Lunes','Martes','Mi&eacute;rcoles','Jueves','Viernes','S&aacute;bado'],
+                dayNamesShort: ['Dom','Lun','Mar','Mi&eacute;','Juv','Vie','S&aacute;b'],
+                dayNamesMin: ['Do','Lu','Ma','Mi','Ju','Vi','S&aacute;'],
+                weekHeader: 'Sm',
+                dateFormat: 'yy/mm/dd',
+                firstDay: 1,
+                isRTL: false,
+                showMonthAfterYear: false,
+                yearSuffix: ''};
+	
+	 jQuery.datepicker.setDefaults(jQuery.datepicker.regional['es']);
+	});
+	
+</script>
+
+<?php echo Tag::endForm() ?>

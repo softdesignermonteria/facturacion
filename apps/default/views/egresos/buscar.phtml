@@ -1,0 +1,40 @@
+<?php echo Tag::formRemote("egresos/detalle_buscar", "update: mensajes", "id: remisiones","name: remisiones"); ?>
+<br />
+<table width="100%" border="0" cellpadding="0" id="r1" class="ui-corner-all">
+<thead>
+  <tr>
+    <th colspan="4" align="center" class="ui-jqgrid-titlebar ui-widget-header ui-corner-top ui-helper-clearfix">LISTADO DE EGRESOS</th>
+  </tr>
+</thead>  
+<tbody>
+  <tr>
+    <td align="right">NOMBRE PROVEEDOR</td>
+    <td colspan="3">
+		<?php echo Tag::textField("proveedores_id","size: 4","readOnly: readOnly","style: background: #cccccc;"); ?>
+		<?php echo Tag::textField("nombre_proveedores","size: 50","readOnly: readOnly","style: background: #cccccc;"); ?>
+    	<button id="buscar_proveedor" type="button">Buscar</button>
+    </td>
+  </tr>
+  <tr>
+    <td width="15%" align="right"><div align="right">DESDE</div></td>
+    <td width="10%"><input type="text" id="finicial" name="finicial" /></td>
+    <td width="19%"><div align="right">HASTA</div></td>
+    <td width="10%"><input type="text" id="ffinal" name="ffinal" /></td>
+  </tr>
+  <tr>
+    <td colspan="4" align="center"><button type="submit" id="enviar" name="enviar">Enviar Consulta</button></td>
+  </tr>
+ </tbody> 
+</table>
+<div id="mensajes"></div>
+
+<?php echo Tag::endForm(); ?>
+
+<script>
+jQuery(document).ready(function(){
+
+	jQuery("#progressbar").attr('style','display:none;');
+	jQuery("#progressbarWrapper").attr('style','display:none;');
+
+});
+</script>

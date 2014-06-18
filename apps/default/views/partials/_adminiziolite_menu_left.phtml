@@ -1,0 +1,124 @@
+<?php if(Session::get("usuario_autenticado")==true){ ?>
+
+<!-- Beginning of compulsory code below -->
+<!--<ul class="box">
+
+	 <?php 
+
+       /* $menu = new Menu();
+
+        $s_menu = new Menu();
+
+        $i=0;
+
+        foreach($menu->find("posicion_x<>0","order: orden") as $menu):
+
+        
+
+        echo "<li id='submenu-active' onClick='ocultar($i);' ><a>$menu->descripcion</a>
+
+                    <ul class='toggler menu_left_admiziolite' id='ul_$i'>";
+
+                    if($s_menu->count("posicion_y='$menu->posicion_x'")){			
+
+                            foreach($s_menu->find("posicion_y='$menu->posicion_x'","order: orden") as $s_menu):
+
+                            echo "<li>";
+
+                                echo "<a href='".core::getInstancePath()."$s_menu->url' title='$s_menu->tittle'>$s_menu->descripcion</a>";
+
+                            echo "</li>";
+
+                            endforeach;
+
+                    }
+
+                echo "</ul>";
+
+        echo "</li>";
+
+		
+
+      	$i++;
+
+        endforeach;*/
+
+        ?>			
+
+</ul>-->
+<!-- Beginning of compulsory code below -->
+<div id="jt1">
+
+</div>
+
+<div id="menu_left_jt1" style="display:none">
+<div id="menu_left_jt1_datos" >
+<?php 
+$menu = new Menu();
+$s_menu = new Menu();
+foreach($menu->find("posicion_x<>0","order: orden") as $menu):
+echo "<li >
+			<a>$menu->descripcion</a>
+			
+			<ul>";
+			if($s_menu->count("posicion_y='$menu->posicion_x'")){			
+					foreach($s_menu->find("posicion_y='$menu->posicion_x'","order: orden") as $s_menu):
+					echo "<li>";
+						echo "<a href='".core::getInstancePath()."$s_menu->url' title='$s_menu->tittle'>$s_menu->descripcion</a>";
+					echo "</li>";
+					endforeach;
+			}
+		echo "</ul>";
+echo "</li>";
+endforeach;
+?>	
+</div>
+</div>
+<script>
+
+//var i = <?php //echo $i; ?>;
+
+
+
+jQuery(document).ready(function(){
+
+		//jQuery(".menu_left_admiziolite").toggle("slow");
+		
+		jQuery("#jt1").jstree({
+			"html_data": {
+						"data": jQuery("#menu_left_jt1_datos").clone(),
+				},
+				"themes" : {
+					"theme" : "apple",
+					"dots"  : true,
+					"icons" : true
+				},
+    	    "plugins" : [ "themes", "html_data" ]
+	    });
+
+
+});
+/*
+function ocultar(id){
+
+			jQuery("#ul_"+id).toggle("slow");
+
+			for(i=0;i<=<?php //echo $i-1; ?>;i<=i++){
+
+				if(i!=id){
+
+					//jQuery("#ul_"+i).css("display","none");
+
+					//alert(jQuery("#ul_"+i).css("display"));
+
+					if( jQuery("#ul_"+i).css("display") == 'block' ){jQuery("#ul_"+i).toggle("slow");}
+
+				}
+
+			}
+
+	}
+*/
+</script>
+
+<?php } ?>

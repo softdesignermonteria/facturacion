@@ -1,0 +1,70 @@
+<?php foreach($consecutivos as $con): ?>
+
+<table border="0" width="100%" cellpadding="1" cellspacing="1">
+<tr>
+   	 <th height="0" colspan="4" scope="col" align="center"> CONSECUTIVO</th>
+</tr>
+<tr>
+  <td width="10%" height="0" >&nbsp;</td>
+    <td width="19%" height="0" align="right" ><strong>EMPRESA</strong></td>
+    <td width="58%" height="0" scope="col"><?php echo Session::get("nombre_empresa");?></td>
+    <td width="13%" height="0" scope="col">&nbsp;</td>
+</tr>
+<tr>
+  <td height="0">&nbsp;</td>
+  <td height="0" align="right"><strong>DESCRIPCION</strong></td>
+  <td height="0"><?php echo $con->descripcion; ?></td>
+  <td height="0">&nbsp;</td>
+</tr>
+<tr>
+  <td height="0">&nbsp;</td>
+    <td height="0" align="right"><strong>FECHA</strong></td>
+    <td height="0"><?php echo $con->fecha; ?></td>
+    <td height="0">&nbsp;</td>
+</tr>
+<tr>
+  <td height="0">&nbsp;</td>
+  <td height="0" align="right"><strong>PREFIJO</strong></td>
+  <td height="0"><?php echo $con->prefijo; ?></td>
+  <td height="0">&nbsp;</td>
+</tr>
+<tr>
+  <td height="0">&nbsp;</td>
+  <td height="0" align="right"><strong>DESDE</strong></td>
+  <td height="0"><?php echo $con->desde; ?></td>
+  <td height="0">&nbsp;</td>
+</tr>
+<tr>
+  <td height="0">&nbsp;</td>
+  <td height="0" align="right"><strong>HASTA</strong></td>
+  <td height="0"><?php echo $con->hasta; ?></td>
+  <td height="0">&nbsp;</td>
+</tr>
+<tr>
+  <td height="0">&nbsp;</td>
+  <td height="0" align="right"><strong>RESOLUCION DIAN</strong></td>
+  <td height="0"><?php echo $con->resolucion_dian; ?></td>
+  <td height="0">&nbsp;</td>
+</tr>
+<tr>
+  <td height="0">&nbsp;</td>
+  <td height="0" align="right"><strong>TIPO DOCUMENTO</strong></td>
+  <td height="0"><?php 
+  		$tp = new TipoDocumento();
+  echo $tp->findFirst("empresa_id = '".Session::get("id_empresa")."' and id = '$con->tipo_documento_id'")->nombre ?></td>
+  <td height="0">&nbsp;</td>
+</tr>
+<tr>
+  <td height="0">&nbsp;</td>
+  <td height="0" align="right"><strong>ACTIVO</strong></td>
+  <td height="0"><?php  if($con->activo==0){ echo "SI"; }else{ echo "NO"; }  ?></td>
+  <td height="0">&nbsp;</td>
+</tr>
+<tr>
+  <td height="0">&nbsp;</td>
+  <td height="0" align="right">&nbsp;</td>
+  <td height="0">&nbsp;</td>
+  <td height="0">&nbsp;</td>
+</tr>
+</table>
+<?php endforeach; ?>

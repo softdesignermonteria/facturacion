@@ -1,0 +1,110 @@
+<br />
+<br />
+
+<?php echo Tag::formRemote(Router::getController()."/add", "update: mensajes", "id: fx","name: fx"); ?>
+<table width="600" border="0" align="center" cellpadding="2" cellspacing="2" id="kardex_referencias">
+    <tr>
+            <th colspan="6" class="ui-jqgrid-titlebar ui-widget-header ui-corner-top ui-helper-clearfix" align="left">
+           		FORMULARIO DE AGREGAR ARTICULO A INVENTARIO
+            </th>
+        </tr>
+   <tr>
+      <th align="right" >ID</th>
+      <td align="left" ><?php echo Tag::textField("id","readOnly: readOnly","size: 5"); ?></td>
+  </tr>     
+  <tr>
+      <th align="right" >Empresa</th>
+      <td align="left" >
+	  <?php echo Tag::textField("empresa_id","readOnly: readOnly","size: 5"); ?> 
+	  <?php echo Tag::textField("nombre_empresa","readOnly: readOnly","size: 50"); ?></td>
+  </tr>
+  
+  <tr>
+    <th width="18%" align="right" >CODIGO</th>
+    <td width="16%" align="left" ><?php echo Tag::textUpperField("codigo", "size: 40","maxlength: 50") ?></td>
+    </tr>
+  <tr>
+    <th align="right" >NOMBRE LARGO</th>
+    <td align="left" ><?php echo Tag::textUpperField("nombre_producto", "size: 40","maxlength: 100") ?></td>
+  </tr>
+  <tr>
+    <th align="right" >NOMBRE CORTO</th>
+    <td align="left" ><?php echo Tag::textUpperField("nombre_corto", "size: 30","maxlength: 50") ?></td>
+    </tr>
+  <tr>
+    <th align="right" >GRUPO</th>
+    <td align="left">
+      <?php $grupos = new Grupos();
+      	echo Tag::select('grupos_id',$grupos->find(), 'using: id,nombre_grupo','useDummy=yes'); 
+	  ?>
+    </td>
+  </tr>
+  <tr>
+    <th align="right" >VALOR</th>
+    <td align="left" ><?php echo Tag::numericField("valor", "size: 20","maxlength: 20") ?></td>
+  </tr>
+ <tr>
+    <th align="right" >STOCK MAXIMO</th>
+    <td align="left" ><?php echo Tag::numericField("stock_maximo", "size: 30","maxlength: 20") ?></td>
+  </tr>
+  <tr>
+    <th align="right" >STOCK MINIMO</th>
+    <td align="left" ><?php echo Tag::numericField("stock_minimo", "size: 30","maxlength: 20") ?></td>
+  </tr>
+ <tr>
+    <th align="right" >AVISO</th>
+    <td align="left" >
+    <?php echo Tag::selectStatic('aviso', array(
+		'0' => 'SI',
+		'1' => 'NO'
+		), 'useDummy: yes') ?>
+	</td>
+  </tr>
+  <tr>
+    <th align="right" >VISIBLE POS</th>
+    <td align="left" >
+     <?php echo Tag::selectStatic('visible_pos', array(
+		'0' => 'SI',
+		'1' => 'NO'
+		), 'useDummy: yes') ?>
+   	</td>
+  </tr>
+  <tr>
+    <th align="right" >TIPO DE ARTICULO</th>
+    <td align="left" ><?php $tipo = new TipoKardex();
+      echo Tag::select('tipo_kardex_id',$tipo->find(), 'using: id,nombre','useDummy=no'); 
+	  ?></td>
+  </tr>
+	<tr>
+    <th align="right" >IVA COMPRA</th>
+    <td align="left" ><?php $tipo = new TarifaIva();
+      echo Tag::select('iva_compra',$tipo->find(), 'using: id,tarifa_iva','useDummy=no'); 
+	  ?></td>
+  </tr>
+  <tr>
+    <th align="right" >IVA VENTA </th>
+    <td align="left" ><?php $tipo = new TarifaIva();
+      echo Tag::select('iva_venta',$tipo->find(), 'using: id,tarifa_iva','useDummy=no'); 
+	  ?></td>
+  </tr>
+   <tr>
+    <th align="right" >GARANTIA</th>
+    <td align="left" >
+      <?php echo Tag::numericField("valor_tiempo", "size: 5","maxlength: 5") ?> 
+      <?php 
+	  		$tipo = new TiempoGarantia();
+      		echo Tag::select('tiempo_garantia_id',$tipo->find(), 'using: id,tiempo_garantia','useDummy=no'); 
+	  ?>
+     </td>
+  </tr>
+  
+  
+  <tr>
+    <td  colspan="2" align="center"><button id="guardar" type="submit">Guardar</button></tr>
+</table>
+
+<div id="mensajes"></div>
+
+<?php echo Tag::endForm() ?>
+
+<?php echo view::getContent(); ?>

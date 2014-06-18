@@ -1,0 +1,27 @@
+<table border="0" cellpadding="1"  width="100%" cellspacing="0">
+<tr>
+	<th>NUMERO</th>
+    <th>CODIGO</th>
+    <th>NOMBRE DEL GRUPO</th>
+    <th>MODIFICAR</th>
+    <th>ELIMINAR</th>
+</tr>
+<?php 
+$i=0;
+$gp = new Grupos();
+foreach($gp->find() as $gp): 
+
+?>
+<tr>
+	<td><?php echo $i; ?></td>
+    <td><?php echo $gp->id; ?></td>
+    <td><?php echo Tag::textField("nombre_grupo".$i,"size: 50","value: $gp->nombre_grupo"); 
+			  echo Tag::hiddenField("id".$i,"size: 10","value: $gp->id");?></td>
+   	<td align="center" valign="middle"><a href="javascript: void(0);"  onClick="modificar('<?php echo $i?>');" id='bt<?php echo $i?>' name='bt<?php echo $i?>'> <?php echo Tag::image("64x64/Edit.png",'width: 20px'); ?> </a></td>
+    <td align="center" valign="middle"><a href="javascript: void(0);"  onClick="eliminar('<?php echo $i?>');" id='bt<?php echo $i?>' name='bt<?php echo $i?>'> <?php echo Tag::image("64x64/Stop.png",'width: 20px'); ?> </a></td>
+</tr>
+<?php $i++; endforeach; ?>
+</table>
+
+
+<?php echo view::getContent(); ?>

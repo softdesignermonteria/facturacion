@@ -1,0 +1,150 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+
+<head>
+ <style media="print" type="text/css" >
+   .oculto{ 
+      display:none; 
+    }
+
+	body{
+		font-size:8pt; 
+		}
+	table{
+		 font-size:8pt; 
+		}
+</style>
+<style>
+body{
+		font-size:8pt; 
+		}
+table{
+	font-size:8pt; 
+	}
+	
+</style>
+</head>
+
+<body style="margin:0px;padding:0px;" >
+<?php 
+
+$emp = new Empresa();
+
+$empresa = $emp->findFirst(" id = '$encabezado->empresa_id' ");
+
+$nombre_empresa = $empresa->nombre_empresa;
+$regimen=$empresa->regimen_id;
+
+$nit=$empresa->nit;
+$consecutivo = str_pad(intval($encabezado->consecutivo), 4, '0', STR_PAD_LEFT);
+
+$consecutivo=$encabezado->prefijo." ".$consecutivo;
+
+$direccion=$empresa->direccion;
+$telefonos=$empresa->telefonos;
+$celular=$empresa->celular;
+$web=$empresa->web;
+$correo=$empresa->correo;
+$nit_cliente=$cli->nit;
+
+$fecha=$encabezado->fecha_act;
+//$observaciones=$encabezado->observaciones;
+$mostrar_logo=$tipo_documento->mostrar_logo;
+$logo=$tipo_documento->logo;
+$ancho=$tipo_documento->ancho;
+$alto=$tipo_documento->alto;
+$font=$tipo_documento->font;
+$size=$tipo_documento->size;
+$tipo_letra=$tipo_documento->tipo_letra;
+$papel=$tipo_documento->papel;
+$entro = '';
+$limite = $total_page;
+
+?>
+<table cellpadding="2" cellspacing="2">
+<tr></tr>
+<tr>
+  <td colspan="3" align="center"><font size="+1"><?php echo $nombre_empresa;  ?></font><br /></td>
+</tr>
+<tr>
+  <td colspan="3" align="center"><font size="+0.5"><?php echo $nit;  ?></font></td>
+</tr>
+<tr>
+  <td colspan="3" align="center"><font size="+0.5"><?php echo $direccion;  ?></font></td>
+</tr>
+<tr>
+  <td colspan="3" align="center"><font size="+0.5"><?php echo "TEL: ".$telefonos." CEL: ".$celular; ?></font></td>
+</tr>
+<tr>
+  <td colspan="3" align="center"><font size="+0.5"><?php echo $web; ?></font></td>
+</tr>
+<tr>
+  <td colspan="3" align="center"><font size="+0.5"><?php echo $correo; ?></font></td>
+</tr>
+<tr>
+	<td colspan="3">&nbsp;</td>
+</tr>
+<tr>
+	<td colspan="3">&nbsp;</td>
+</tr>
+<tr>
+  <td colspan="3" align="right"><font size="+0.5">Cuadre de Caja </font><font size="+0.5"><?php echo $consecutivo; ?></font></td>
+</tr>
+<tr>
+  <td colspan="3" align="right"><font size="+0.1"><?php echo $empleado->nombre_completo; ?></font></td>
+</tr>
+<tr>
+	<td colspan="3">&nbsp;</td>
+</tr>
+<tr>
+  <td colspan="3">HORA ENTRADA <?php echo $turnos->inicio; ?></td>
+</tr>
+<tr>
+  <td colspan="3">HORA SALIDA <?php echo $turnos->fin; ?></td>
+</tr>
+<tr>
+  <td colspan="3"><font size="+0.5">VALOR CAJA X DEFECTO $ <?php echo number_format($encabezado->valor_caja_defecto,0); ?></font></td>
+</tr>
+<tr>
+  <td colspan="3"><font size="+0.5">VALOR DEPOSITADO CAJA $ <?php echo number_format($encabezado->deposito_caja,0); ?></font></td>
+</tr>
+<tr>
+  <td colspan="3">&nbsp;</td>
+</tr>
+<tr>
+  <td colspan="2" nowrap="nowrap" width="200px" align="left">CANT DESCRIPCION</td>
+  <td nowrap="nowrap" width="100px;" align="right">Subtotal</td>
+</tr>
+<?php 
+  	$i = 1; 
+   $total = 0;
+	foreach($detalles as $det):
+	
+?>
+<tr>
+  <td colspan="2" align="left"><?php echo $det->prefijo.$det->consecutivo; ?></td>
+  <td align="right">$<?php echo number_format($det->total,0); $total += $det->total; ?></td>
+</tr>
+<?php 
+   	$i++;
+endforeach;
+	
+ ?>
+<tr>
+  <td colspan="3" align="right"> - - - - - - - - - - - - - - - - - - - - -  - - - -  - - - - - - -     - </td>
+  <td></td>
+</tr>
+<tr>
+  <td colspan="2" nowrap="nowrap" align="right"><font size="+0.5">TOTAL INGRESOS</font></td>
+  <td nowrap="nowrap" align="right"><font size="+0.5">$<?php echo number_format($total,0);  ?></font></td>
+</tr>
+<tr>
+  <td colspan="2" nowrap="nowrap" align="right"><font size="+0.5">SALDO CAJA</font></td>
+  <td nowrap="nowrap" align="right"><font size="+0.5">$<?php echo number_format($encabezado->total_ingresos + $encabezado->valor_caja_defecto + $encabezado->deposito_caja,0);  ?></font></td>
+</tr>
+</table>
+<font size="+2" class="oculto"><a onclick="window.close();" class="oculto" style="cursor: pointer;">Cerrar <img src="/paraiso/public/img/iconos/borrar.png" width="20px" /></a></font>
+  
+<?php echo view::getContent(); ?>
+</body>
+</html>

@@ -1,0 +1,7 @@
+<?php 
+$url = $_SERVER['DOCUMENT_ROOT'].core::getInstancePath().'public/files/'.$_REQUEST["archivo"];
+unlink($url);
+//echo $url;
+?>
+
+<?php echo View::renderPartial("listar_copias"); ?>

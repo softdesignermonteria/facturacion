@@ -1,0 +1,33 @@
+<!--Formulario para configurar la consecutivos-->
+
+<?php echo Tag::form("empresa/add","id: consecutivos") ?>
+
+<table border="0" cellpadding="1">
+    <tr>
+   	 <th colspan="4" scope="col">CONFIGURE EMPRESA</th>
+    </tr>
+  <tr>
+    <td width="19%" height="30" >NIT</td>
+    <td width="43%" scope="col"><?php echo Tag::numericField("nit", "size: 30","maxlength: 20") ?></td>
+    <td width="21%" scope="col"><strong>DIRECCION</strong></td>
+    <td width="17%" scope="col"><?php echo Tag::textField("direccion", "size: 30","maxlength: 20") ?></td>
+  </tr>
+  <tr>
+    <td height="30"><strong>NOMBRE EMPRESA</strong></td>
+    <td height="30"><?php echo Tag::textField("nombre_empresa", "size: 30","maxlength: 20") ?></td>
+    <td><strong>REGIMEN</strong></td>
+    <td><?php $regimen = new Regimen();
+      echo Tag::select('regimen_id',$regimen->find(), 'using: id,descripcion','useDummy=yes'); 
+	  ?></td>
+  </tr>
+  <tr>
+    <td height="30"><strong>LOGO</strong></td>
+    <td height="30"><?php echo Tag::fileField("imagen", "size: 30","maxlength: 20") ?></td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td height="30" colspan="4"><?php echo Tag::submitButton('Agregar', 'id: guardar', 'name: guardar') ?></tr>
+</table>
+
+<?php echo Tag::endForm() ?>

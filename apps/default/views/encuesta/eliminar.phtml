@@ -1,0 +1,50 @@
+<h4>FORMULARIO PARA ELIMINAR ENCUESTA</h4>
+
+<?php echo Tag::formRemote(Router::getController()."/delete", "update: mensajes", "id: fx","name: fx"); ?>
+
+<table width="80%" border="0" align="center" cellpadding="1">
+  <tr>
+    <td  align="right" valign="middle">TITULO ENCUESTA</td>
+    <td align="left" valign="middle"><?php echo Tag::hiddenField("id"); ?><?php echo Tag::hiddenField("usuarios_id","value: ".Session::get("usuarios_id")); ?>
+	<?php echo Tag::textField("descripcion", "size: 30","maxlength: 20","placeholder: INGRESE TITULO ENCUESTA") ?></td>
+  </tr>
+  <tr>
+    <td  align="right" valign="middle">ENCABEZADO</td>
+    <td align="left" valign="middle"><?php echo Tag::textArea2("encabezado") ?></td>
+    </tr>
+  <tr>
+    <td  align="right" valign="middle">FECHA CIERRE</td>
+    <td align="left" valign="middle"><?php echo Tag::textField("fecha_cierre", "size: 30","maxlength: 20","placeholder: INGRESE FECHA") ?></td>
+  </tr>
+  <tr>
+    <td  align="right" valign="middle">ESTADO ENCUESTA</td>
+    <td align="left" valign="middle"><?php echo Tag::selectStatic('estado', array('' => 'Seleccione...','1' => 'NO','0' => 'SI','1' => 'NO')) ?></td>
+  </tr>
+  <tr>
+     <td colspan="3" align="center" >
+     <button type="submit" id="guardar" name="guardar">Eliminar</button>
+     <button type="button" id="cancelar" name="cancelar" onclick="doccancelar('<?php echo core::getInstancePath(); ?>','<?php echo Router::getController(); ?>');">Cancelar</button>
+     </td>
+  </tr> 
+</table>
+
+<div id="mensaje"><?php echo View::getContent(); ?></div>
+
+<?php echo Tag::endForm() ?>
+
+<div id="mensajes"></div>
+
+<script>
+	
+	jQuery(document).ready(function(e) {
+		
+        jQuery("#id").attr("readOnly","ReadOnly");
+		jQuery("#descripcion").attr("readOnly","ReadOnly");
+		jQuery("#encabezado").attr("readOnly","ReadOnly");
+		jQuery("#fecha_cierre").attr("readOnly","ReadOnly");
+		jQuery("#estado").prop('disabled', true);
+			
+
+    });
+	
+</script>

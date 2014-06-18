@@ -1,0 +1,144 @@
+
+<br />
+<table width="50%" height="160"  align="center" cellpadding="2" cellspacing="2">
+ <tr>
+    <th colspan="6" class="ui-jqgrid-titlebar ui-widget-header ui-corner-top ui-helper-clearfix" align="left">
+   		 Agregar o Modificar Turnos de los Empleados
+    </th>
+</tr>
+
+  <tr>
+    <td width="29%" align="right">Id</td>
+    <td width="45%" align="left"><?php echo Tag::textField("id", "size: 25","maxlength: 20","readOnly: readOnly","style: background: #cccccc;") ?></td>
+    <td width="26%" align="left">&nbsp;</td>
+  </tr>
+  
+  <tr>
+    <td align="right">Fecha Inicio</td>
+    <td align="left"><?php echo Tag::textField("fecha_inicio", "size: 15") ?></td>
+    <td align="left">&nbsp;</td>
+  </tr>
+  
+  <tr>
+    <td align="right">Fecha Fin</td>
+    <td align="left"><?php echo Tag::textField("fecha_fin", "size: 15") ?></td>
+    <td align="left">&nbsp;</td>
+  </tr>
+  
+  <tr>
+    <td align="right">Nombre Empleado</td>
+    <td align="left"><?php echo Tag::textField("empleado_id", "size: 5","maxlength: 30","readOnly: readOnly","style: background: #cccccc;") ?>
+					<?php echo Tag::textField("nombre_empleados", "size: 25","maxlength: 30") ?></td>
+    <td align="left"><button id="buscar_empleados">Buscar</button></td>
+  </tr>
+  
+   <tr>
+    <td align="right">Activo</td>
+    <td align="left"><select id="anulado"><option value="0">Activo</option><option value="1">Inactivo</option></select></td>
+    <td align="left"></td>
+  </tr>
+  
+  
+ 
+</table>
+<br />
+<div align="center">
+	<button id="guardar">Guardar</button>
+    <button id="cancelar">Cancelar</button>
+</div>
+
+<br /><br />
+
+<div id="mensajes"></div>
+
+
+<?php 
+$admin =  new Turnos();
+$emp = new Empleado();
+
+	if( isset( $_REQUEST["id"] ) ){
+		if($_REQUEST["id"]!=''){
+		
+			$idt = $_REQUEST["id"];
+			$encabezado       = $admin->findFirst(" id = '$idt' ");
+			$id               = $encabezado->id; 
+			$fecha_inicio     = $encabezado->inicio; 
+			$fecha_fin        = $encabezado->fin; 
+			$nombre_completo  = $emp->findFirst("id = '$encabezado->empleado_id'")->nombre_completo; 
+			$empleado_id      = $encabezado->empleado_id; 
+			$anulado          = $encabezado->anulado; 
+
+				
+		}
+	}
+?>
+
+<script>
+
+jQuery(document).ready(function(){
+
+	<?php if( isset( $_REQUEST["id"] ) ){
+		if($_REQUEST["id"]!=''){ ?>
+			
+				jQuery("#id").val("<?php echo $id; ?>");
+				jQuery("#fecha_inicio").val("<?php echo $fecha_inicio; ?>");
+				jQuery("#fecha_fin").val("<?php echo $fecha_fin; ?>");
+				jQuery("#empleado_id").val("<?php echo $empleado_id; ?>");
+				jQuery("#nombre_empleados").val("<?php echo $nombre_completo; ?>");
+				jQuery("#anulado").val("<?php echo $anulado; ?>");
+<?php	
+			}
+	}
+	
+	?>
+	
+
+jQuery("#guardar").click(function(){
+	guardar();
+});
+
+function guardar(){
+var datos = "";
+jQuery( '#mensajes' ).html("");
+jQuery( "#progressbar" ).progressbar({ value: 50 });	
+var jqXHR = jQuery.ajax({
+	type: "POST",
+	url: "<?php echo core::getInstancePath(); ?>turnos/add",
+	data: {
+			id:             jQuery("#id").val(),
+			fecha_inicio:   jQuery("#fecha_inicio").val(),
+			fecha_fin:      jQuery("#fecha_fin").val(),
+			empleado_id:    jQuery("#empleado_id").val(),
+			anulado:        jQuery("#anulado").val(),
+			
+	},
+	success: function(data) {
+		jQuery( '#mensajes' ).html("");
+		jQuery( "#progressbar" ).progressbar({ value: 90 });
+		jQuery( '#mensajes' ).html(data);
+	},
+	error: function(data) {
+		jQuery('#dialogo_mensajes').html("Error Enviando parametros.....");
+		jQuery( "#progressbar" ).progressbar({ value: 0 });
+		jQuery('#dialogo_mensajes').dialog("open");
+	}
+});
+
+ jqXHR.done(function(data){
+	jQuery( "#progressbar" ).progressbar({ value: 0 });
+	 jQuery("#id").val("");
+	 jQuery("#fecha_inicio").val("");
+	 jQuery("#fecha_fin").val("");
+	 jQuery("#empleado_id").val("");
+	 jQuery("#nombre_empleados").val("");
+	 jQuery("#anulado").val("0");
+});
+
+}
+
+
+});
+
+
+</script>
+

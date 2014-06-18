@@ -1,0 +1,136 @@
+<h1>FORMULARIO MODIFICAR CLIENTES</h1>
+
+<?php echo Tag::formRemote(Router::getController()."/update", "update: mensajes", "id: fx","name: fx"); ?>
+
+<table width="874" border="0" align="center" cellpadding="1">
+  <tr>
+    <td width="155" height="0" align="right" valign="middle" >IDENTIFICACION</td>
+    <td width="180" height="0" align="left" valign="middle" scope="col"><?php echo Tag::hiddenField("id", "size: 12","maxlength: 12") ?><?php echo Tag::textField("nit", "size: 12","maxlength: 12") ?></td>
+    <td width="136" align="right" scope="col">&nbsp;</td>
+    <td width="349" scope="col">&nbsp;</td>
+    </tr>
+  <tr>
+    <td height="0" align="right" valign="middle">PRIMER NOMBRE</td>
+    <td height="0" align="left" valign="middle"><?php echo Tag::textUpperField("nombre1", "size: 20","maxlength: 20") ?></td>
+    <td align="right">SEGUNDO NOMBRE</td>
+    <td><?php echo Tag::textUpperField("nombre2", "size: 30","maxlength: 20") ?></td>
+    </tr>
+  <tr>
+    <td height="0" align="right" valign="middle">PRIMER APELLIDO</td>
+    <td height="0" align="left" valign="middle"><?php echo Tag::textUpperField("apellido1", "size: 20","maxlength: 20") ?></td>
+    <td align="right">SEGUNDO APELLIDO</td>
+    <td><?php echo Tag::textUpperField("apellido2", "size: 30","maxlength: 20") ?></td>
+    </tr>
+  <tr>
+    <td height="0" align="right" valign="middle">RAZ&Oacute;N SOCIAL</td>
+    <td height="0" align="left" valign="middle"><?php echo Tag::textUpperField("razon_social", "size: 40","maxlength: 100") ?></td>
+    <td align="right" valign="middle">&nbsp;</td>
+    <td align="left" valign="middle">&nbsp;</td>
+  </tr>
+  <tr>
+    <td height="0" align="right" valign="middle">DIRECCION CASA</td>
+    <td height="0" align="left" valign="middle"><?php echo Tag::textUpperField("direccion_casa", "size: 40","maxlength: 100") ?></td>
+    <td align="right"></td>
+    <td></td>
+    </tr>
+  <tr>
+    <td height="0" align="right" valign="middle">DIRECCION OFICINA</td>
+    <td height="0" align="left" valign="middle"><?php echo Tag::textUpperField("direccion_oficina", "size: 40","maxlength: 100") ?></td>
+    <td align="right">&nbsp;</td>
+    <td>&nbsp;</td>
+    </tr>
+  <tr>
+    <td height="0" align="right" valign="middle">TELEFONO FIJO(1)</td>
+    <td height="0" align="left" valign="middle"><?php echo Tag::numericField("telefono1", "size: 15","maxlength: 20") ?></td>
+    <td align="right">TELEFONO FIJO(2)</td>
+    <td><?php echo Tag::numericField("telefono2", "size: 15","maxlength: 15") ?></td>
+  </tr>
+  <tr>
+    <td height="0" align="right" valign="middle">CELULAR</td>
+    <td height="0" align="left" valign="middle"><?php echo Tag::numericField("celular", "size: 15","maxlength: 15") ?></td>
+    <td align="right">&nbsp;</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td height="0" align="right" valign="middle">DEPARTAMENTOS</td>
+    <td height="0" colspan="3" align="left" valign="middle"><?php  echo Tag::textFieldExt("departamentos","campo: departamento","size: 10"); ?></td>
+    </tr>
+  <tr>
+    <td height="0" align="right" valign="middle">MUNICIPIOS</td>
+    <td height="0" colspan="3" align="left" valign="middle"><?php  echo Tag::textFieldExt("municipios","campo: municipio","size: 10"); ?></td>
+  </tr>
+  <tr>
+    <td height="0" align="right" valign="middle">EMAIL</td>
+    <td height="0" align="left" valign="middle"><?php echo Tag::textUpperField("email", "size: 30","maxlength: 100") ?></td>
+    <td align="right">PAGINA WEB</td>
+    <td><?php echo Tag::textUpperField("web", "size: 30","maxlength: 50") ?></td>
+    </tr>
+ 	 <tr>
+ 	 <td colspan="4" align="center" >
+     		<button type="submit" id="enviar" name="enviar">Modificar</button>
+            <button type="button" id="cancelar" name="cancelar" onclick="doccancelar('<?php echo core::getInstancePath(); ?>','<?php echo Router::getController(); ?>');">Cancelar</button>
+     </td>
+    </tr> 
+     
+</table>
+
+<?php echo Tag::endForm() ?>
+
+<div id="mensajes"></div>
+<br />
+
+<script language="JavaScript">
+ jQuery(document).ready(function(e) {
+	 
+	 
+ <?php 
+		$entidad = new Clientes();
+		
+		foreach( $entidad->getPrimaryKeyAttributes() as $filas):
+			echo "jQuery(\"#$filas\").attr(\"readonly\",\"readonly\");\n";
+		endforeach;	
+		
+		foreach( $entidad->getNonPrimaryKeyAttributes() as $filas):
+				foreach( $entidad->getNonPrimaryKeyAttributes() as $filas2):
+					if($filas==$filas2){ echo "jQuery(\"#$filas2\").attr(\"required\",\"required\");\n"; break;} 
+				endforeach;	
+				
+		endforeach;	
+		
+	?> 	
+	
+	 
+	 jQuery("#razon_social").focus(function(){
+		 	nom="";
+			nom+=jQuery("#nombre1").val();nom+=" ";
+			nom+=jQuery("#nombre2").val();nom+=" ";
+			nom+=jQuery("#apellido1").val();nom+=" ";
+			nom+=jQuery("#apellido2").val();nom+=" ";
+			nom = nom.replace("  "," ");
+	 		jQuery("#razon_social").val(nom);
+		 });
+	 
+	 jQuery("#camara").click(function(event){
+		 	event.preventDefault();
+			 html = webcam.get_html(640, 480) ;
+			 html += "<center><a href='javascript:void(webcam.snap())'>Tomar Foto</a></center>"; 
+		 	 jQuery("#dialogo_camara").html(html);
+			 jQuery("#dialogo_camara").dialog("open");
+		 });
+	
+	jQuery(document).ready(function(){
+         jQuery("#departamentos").change(function(evento){
+         //elimino el comportamiento por defecto del enlace
+  	 evento.preventDefault();
+         //Aquí pondría el código de la llamada a Ajax
+	 url = 	"<?php echo core::getInstancePath(); ?>proveedores/traer_municipios/"+$('dptos').value; 
+	jQuery("#traer_municipios2").load(url);
+			  
+   });
+   
+}); 
+	
+});
+
+	
+</script>

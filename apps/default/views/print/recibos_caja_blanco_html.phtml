@@ -1,0 +1,136 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+
+<head>
+ <style media="print" type="text/css" >
+   .oculto{ 
+      display:none; 
+    }
+
+ </style>
+</head>
+
+<body style="margin:0px; padding:0px; font-size:10pt;font-family:Arial, Helvetica, sans-serif;">
+<?php 
+
+$emp = new Empresa();
+$empresa = $emp->findFirst(" id = '".$_REQUEST["empresa_id"]."' ");
+$nombre_empresa = $empresa->nombre_empresa;
+$regimen=$empresa->regimen_id;
+$nit=$empresa->nit;
+$direccion=$empresa->direccion;
+$telefonos=$empresa->telefonos;
+$celular=$empresa->celular;
+$web=$empresa->web;
+$correo=$empresa->correo;
+
+?>
+
+<table width="100%" border="0" cellspacing="2" cellpadding="2">
+<thead>
+	<tr>
+   	  <td colspan="4">
+       	  <table width="100%">
+           		  <tr>
+                      <th width="16%" rowspan="4" align="left" valign="top">
+                          <?php
+                            if($_REQUEST["empresa_id"]=='2'){
+                               echo "<img src=\"".core::getInstancePath()."public/img/iconos/logo.jpeg\" width=\"125px\" />";
+                            }
+                            ?>    </th>
+              <th colspan="3" rowspan="4" align="center" scope="col">
+					  			<?php if($regimen == 1 ){ echo "$nombre_empresa"; }else{ echo $nombre_empresa; } ?><br />
+                                <?php if($regimen == 1 ){ echo "C.C $nit"; }else{ echo $nit; } ?><br />
+                                <?php echo $direccion;  ?><br />             
+                                <?php echo "TEL: ".$telefonos." CEL: ".$celular; ?><br /> 
+								<?php $w = '';
+                                    if( $web != ''){
+                                        $w=" WEB: ".$web;
+                                    }
+                                    if( $correo !=''){
+                                        $w=" CORREO: ".$correo;
+                                    }
+                                    echo $w;?><br />                         </th>
+                      <th width="21%" scope="col">RECIBO DE CAJA </th>
+            </tr>
+                    <tr>
+                      <th align="center"><?php echo  $_REQUEST["numero"];?></th>
+            </tr>
+                    <tr>
+                      <th>&nbsp;</th>
+                    </tr>
+                    <tr>
+                      <th>&nbsp;</th>
+                    </tr>
+          </table>      </td>
+    </tr>
+  <tr>
+    <th colspan="4" scope="row">&nbsp;</th>
+  </tr>
+  <tr>
+    <th width="15%" height="30" align="right" scope="row">SE&Ntilde;OR(ES)</th>
+    <td width="21%" height="30"><?php echo  $_REQUEST["nombre_cliente"];?></td>
+    <td width="48%" height="30">&nbsp;</td>
+    </tr>
+  <tr>
+    <th height="30" align="right" scope="row">DIRECCION</th>
+    <td height="30"><?php echo $_REQUEST["direccion"];?></td>
+    <td height="30">FECHA<?php echo $_REQUEST["fecha"];?></td>
+    </tr>
+  <tr>
+    <th height="30" align="right" scope="row">PAGADO</th>
+    <th height="30" align="left" scope="row">$<?php echo number_format($_REQUEST["total"],0);?></th>
+    <th height="30" scope="row">&nbsp;</th>
+  </tr>
+  </thead>
+  <tbody>
+
+  <tr>
+    <td height="30" align="right" scope="row"><strong>POR CONCEPTO DE</strong></td>
+    <td height="30" colspan="3" align="left" scope="row"><?php echo $_REQUEST["por_concepto_de"];?></td>
+    </tr>
+  <tr>
+    <td height="30" align="right" scope="row"><strong>CHEQUE</strong></td>
+    <td height="30" colspan="3" align="left" scope="row"><?php echo $_REQUEST["cheque"];?></td>
+  </tr>
+  <tr>
+    <td height="30" align="right" scope="row"><strong>BANCO</strong></td>
+    <td height="30" colspan="3" align="left" scope="row"><?php echo $_REQUEST["banco"];?></td>
+  </tr>
+  <tr>
+    <td height="30" colspan="4" align="left" scope="row"><strong>RECIBIMOS LA SUMA DE: 
+        <?php 
+			$currency = new Currency(new Locale('es_CO'));
+			
+			$letras = $currency->getMoneyAsText($_REQUEST["total"],false);
+			$letras =  str_replace("COLOMBIANOS",'',$letras); 
+			$letras =  str_replace("colombianos",'',$letras); 
+			echo $letras;
+			//print $currency->getMoneyAsText($_REQUEST["total"]); 
+			
+			?>
+    </strong></td>
+    </tr>
+  <tr>
+    <th colspan="4" align="left" scope="row">&nbsp;</th>
+  </tr>
+  <tr>
+    <th colspan="4" align="right" scope="row">RECIBIDO: ____________________</th>
+    </tr>
+  </tbody>
+</table>
+<div align="center" class="oculto">
+<table border="1" cellpadding="1" cellspacing="2">
+    <tr>
+      <td align="center"><?php echo Tag::button("Imprimir","onClick: window.print();"); ?></td>
+      <td align="center"><?php echo Tag::linkTo("menu/", Tag::image("iconos/inicio.png",'width: 32px')); ?></td>
+    </tr>
+    <tr>
+      <td align="center">IMPRIMIR</td>
+      <td align="center"><p>INICIO</p></td>
+    </tr>
+</table>    
+</div>
+<?php echo view::getContent(); ?>
+</body>
+</html>

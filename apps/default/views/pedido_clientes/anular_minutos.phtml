@@ -1,0 +1,58 @@
+<br /><br />
+<table width="100%" align="center" cellpadding="1" cellspacing="1" class="ui-widget ui-widget-content ui-corner-all">
+<tr> 
+	<th colspan="8" class="ui-jqgrid-titlebar ui-widget-header ui-corner-top ui-helper-clearfix" align="left">ULTIMOS 30 NO LIQUIDADOS</th>
+</tr>
+<tr>
+	<th>Numero</th>
+	
+    <th>Consecutivo</th>
+    <th>Hora Entrada</th>
+    <th>Habitacion</th>
+    <th>Hora Salida</th>
+    <th>Tiempo</th>
+    <th>Modificar</th>
+    <th>Anular</th>
+</tr>
+<?php 
+	$i = 1;
+	$encabezado = new PedidoClientes();
+	$hb = new CentroProduccion();
+	foreach($encabezado->find("liquidado = 0","limit: 30","order: id desc") as $encabezado):
+	$db = DbBase::rawConnect();
+	$fila = $db->query("select HOUR(TIMEDIFF('".Date::now()."','$encabezado->hora_entrada')) as hora , MINUTE(TIMEDIFF('".Date::now()."','$encabezado->hora_entrada')) as minutos");
+	$minutos = $db->fetchArray($fila);
+	//echo $minutos["hora"];
+	//echo $minutos["minutos"];
+?>
+<tr>
+	<td><?php echo $i; ?></td>
+    <td><?php echo $encabezado->prefijo.$encabezado->consecutivo; ?></td>
+    <td><?php echo $hb->findFirst(" id  = '$encabezado->centro_produccion_id' ")->centro_produccion; ?></td>
+    <td><?php echo $encabezado->hora_entrada; ?></td>
+    <td><?php echo $encabezado->hora_salida; ?></td>
+    <td><?php echo $minutos["hora"].":".$minutos["minutos"]; ?></td>
+    <td><?php echo Tag::linkTo("pedido_clientes/agregar/?centro_produccion_id=$encabezado->centro_produccion_id",Tag::image("iconos/bd.png")); ?></td>
+    <td>
+	 <?php if( $minutos["hora"] == 0 && $minutos["minutos"] <= 5 ) { echo Tag::linkTo("pedido_clientes/anular/?id=$encabezado->id&prefijo=$encabezado->prefijo&consecutivo=$encabezado->consecutivo",Tag::image("iconos/borrar.png")); } ?>
+     <?php //echo Tag::linkTo("pedido_clientes/anular/?id=$encabezado->id&prefijo=$encabezado->prefijo&consecutivo=$encabezado->consecutivo",Tag::image("iconos/borrar.png")); ?>
+    </td>
+</tr>
+
+<?php $i++; endforeach; ?>
+
+</table>
+
+<?php echo view::getContent(); ?>
+
+<script>
+jQuery(function() {
+
+jQuery("#progressbar").attr('style','display:none;');
+jQuery("#progressbarWrapper").attr('style','display:none;');
+
+
+});
+
+</script>
+

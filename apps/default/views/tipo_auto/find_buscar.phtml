@@ -1,0 +1,46 @@
+<table id="tablatipoauto"></table>
+<div id="pagertipoauto"></div>
+<script>
+jQuery(document).ready(function(){
+
+		
+		jQuery("#tablatipoauto").jqGrid(
+		{ 
+			ajaxGridOptions : {type:"POST"},
+			url:'<?php echo core::getInstancePath(); ?>tipo_auto/find_detalle_buscar', 
+			datatype: "json", 
+			colNames:['Id','Tipo de Auto'], 
+			colModel:[ 
+				{ name:'id',index:'id', width:20}, 
+				{ name:'tipo_auto',index:'tipo_auto', width:90}
+			], 
+			autoWidth:true,
+			width: 550,
+			height: 250,
+			rowNum:10, 
+			rowList:[10,20,30,40,50], 
+			pager: '#pagertipoauto', 
+			sortname: 'tipo_auto', 
+			/*shrinkToFit :false,*/
+			viewrecords: true, 
+			sortorder: "asc", 
+			caption:"listado de Tipos de Autos",
+			ondblClickRow:function(rowid,iRow,iCol,e){
+				
+				var fila = jQuery(this).jqGrid('getRowData',rowid);
+					
+					jQuery("#tipo_auto_id").val(fila['id']);
+					jQuery("#nombre_tipo_auto").val(fila['tipo_auto']);
+					jQuery("#dialogo_tipo_auto").dialog("close");
+       		 }
+		}); 
+		jQuery("#tablatipoauto").jqGrid('navGrid','#pagertipoauto',{edit:false,add:false,del:false}); 
+		jQuery("#tablatipoauto").jqGrid('navButtonAdd','#pagertipoauto',{
+		caption: "Columnas",
+		title: "Reordena Columnas",
+		onClickButton : function (){
+			jQuery("#tablatipoauto").jqGrid('columnChooser');
+		}
+	});
+});
+</script>

@@ -1,0 +1,165 @@
+<?php
+
+$emp = new Empresa();
+$empresa = $emp->findFirst(" id = '$encabezado->empresa_id' ");
+Session::set("nombre_empresa",$empresa->nombre_empresa);
+Session::set("nit",$empresa->nit);
+Session::set("consecutivo",$encabezado->prefijo.$encabezado->consecutivo);
+Session::set("direccion",$empresa->direccion);
+Session::set("telefonos",$empresa->telefonos);
+Session::set("celular",$empresa->celular);
+Session::set("web",$empresa->web);
+Session::set("correo",$empresa->correo);
+
+Session::set("razon_social",$cli->razon_social);
+Session::set("telefonos_cliente",$cli->telefono1. " ".$cli->telefono2);
+Session::set("fecha",$encabezado->fecha);
+Session::set("observaciones",$encabezado->observaciones);
+Session::set("mostrar_logo",$tipo_documento->mostrar_logo);
+Session::set("logo",$tipo_documento->logo);
+Session::set("ancho",$tipo_documento->ancho);
+Session::set("alto",$tipo_documento->alto);
+Session::set("font",$tipo_documento->font);
+Session::set("size",$tipo_documento->size);
+$font = $tipo_documento->font;
+
+class PDF extends FPDF
+{
+
+	 
+	
+   //Cabecera de página
+   function Header()
+   {
+   		
+		
+	    
+		//global $nit;
+	
+	    
+		
+		
+		if(Session::get("mostrar_logo")=='1'){
+			$this->Image($_SERVER['DOCUMENT_ROOT'].core::getInstancePath()."public/img/".Session::get("logo")."",10,5,Session::get("ancho"),Session::get("alto"));
+		}
+		$this->SetTextColor('');
+		$size = Session::get("size") + 1;
+		$this->setFont("".Session::get("font")."", '', "".$size."");
+		$this->setX("50");
+		$this->Cell(105, 5, Session::get("nombre_empresa")                          ,'0','0','C');
+		$this->Cell(50,  5, "RECIBO DE CAJA NUMERO "                                      ,'1','1','C');
+		$this->setX("50");
+		$this->Cell(105, 5, Session::get("nit")                             ,'0','0','C');
+		$this->Cell(50,  5,  Session::get("consecutivo")             ,'1','1','C');
+		$this->setX("50");
+		$this->Cell(110, 5,  Session::get("direccion")                              ,'0','1','C');
+		$this->setX("50");
+		$this->Cell(110, 5, "TEL: ".Session::get("telefonos")." CEL: ".Session::get("celular"),'0','1','C');
+		$this->setX("50");
+		$w = '';
+		if( Session::get("web") != ''){
+			$w=" WEB: ".Session::get("web");
+		}
+		if( Session::get("web") !=''){
+			$w=" CORREO: ".Session::set("correo");
+		}
+		
+		
+		
+		$this->Cell(110, 5, $w );
+		$this->Ln();
+		$this->SetX("15");
+		$this->Cell(40, 5, "SEÑOR (ES):"        ,'0','0','L');
+		$this->Cell(140, 5, Session::get("razon_social")  ,'0','1','L');
+		$this->SetX("15");
+		$this->SetX("15");
+		$this->Cell(40, 5, "TELEFONOS:"         ,'0','0','L');
+		$this->Cell(60, 5, Session::get("telefonos_cliente") ,'0','0','L');
+		$this->Cell(30, 5, "FECHA:"             ,'0','0','L');
+		$this->Cell(30, 5, Session::get("fecha")     ,'0','1','L');
+		$this->setX("15");
+		$this->Cell(40, 5, "OBSERVACIONES:");
+		$this->Cell(130, 5, Session::get("observaciones") );
+		$this->Ln();
+
+	  	
+     // $this->Cell(30,10,$tnit,1,0,'C');
+
+   }
+ 
+ 
+	/* function Footer(){
+		
+		$this->SetY(-10);
+		$this->SetFont('Arial','',8);
+		$this->Cell(0,10,"EYSIL SOFTWARE FECHA DE IMPRESION ".date("Y-m-d")." PAGINA ".$this->PageNo(),0,0,'C');
+		   
+		}
+  */
+   
+}
+
+$pdf = new PDF('P','mm','media_letter');
+//$pdf->setDebug(true);
+$fact = new Factura();
+$pdf->addPage();
+$pdf->SetDisplayMode('real');
+$pdf->setFont("$font", '', "".Session::get("size")."");
+$pdf->SetTextColor('');
+	
+	$pdf->setX("10");
+	
+	
+	/*encabezado de detalle de encabezadoes*/
+	$pdf->Cell(45 ,5, "NUMERO"     ,'1','0','C');
+	$pdf->Cell(60 ,5, "DESCRIPCION"     ,'1','0','C');
+	$pdf->Cell(45, 5,"FECHA" ,'1','0','C');
+	$pdf->Cell(45 ,5, "TOTAL"        ,'1','1','C');
+	//$pdf->Ln();
+	/*fin encabezado de detalle de encabezadoes*/
+	/*$pdf->Cell(45, 10, print_r($dtencabezado));*/
+	$i=0;
+	foreach($detalles as $det):
+		$factura = $fact->findFirst(" id ='$det->factura_id' ");
+	
+		if($det->total>0){
+			$pdf->Cell(45, 5, $factura->prefijo.$factura->consecutivo          ,'0','0','C');
+			$pdf->Cell(60, 5,"VALOR CANCELADO"                                ,'0','0','C');
+		}else{
+			$pdf->Cell(45, 5, $factura->prefijo.$factura->consecutivo          ,'0','0','C');
+			$pdf->Cell(60, 5,"VALOR DESCUENTO"                                ,'0','0','C');
+		}
+		$pdf->Cell(45, 5, "$ ".number_format($det->total,0,",",".")            ,'0','0','C');
+		$pdf->Cell(45, 5, "$ ".number_format($det->total,0,",",".")            ,'0','1','R');
+		//$pdf->Ln();
+		$i++;
+	endforeach;
+			
+			if($i<=6){
+				for($j=$i;$j<=6;$j++){
+					$pdf->Ln();
+				}
+			}
+		
+		$det2 = new DetalleRecibosCaja();	
+		$pdf->setX("15");
+		$pdf->Cell(100, 5, " "                                              ,'0','0','R');
+		$pdf->Cell(45, 5, "SUBTOTAL: "                                       ,'1','0','R');
+		$pdf->Cell(45 , 5, "$ ".number_format($det2->sum("total","conditions: recibos_caja_id = '$encabezado->id' and total > 0"),0,",",".") ,'1','1','R');
+		$pdf->setX("15");
+		$pdf->Cell(100, 5, " "                                              ,'0','0','R');
+		$pdf->Cell(45, 5, "DESCUENTO: "                                       ,'1','0','R');
+		$pdf->Cell(45 , 5, "$ ".number_format($det2->sum("total","conditions: recibos_caja_id = '$encabezado->id' and total < 0"),0,",",".")          ,'1','1','R');
+		$pdf->setX("15");
+		$pdf->Cell(100, 5, " "                                              ,'0','0','R');
+		$pdf->Cell(45, 5, "CANCELADO: "                                       ,'1','0','R');
+		$pdf->Cell(45 , 5, "$ ".number_format($det2->sum("total","conditions: recibos_caja_id = '$encabezado->id'"),0,",",".")        ,'1','1','R');
+		
+		
+	
+	
+	/*fin detalle de las encabezadoes*/
+
+$pdf->OutPut();
+?>
+<?php view::getContent(); ?>

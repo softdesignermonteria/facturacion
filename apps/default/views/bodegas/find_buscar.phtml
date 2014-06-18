@@ -1,0 +1,47 @@
+<table id="tablabodegas"></table>
+<div id="pagerbodegas"></div>
+<script>
+jQuery(document).ready(function(){
+
+		
+		jQuery("#tablabodegas").jqGrid(
+		{ 
+			ajaxGridOptions : {type:"POST"},
+			url:'<?php echo core::getInstancePath(); ?>bodegas/find_detalle_buscar', 
+			datatype: "json", 
+			colNames:['Id','Bodega'], 
+			colModel:[ 
+				{ name:'id',index:'id', width:20}, 
+				{ name:'bodega',index:'bodega', width:90}
+			], 
+			autoWidth:true,
+			width: 550,
+			height: 250,
+			rowNum:10, 
+			rowList:[10,20,30,40,50], 
+			pager: '#pagerbodegas', 
+			sortname: 'bodega', 
+			/*shrinkToFit :false,*/
+			viewrecords: true, 
+			sortorder: "asc", 
+			caption:"listado de Bodegas",
+			ondblClickRow:function(rowid,iRow,iCol,e){
+				
+				var fila = jQuery(this).jqGrid('getRowData',rowid);
+					
+					jQuery("#bodegas_id").val(fila['id']);
+					jQuery("#bodegas").val(fila['bodega']);
+					
+					jQuery("#dialogo_<?php echo Router::getController(); ?>").dialog("close");
+       		 }
+		}); 
+		jQuery("#tablabodegas").jqGrid('navGrid','#pagerbodegas',{edit:false,add:false,del:false}); 
+		jQuery("#tablabodegas").jqGrid('navButtonAdd','#pagerbodegas',{
+		caption: "Columnas",
+		title: "Reordena Columnas",
+		onClickButton : function (){
+			jQuery("#tablabodegas").jqGrid('columnChooser');
+		}
+	});
+});
+</script>

@@ -1,0 +1,213 @@
+
+<br />
+<table width="800px" align="center" cellpadding="2" cellspacing="2">
+ <tr>
+    <th colspan="4" class="ui-jqgrid-titlebar ui-widget-header ui-corner-top ui-helper-clearfix" align="left">
+   		 Agregar o Modificar Alertas    </th>
+</tr>
+
+  <tr>
+    <td width="21%" align="right">Id</td>
+    <td width="36%" align="left"><?php echo Tag::textField("id", "size: 25","maxlength: 20","readOnly: readOnly","style: background: #cccccc;") ?></td>
+    <td width="11%" align="left">&nbsp;</td>
+    <td width="32%" align="left">&nbsp;</td>
+  </tr>
+  
+  <tr>
+    <td align="right">Fecha </td>
+    <td align="left"><?php echo Tag::textField("fecha_inicio", "size: 15") ?></td>
+    <td align="left">&nbsp;</td>
+    <td align="left">&nbsp;</td>
+  </tr>
+  <tr>
+       <td align="right" valign="top">PLACA</td>
+       <td><input type="text" size="20" id="placa" name="placa"/></td>
+       <td>COLOR</td>
+       <td><input type="text" size="20" id="color" name="color"/></td>
+     </tr>
+     <tr>
+    <td align="right" valign="top">CLASE DE VEHICULO</td>
+    <td>
+		<?php echo Tag::textField("clase_vehiculo_id","size: 4","readOnly: readOnly","style: background: #cccccc;"); ?>
+		<?php echo Tag::textField("nombre_clase_vehiculo","size: 20","readOnly: readOnly","style: background: #cccccc;"); ?>
+           <!-- <button id="buscar_clase_vehiculo" type="button">Buscar</button> -->
+   			<!--<button id="agregar_clase_vehiculo" type="button">Agregar</button> -->   </td>
+    <td>TIPO AUTO</td>
+    <td><?php echo Tag::textField("tipo_auto_id","size: 4","readOnly: readOnly","style: background: #cccccc;"); ?> 
+		<?php echo Tag::textField("nombre_tipo_auto","size: 20","readOnly: readOnly","style: background: #cccccc;"); ?>
+     <!-- <button id="buscar_tipo_auto" type="button">Buscar</button> -->
+      <!--<button id="agregar_tipo_auto" type="button">Agregar</button>--></td>
+  </tr>
+  <tr>
+    <td align="right">Nombre Empleado</td>
+    <td align="left"><?php echo Tag::textField("admin_id", "size: 5","maxlength: 30","readOnly: readOnly","style: background: #cccccc;") ?>
+					<?php echo Tag::textField("nombre_usuario", "size: 25","maxlength: 30") ?></td>
+    <td align="left"><!--<button id="buscar_empleados">Buscar</button>--></td>
+    <td align="left">&nbsp;</td>
+  </tr>
+  <tr>
+    <td align="right">Observacion</td>
+    <td colspan="3" align="left"><textarea id="observacion" name="observacion" cols="50"></textarea></td>
+  </tr>
+  
+   <tr>
+    <td align="right">Activo</td>
+    <td align="left"><select id="anulado"><option value="0">Activo</option><option value="1">Inactivo</option></select></td>
+    <td align="left"></td>
+    <td align="left">&nbsp;</td>
+  </tr>
+</table>
+<br />
+<div align="center">
+	<button id="guardar">Guardar</button>
+    <button id="cancelar">Cancelar</button>
+</div>
+
+<br /><br />
+
+<div id="mensajes"></div>
+
+
+<?php 
+$admin_id = Session::get("usuarios_id");
+$nombre_usuario = Session::get("nombre_completo");
+
+$admin =  new Admin();
+$dtplacas =  new PedidoClientes();
+$cv =  new ClaseVehiculo();
+$ta =  new TipoAuto();
+$alertas =  new Alertas();
+
+
+	if( isset( $_REQUEST["id"] ) ){
+			
+			if($_REQUEST["id"]!=''){
+			
+				$idt = $_REQUEST["id"];
+				$encabezado            = $alertas->findFirst(" id = '$idt' ");
+				$id                    = $encabezado->id; 
+				$fecha                 = $encabezado->fecha; 
+				$placa                 = $encabezado->placa; 
+				$dtplacas->findFirst(" placa = '$placa' ");
+				$color                 = $dtplacas->color;
+				$clase_vehiculo_id     = $dtplacas->clase_vehiculo_id;
+				$nombre_clase_vehiculo = $cv->findFirst(" id = '$clase_vehiculo_id' ")->clase_vehiculo;
+				
+				$tipo_auto_id          = $dtplacas->tipo_auto_id;
+				$nombre_tipo_auto      = $ta->findFirst(" id = '$tipo_auto_id' ")->tipo_auto;
+				$admin->findFirst(" id = '$encabezado->admin_id' ");
+				$admin_id              = $admin->id;
+				$nombre_usuario        = $admin->nombre_completo;
+				$observacion           = $encabezado->observacion; 
+				$anulado               = $encabezado->anulado; 
+					
+			}
+	}
+?>
+
+<script>
+
+jQuery(document).ready(function(){
+
+	<?php if( isset( $_REQUEST["id"] ) ){
+		if($_REQUEST["id"]!=''){ ?>
+			
+				jQuery(" #id                   ").val("<?php echo $id; ?>");
+				jQuery(" #fecha_inicio         ").val("<?php echo $fecha; ?>");
+				jQuery(" #placa                ").val("<?php echo $placa; ?>");
+				jQuery(" #color                ").val("<?php echo $color; ?>");
+				jQuery(" #clase_vehiculo_id    ").val("<?php echo $clase_vehiculo_id; ?>");
+				jQuery(" #nombre_clase_vehiculo").val("<?php echo $nombre_clase_vehiculo; ?>");
+				jQuery(" #tipo_auto_id         ").val("<?php echo $tipo_auto_id; ?>");
+				jQuery(" #nombre_tipo_auto     ").val("<?php echo $nombre_tipo_auto; ?>");
+				jQuery(" #admin_id             ").val("<?php echo $admin_id; ?>");
+				jQuery(" #nombre_usuario       ").val("<?php echo $nombre_usuario; ?>");
+				jQuery(" #observacion          ").val("<?php echo $observacion; ?>");
+				jQuery(" #anulado              ").val("<?php echo $anulado; ?>");
+<?php	
+			}
+	}else{ ?>
+				
+				jQuery(" #admin_id             ").val("<?php echo $admin_id; ?>");
+				jQuery(" #nombre_usuario       ").val("<?php echo $nombre_usuario; ?>");
+<?php } ?>
+	
+
+jQuery("#guardar").click(function(){
+	guardar();
+});
+
+function guardar(){
+var datos = "";
+jQuery( '#mensajes' ).html("");
+jQuery( "#progressbar" ).progressbar({ value: 50 });	
+var jqXHR = jQuery.ajax({
+	type: "POST",
+	url: "<?php echo core::getInstancePath(); ?>alertas/add",
+	data: {
+			id:                 jQuery("#id").val(),
+			fecha:              jQuery("#fecha_inicio").val(),
+			placa:              jQuery("#placa").val(),
+			color:              jQuery("#color").val(),
+			clase_vehiculo_id:  jQuery("#clase_vehiculo_id").val(),
+			tipo_auto_id:       jQuery("#tipo_auto_id").val(),
+			observacion:        jQuery("#observacion").val(),
+			admin_id:           jQuery("#admin_id").val(),
+			anulado:            jQuery("#anulado").val(),
+			
+	},
+	success: function(data) {
+		jQuery( '#mensajes' ).html("");
+		jQuery( "#progressbar" ).progressbar({ value: 90 });
+		jQuery( '#mensajes' ).html(data);
+	},
+	error: function(data) {
+		jQuery('#dialogo_mensajes').html("Error Enviando parametros.....");
+		jQuery( "#progressbar" ).progressbar({ value: 0 });
+		jQuery('#dialogo_mensajes').dialog("open");
+	}
+});
+
+ jqXHR.done(function(data){
+	 jQuery( "#progressbar" ).progressbar({ value: 0 });
+	 jQuery("#id").val("");
+	 jQuery("#fecha_inicio").val("");
+	 jQuery("#placa").val("");
+	 jQuery("#color").val("");
+	 jQuery("#clase_vehiculo_id").val("");
+	 jQuery("#nombre_clase_vehiculo").val("");
+	 jQuery("#tipo_auto_id").val("");
+	 jQuery("#nombre_tipo_auto").val("");
+	 jQuery("#observacion").val("");
+	 jQuery(" #admin_id             ").val("<?php echo $admin_id; ?>");
+	 jQuery(" #nombre_usuario       ").val("<?php echo $nombre_usuario; ?>");
+	 
+	 jQuery("#anulado").val("0");
+});
+
+}
+
+
+jQuery( "#placa" ).autocomplete({
+	source: "<?php echo core::getInstancePath(); ?>pedido_clientes/placaautocomplete",
+	minLength: 1,
+	select: function( event, ui ) {
+		 //alert("Has seleccionado: " + ui.item.value);
+		 jQuery("#placa").val(ui.item.value)
+		 jQuery("#color").val(ui.item.color);
+		 jQuery("#tipo_auto_id").val(ui.item.tipo_auto_id);
+		 jQuery("#clase_vehiculo_id").val(ui.item.clase_vehiculo_id);
+		 jQuery("#nombre_tipo_auto").val(ui.item.tipo_auto);
+		 jQuery("#nombre_clase_vehiculo").val(ui.item.clase_vehiculo);
+		 
+		//jQuery("#buscar_clase_vehiculo").attr("disabled","disabled");
+		// jQuery("#buscar_tipo_auto").attr("disabled","disabled");
+		 
+	}
+});
+
+});
+
+
+</script>
+

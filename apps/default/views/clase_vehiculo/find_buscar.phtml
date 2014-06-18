@@ -1,0 +1,45 @@
+<table id="tablaclasevehiculo"></table>
+<div id="pagerclasevehiculo"></div>
+
+<script>
+jQuery(document).ready(function(){
+		jQuery("#tablaclasevehiculo").jqGrid(
+		{ 
+			ajaxGridOptions : {type:"POST"},
+			url:'<?php echo core::getInstancePath(); ?>clase_vehiculo/find_detalle_buscar', 
+			datatype: "json", 
+			colNames:['Id','Clase de Vehiculo'], 
+			colModel:[ 
+				{ name:'id',index:'id', width:20}, 
+				{ name:'clase_vehiculo',index:'clase_vehiculo', width:90}
+			], 
+			autoWidth:true,
+			width: 550,
+			height: 250,
+			rowNum:10, 
+			rowList:[10,20,30,40,50], 
+			pager: '#pagerclasevehiculo', 
+			sortname: 'clase_vehiculo', 
+			/*shrinkToFit :false,*/
+			viewrecords: true, 
+			sortorder: "asc", 
+			caption:"listado de Clases de Vehiculos",
+			ondblClickRow:function(rowid,iRow,iCol,e){
+				
+				var fila = jQuery(this).jqGrid('getRowData',rowid);
+					
+					jQuery("#clase_vehiculo_id").val(fila['id']);
+					jQuery("#nombre_clase_vehiculo").val(fila['clase_vehiculo']);
+					jQuery("#dialogo_clase_vehiculo").dialog("close");
+       		 }
+		}); 
+		jQuery("#tablaclasevehiculo").jqGrid('navGrid','#pagerclasevehiculo',{edit:false,add:false,del:false}); 
+		jQuery("#tablaclasevehiculo").jqGrid('navButtonAdd','#pagerclasevehiculo',{
+		caption: "Columnas",
+		title: "Reordena Columnas",
+		onClickButton : function (){
+			jQuery("#tablaclasevehiculo").jqGrid('columnChooser');
+		}
+	});
+});
+</script>

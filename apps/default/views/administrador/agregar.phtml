@@ -1,0 +1,41 @@
+<h1>Agregar Rol de Usuario en el Sistema</h1>
+<?php echo Tag::formRemote("administrador/add", "update: mensajes", "id: fx","name: fx"); ?>
+
+<table width="100%" height="160"  align="center" cellpadding="2" cellspacing="2">
+ <tr>
+    <td width="29%" align="right">Nombre Usuario</td>
+    <td width="38%" align="left"><?php echo Tag::textField("username", "size: 25","maxlength: 20") ?></td>
+    <td width="33%" align="left">&nbsp;</td>
+  </tr>
+  <tr>
+    <td align="right">Clave</td>
+    <td align="left"><?php echo Tag::PasswordField("password", "size: 25","maxlength: 20") ?></td>
+    <td align="left">&nbsp;</td>
+  </tr>
+  <tr>
+    <td align="right">Confirmar Clave</td>
+    <td align="left"><?php echo Tag::PasswordField("confirmar", "size: 25","maxlength: 20") ?></td>
+    <td align="left">&nbsp;</td>
+  </tr>
+  <tr>
+    <td align="right">Nombre Completo</td>
+    <td colspan="2" align="left"><?php echo Tag::textFieldExt("empleados", "size: 20","maxlength: 20","placeholder: INGRESE PREGUNTA") ?></td>
+  </tr>
+  <tr>
+    <td align="right">Tipo de Usuario</td>
+    <td align="left"><?php $rol = new Role();
+      echo Tag::select('role',$rol->find(), 'using: role,role','useDummy=yes'); 
+	  ?>    </td>
+    <td align="left">&nbsp;</td>
+  </tr>
+
+</table>
+<br />
+<div align="center"><button id="guardar" type="submit">Guardar</button><button id="cancelar">Cancelar</button></div>
+
+<br /><br />
+
+<?php echo Tag::endForm() ?>
+
+<div id="mensajes"></div>
+

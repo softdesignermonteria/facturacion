@@ -1,0 +1,165 @@
+
+<?php echo Tag::formRemote("egresos/update", "update: mensajes", "id: egre","name: egre"); ?>
+
+<h1>COMPROBANTES DE EGRESOS</h1>
+
+
+<table width="90%" border="0" align="center" cellpadding="0" cellspacing="0" id="f1">
+  <tr>
+    <th colspan="4"> COMPROBANTE DE EGRESO: <?php echo Tag::hiddenField("id_unico","value: ".uniqid('egr_')."","size: 30"); ?>
+        <?php echo Tag::hiddenField("tipo_documento","value: $tipo_documento","size: 12","maxlegnth: 12"); ?> 
+        <?php echo Tag::hiddenField("empresa_id","value: ".Session::get('id_empresa').""); ?>    </th>
+  </tr>
+  <tr>
+    <td colspan="4" align="right"><div class="datos_config">Codigo: <?php echo $tipo_documento; echo " Nombre Documento "; echo $tipo_documento_nombre;  ?> </div></td>
+  </tr>
+  <tr>
+    <td width="25%" align="right" valign="top">FECHA</td>
+    <td width="24%"><?php echo Tag::dateFieldMod("fecha","value: ".date("Y-m-d"),"size: 10"); ?>
+    <?php //echo Tag::datePickerField("fecha","'calendar: true'"); ?></td>
+    <td width="8%" align="right" valign="top">HORA</td>
+    <td width="43%"><?php echo Tag::timeField("hora","active: true"); ?></td>
+  </tr>
+  <tr>
+    <td align="right" valign="top">PROVEEDOR:</td>
+    <td colspan="3"><?php echo Tag::textField("nombre_proveedor","size: 50","readOnly: readOnly","style: background: #cccccc;"); ?>
+        <?php echo Tag::hiddenField("proveedores_id","size: 12"); ?>
+        <?php echo Tag::button("Buscar Proveedores","id: btnbuscar_proveedores","name: btnbuscar_proveedores","onClick: buscar_proveedores(".core::getInstancePath().");"); ?>
+        <?php echo Tag::button("Agregar Proveedores","id: btnagregar_proveedores","name: btnagregar_proveedores","onClick: agregar_proveedores(".core::getInstancePath().");"); ?>
+        <?php //echo "<a href='javascript:void(0);' id='buscar_proveedores' name='buscar_proveedores' onClick='buscar_proveedores(".core::getInstancePath().");'>".Tag::image("iconos/buscar.png",'width: 20px')."</a>"; ?>    
+		<?php //echo "<a href='javascript:void(0);' id='agregar_proveedores' name='agregar_proveedores' onClick='agregar_proveedores(".core::getInstancePath().");'>".Tag::image("64x64/Add.png",'width: 20px')."</a>"; ?>        </td>
+  </tr>
+  <tr>
+    <td align="right" valign="top">BANCO</td>
+    <td><?php $bancos = new Bancos();
+      echo Tag::select('bancos_id',$bancos->find(),'using: id,descripcion','useDummy: yes'); 
+	  ?></td>
+    <td align="right" valign="top">&nbsp;</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td align="right" valign="top">CHEQUE</td>
+    <td><?php echo Tag::textField("cheque","size: 30"); ?></td>
+    <td align="right" valign="top">&nbsp;</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td align="right" valign="top">FORMA DE PAGO</td>
+    <td colspan="3"><?php $forma = new FormaPago();
+      echo Tag::select('forma_pago_id',$forma->find(),'using: id,forma_pago','useDummy: yes'); 
+	  ?></td>
+  </tr>
+  <tr>
+    <td align="right" valign="top">OBSERVACIONES</td>
+    <td colspan="3"><?php echo Tag::textField("observaciones","size: 50"); ?></td>
+  </tr>
+</table>
+<br />       
+<h1>AGREGAR DETALLES AL EGRESO</h1>
+<table width="90%" border="0" align="center" cellpadding="0" cellspacing="0" id="f2">
+  <tr>
+    <td width="8%">VALOR</td>
+    <td width="21%"><?php echo Tag::numericField("valor","size: 20"); ?></td>
+    <td width="8%">CONCEPTO</td>
+    <td width="45%"><div align="left"><?php echo Tag::textUpperField("concepto","size: 30"); ?></div></td>
+    <td width="18%"><?php echo Tag::button("Agregar Detalles al Egreso","id: add_d_egresos","name: add_d_egresos","onclick: agregar_detalles_egresos()"); ?></td>
+  </tr>
+</table>
+<br />
+<div id="div_egresos">
+<table width="90%">
+    	<tr>
+         <th><div align="right">VALOR</div></th>
+         <th><div align="center">CONCEPTO</div></th>
+         <th><div align="center">ELIMINAR</div></th>
+        </tr>
+</table>
+</div>
+
+<div align="center"><?php echo Tag::submitButton("Guardar Informacion","id: egresos","name: egresos"); ?><?php echo Tag::button("Cancelar","id: cancelar","name: cancelar","onClick: doccancelar(".core::getInstancePath().");"); ?></div>
+
+
+
+<div id="mensajes"></div>
+
+
+<div align="center">
+  <table border="0" cellpadding="2" id="remisiones"  cellspacing="2">
+    <tr>
+      <td align="center"><?php echo Tag::linkTo("#", Tag::image("64x64/Back.png",'width: 32px'),"onClick: window.close();") ?></td>
+      <td align="center"><?php echo Tag::linkTo("menu/", Tag::image("iconos/inicio.png",'width: 32px'),"tittle: Regresar al Menu"); ?></td>
+    </tr>
+    <tr>
+      <td align="center">Regresar</td>
+      <td align="center">Inicio</td>
+    </tr>
+  </table>
+</div>
+
+<?php echo Tag::endForm(); ?>
+
+
+<script>
+
+		function agregar_detalles_egresos(){
+		
+								 
+			id_unico  = $('id_unico').value;
+			valor     = $('valor').value;
+			concepto  = $('concepto').value;
+			
+			parametros = '';
+			parametros += '&id_unico='+id_unico;
+			parametros += '&valor='+valor;
+			parametros += '&concepto='+concepto;
+			
+			
+			url = 	"<?php echo core::getInstancePath(); ?>egresos/agregar_detalles_egresos/?"+parametros;
+			
+			
+			new Ajax.Updater('div_egresos'
+							, url
+							, { method: 'get' 
+							, evalScripts: true
+							, encoding: 'ISO-8859-1'
+			});
+	 	
+		
+		}	
+		
+		function eliminar(id){
+		
+								 
+			id   = $('id').value;
+			id_unico   = $('id_unico').value;
+						
+			url = 	"<?php echo core::getInstancePath(); ?>egresos/delete/?id="+id+"&id_unico="+id_unico;
+			
+			
+				new Ajax.Updater('div_egresos'
+							, url
+							, { method: 'get' 
+							, evalScripts: true
+							, encoding: 'ISO-8859-1'
+						});
+		
+		}
+	
+			
+		function trae_municipios(){
+		
+		url = 	"<?php echo core::getInstancePath(); ?>remisiones/traer_municipios/"+$('tmp_dptos').value;
+		
+			new Ajax.Updater('tmp_div_municipios'
+						, url
+						, { method: 'get' 
+						, evalScripts: true
+						, encoding: 'ISO-8859-1'
+					});
+			
+		}
+		
+		
+</script>
+
+<?php echo view::getContent(); ?>

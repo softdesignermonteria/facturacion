@@ -1,0 +1,131 @@
+<h1>INVENTARIO DETALLADO POR REFERENCIA</h1>
+<?php 
+ $grupos = new Grupos();
+ $alq = new SaldoRemisiones();
+ $alq2 = new SaldoRemisiones();
+ $direccion = new Direccion();
+ 
+ $alquilados = $alq->sum("cantidad-devueltos","conditions: kardex_id = '$inventario->id' and anulado = '0' and cantidad-devueltos <> 0 "); 
+
+?>  
+
+<table border="0" cellpadding="1" id="remisiones" width="100%" style="font-size:12pt;">
+   <tr>
+    <th>CODIGO</th>
+    <th>NOMBRE</th>
+    <th>REMISION</th>
+    <th>FECHA <br /> REMISION</th>
+    <th>DEVOLUCION</th>
+    <th>FECHA <br /> DEVOLUCION</th>
+    <th>CANTIDAD</th>
+    <th>DEVUELTO</th>
+	<th>SALDO</th>
+  </tr>
+        <?php 
+		 $i=0;	
+		 $db = DbBase::rawConnect();
+		 $clientes_id = $_REQUEST["clientes_id"];
+		 $kardex_id = $_REQUEST["kardex_id"];
+		 $direccion_id = $_REQUEST["direccion_id"];
+		 $empresa_id = $_REQUEST["empresa_id"];
+		 
+		 $query = "select * from (
+							select 
+								r.id as remision_id,
+								dr.id as detalle_remision_id,
+								k.id as kardex_id,
+								k.codigo,
+								k.nombre_producto,
+								concat(r.prefijo, r.consecutivo) as numero_remision,
+								r.fecha,
+								'' as numero_devolucion,
+								r.fecha as fecha_remision,
+								'' as fecha_devolucion,
+								sum(dr.cantidad) as cantidad,
+								0 as devueltos
+								from remisiones r, detalle_remisiones dr, kardex k
+							where 
+							r.id = dr.remisiones_id
+							and dr.anulado = 0
+							and r.clientes_id = '$clientes_id'
+							and r.direccion_id = '$direccion_id'
+							and r.empresa_id = '$empresa_id'
+							and dr.kardex_id = k.id
+											
+							and dr.kardex_id = '$kardex_id'
+							group by r.id
+							
+							union all 
+							
+							select 
+								r.id as remision_id,
+								dr.id as detalle_remision_id,
+								 k.id as kardex_id,
+								 k.codigo,
+								k.nombre_producto,
+								 '' as numero_remision,
+								 r.fecha,
+								concat(r.prefijo, r.consecutivo) as numero_devolucion,
+								'' as fecha_remision,
+								
+								r.fecha as fecha_devolucion,
+								0 as cantidad,
+								sum(dr.devueltos) as devueltos
+								from devoluciones r, detalle_devoluciones dr, kardex k
+							where 
+							r.id = dr.devoluciones_id
+							and dr.anulado = 0
+							and r.clientes_id = '$clientes_id'
+							and r.direccion_id = '$direccion_id'
+							and r.empresa_id = '$empresa_id'
+							and dr.kardex_id = k.id
+							and dr.kardex_id = '$kardex_id'
+							
+							group by r.id
+							) h order by h.fecha";
+							
+		$result  = $db->query($query);					
+		//Flash::notice($db->getLastQuery());
+		$t_empresa = 0;
+		$t_valor_empresa = 0;
+		$rem = new Remisiones();
+		$cantidad = 0;
+		$devueltos = 0;
+		
+		while($detalles = $db->fetchArray($result)){	
+		 
+		 ?>  
+         
+          <tr>
+           
+            <td><?php echo $detalles["codigo"];  ?></td>
+            <td><?php echo $detalles["nombre_producto"];  ?></td>
+            <td><?php echo $detalles["numero_remision"];  ?></td>
+            <td><?php echo $detalles["fecha_remision"]; ?></td>
+            <td><?php echo $detalles["numero_devolucion"]; ?></td>
+            <td><?php echo $detalles["fecha_devolucion"]; ?></td>
+            <td><?php echo $detalles["cantidad"]; $cantidad += $detalles["cantidad"]; ?></td>
+            <td><?php echo $detalles["devueltos"]; $devueltos +=$detalles["devueltos"];  ?></td>
+            <td>&nbsp;</td>
+          </tr>
+        <?php $i++;  } ?> 
+          <tr>
+               <td>&nbsp;</td>
+                <td>&nbsp;</td>
+                <td>&nbsp;</td>
+                <td>&nbsp;</td>
+                <td>&nbsp;</td>
+                
+                <td>&nbsp;</td>
+                <td><?php echo $cantidad; ?></td>
+                <td><?php echo $devueltos;  ?></td>
+                <td><?php echo $cantidad-$devueltos; ?></td>
+          </tr>
+ </table>
+<br />
+
+<?php
+$t_empresa_cons += $t_empresa;
+$t_valor_empresa_cons += $t_valor_empresa;
+?>
+

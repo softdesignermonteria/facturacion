@@ -1,0 +1,26 @@
+
+<div style="display:block; width:100%;float:none; margin:auto;padding:20px;">
+	<div style="height:100%;min-height:500px; display:block;width:400px; float:left; padding-top:50px;padding-left:10px;color:#000000; font-size:11pt;background-image:url(/eysil4/public/img/submn_bg.png);">
+		<script type="text/javascript">
+            d = new dTree('d');
+                // x, y , descrip, url, titel, target
+                d.add('0','-1','MENU PRINCIPAL AYUDA','','MENU PRINCIPAL AYUDA','','','',true);
+                d.add('1','0','Remisiones','','Remisiones','','','',true);		
+				d.add('2','1','Agregar Remisiones','agregar_remisiones','Agregar Remisiones','_self','','',true);
+				d.add('3','1','Buscar Remisiones','buscar_remisiones','Buscar Remisiones','_self','','',true);
+				
+				d.add('10','0','Devoluciones','','Devoluciones','','','',true);		
+				d.add('11','10','Agregar Devoluciones','agregar_devoluciones','Agregar Devoluciones','_self','','',true);
+				d.add('12','10','Buscar Devoluciones','agregar_devoluciones','Buscar Devoluciones','_self','','',true);
+				  
+				
+                d.openAll();	    
+        document.write(d);
+		
+        </script>
+    </div>
+    <div style="display:block;width:600px; float:left;">
+    	<div id="mensajes"><?php echo view::getContent(); ?></div>
+    </div>
+
+</div>

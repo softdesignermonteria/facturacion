@@ -1,0 +1,302 @@
+
+<?php echo Tag::formRemote("tipo_documento/add", "update: div_tipo_documento", "id: tipod","name: tipod"); ?>
+
+<h1>TIPO DE DOCUMENTOS DEL SISTEMA</h1>
+
+<table width="100%" cellpadding="1" cellspacing="1">
+	<thead>
+    	<tr class="ui-jqgrid-titlebar ui-widget-header ui-corner-top ui-helper-clearfix">
+    	  <th height="25" colspan="4" >FORMULARIO PARA AGREGAR TIPOS DE DOCUMENTOS AL SISTEMA</th>
+   	   </tr>
+    </thead>
+    <tbody>   
+    	<tr>
+    	  <td width="4%">&nbsp;</td>
+    	  <th width="30%" align="right">NOMBRE EMPRESA:</th>
+    	  <td width="64%" align="left"><?php echo Session::get("nombre_empresa");?></td>
+    	  <td width="2%">&nbsp;</td>
+   	  </tr>
+    	<tr>
+    	  <td>&nbsp;</td>
+    	  <th align="right">NOMBRE DEL DOCUMENTO</th>
+    	  <td align="left"><?php  echo Tag::textField("nombre","size: 50","maxlength: 50"); ?></td>
+    	  <td>&nbsp;</td>
+   	  </tr>
+      <tr>
+    	  <td>&nbsp;</td>
+    	  <th align="right">LOGO</th>
+    	  <td align="left">
+		  		<?php  echo Tag::textField("logos","size: 50","maxlength: 50","readOnly: readOnly","style: background: #cccccc;"); ?>
+                <a href="javascript: void(0);"  onClick="buscar_imagenes('logos');" id='btlogo' name='btlogo'> <?php echo Tag::image("iconos/buscar.png",'width: 20px'); ?> </a>          </td>
+    	  <td>&nbsp;</td>
+   	  </tr>
+      <tr>
+    	  <td>&nbsp;</td>
+    	  <th align="right">ANCHO</th>
+    	  <td align="left"><?php  echo Tag::textField("ancho","size: 10","maxlength: 10"); ?></td>
+    	  <td>&nbsp;</td>
+   	  </tr>
+      <tr>
+    	  <td>&nbsp;</td>
+    	  <th align="right">ALTO</th>
+    	  <td align="left"><?php  echo Tag::textField("alto","size: 10","maxlength: 10"); ?></td>
+    	  <td>&nbsp;</td>
+   	  </tr>
+        <tr>
+    	  <td>&nbsp;</td>
+    	  <th align="right">MOSTRAR LOGO</th>
+    	  <td align="left"><?php
+					$order = array(
+					'SI' => 'SI',	
+					'NO' => 'NO'
+					);
+					echo Tag::selectStatic("mostrar_logo", $order); ?></td>
+    	  <td>&nbsp;</td>
+   	  </tr>
+        <tr>
+          <td>&nbsp;</td>
+          <th align="right">FUENTE:</th>
+          <td align="left"><?php
+					$order = array(
+						'Arial' => 'Arial',
+						'Courier' => 'Courier',
+						'Helvetica' => 'Helvetica',	
+						'Times' => 'Times',	
+						'Symbol' => 'Symbol'
+					);
+					echo Tag::selectStatic("font", $order); ?></td>
+          <td>&nbsp;</td>
+        </tr>
+        <tr>
+          <td>&nbsp;</td>
+          <th align="right">TAMA&Ntilde;O</th>
+          <td align="left">
+		  		<?php
+					$order = array(
+						'7' => '7',
+						'8' => '8',	
+						'9' => '9',
+						'10' => '10',
+						'11' => '11',
+						'12' => '12',
+						'13' => '13',
+						'14' => '14',
+						'15' => '15'
+					);
+					echo Tag::selectStatic("size", $order); ?></td>
+          <td>&nbsp;</td>
+        </tr>
+        <tr>
+          <td>&nbsp;</td>
+          <th align="right">TIPO DE LETRA</th>
+          <td align="left"><?php
+					$tl = array(
+						'' => 'NORMAL',
+						'I' => 'ITALICA',	
+						'B' => 'NEGRITA'
+					);
+					echo Tag::selectStatic("tipo_letra", $tl); ?></td>
+          <td>&nbsp;</td>
+        </tr>
+        <tr>
+          <td>&nbsp;</td>
+          <th align="right">PAPEL</th>
+          <td align="left"><?php
+					$papel = array(
+						'media_letter' => 'MEDIA CARTA',
+						'letter' => 'CARTA',
+						'legal' => 'LEGAL/OFICIO',	
+						'a3' => 'A3',
+						'a4' => 'A4',
+						'a5' => 'A5',
+					);
+					echo Tag::selectStatic("papel", $papel); ?></td>
+          <td>&nbsp;</td>
+        </tr>
+    	<tr>
+    	  <td colspan="4" align="center"><button type="submit" id="guardar" name="guardar">Guardar</button></td>
+   	  </tr>
+      </tbody>
+  </table>
+
+<?php echo Tag::endForm(); ?>
+
+<br />        
+<h1>TIPO DE DOCUMENTOS DEL SISTEMA</h1>
+<br />        
+
+
+
+<div id="div_tipo_documento" class="div_ajax">
+<table width="100%">
+<thead>
+    	<tr class="ui-jqgrid-titlebar ui-widget-header ui-corner-top ui-helper-clearfix">
+	        <th>COD</th>
+            <th>NOMBRE <br /> DOCUMENTO</th>
+            <th>LOGO</th>
+            <th>ANCHO</th>
+            <th>ALTO</th>
+            <th>MOSTRAR <br /> LOGO</th>
+            <th>FONT</th>
+            <th>SIZE</th>
+            <th>TIPO<br />LETRA</th>
+            <th>PAPEL</th>
+            <th></th>
+            <th></th>
+        </tr>
+  </thead>
+  <tbody>      
+<?php 
+$i=1;
+$td = new TipoDocumento();
+$emp = new Empresa();
+foreach($td->find("empresa_id = '".Session::get("id_empresa")."'") as $tipo):
+?>        
+        <tr>
+        	
+            <td><?php echo Tag::hiddenField("idt$i","value: $tipo->id"); ?><?php echo $tipo->id; ?></td>
+            <td><?php echo Tag::textField("nombre$i","value: $tipo->nombre", "size: 15","maxlength: 50"); ?></td>
+            <td><?php echo Tag::textField("logo$i","value: $tipo->logo", "size: 10","maxlength: 50"); ?><a href="javascript: void(0);"  onClick="buscar_imagenes('logo<?php echo $i?>');" id='btlogo<?php echo $i?>' name='btlogo<?php echo $i?>'> <?php echo Tag::image("iconos/buscar.png",'width: 20px'); ?> </a></td>
+            <td><?php echo Tag::textField("ancho$i","value: $tipo->ancho", "size: 3","maxlength: 5"); ?></td>
+            <td><?php echo Tag::textField("alto$i","value: $tipo->alto", "size: 3","maxlength: 5"); ?></td>
+            <td><?php
+					$order = array(
+					'1' => 'SI',	
+					'0' => 'NO'
+					);
+					echo Tag::selectStatic("mostrar_logo$i", $order); ?>
+                    <script> $('mostrar_logo<?php echo $i; ?>').value =  '<?php echo $tipo->mostrar_logo; ?>'; </script>             </td>
+             <td><?php
+					$order = array(
+						'Arial' => 'Arial',
+						'Courier' => 'Courier',
+						'Helvetica' => 'Helvetica',	
+						'Times' => 'Times',	
+						'Symbol' => 'Symbol'
+					);
+					echo Tag::selectStatic("font$i", $order); ?>
+					<?php if($tipo->font!=''){ ?>
+                    <script> $('font<?php echo $i; ?>').value =  '<?php echo $tipo->font; ?>'; </script>
+                    <?php } ?> </td>
+             <td><?php
+					$order = array(
+						'7' => '7',
+						'8' => '8',	
+						'9' => '9',
+						'10' => '10',
+						'11' => '11',
+						'12' => '12',
+						'13' => '13',
+						'14' => '14',
+						'15' => '15'
+					);
+					echo Tag::selectStatic("size$i", $order); ?>
+                    <?php if($tipo->size!=''){ ?>
+                    <script> $('size<?php echo $i; ?>').value =  '<?php echo $tipo->size; ?>'; </script>
+                    <?php } ?> </td>
+             <td><?php
+					$tl = array(
+						'' => 'NORMAL',
+						'I' => 'ITALICA',	
+						'B' => 'NEGRITA'
+					);
+					echo Tag::selectStatic("tipo_letra$i", $tl); ?>
+                    <?php if($tipo->tipo_letra!=''){ ?>
+                    <script> $('tipo_letra<?php echo $i; ?>').value =  '<?php echo $tipo->tipo_letra; ?>'; </script>
+                    <?php } ?>             </td>
+             <td><?php
+					$papel = array(
+						'' => 'ESCOGA..',
+						'media_letter' => 'MEDIA CARTA',
+						'letter' => 'CARTA',
+						'legal' => 'LEGAL/OFICIO',	
+						'a3' => 'A3',
+						'a4' => 'A4',
+						'a5' => 'A5',
+					);
+					echo Tag::selectStatic("papel$i", $papel); ?>
+                    <?php if($tipo->papel!=''){ ?>
+                    <script> $('papel<?php echo $i; ?>').value =  '<?php echo $tipo->papel; ?>'; </script>
+                    <?php } ?>             </td>
+            <td><a href="javascript: void(0);"  onClick="modificar('<?php echo $i?>');" id='bt<?php echo $i?>' name='bt<?php echo $i?>'> <?php echo Tag::image("iconos/editar.png",'width: 30px'); ?> </a></td>
+            <td><a href="javascript: void(0);"  onClick="eliminar('<?php echo $i?>');" id='bt<?php echo $i?>' name='bt<?php echo $i?>'> <?php echo Tag::image("iconos/borrar.png",'width: 30px'); ?> </a></td>
+        </tr>
+<?php 
+$i++; endforeach;
+?>        
+		</tbody>
+    </table>
+  <?php echo view::getContent(); ?>   
+
+</div>
+
+<script>
+
+	function buscar_imagenes(campo){
+		
+		Dialog.alert(
+		 	{
+				url: "<?php echo core::getInstancePath(); ?>imagenes/buscar_imagenes/?campo="+campo, 
+				options: {method: 'get'
+				, evalScripts: true}
+			}, 
+			{
+				className: "mac_os_x", width:900,height:600 ,
+				okLabel: "Cerrar Ventanas"}
+			);
+		
+	}
+	
+	
+	function modificar(ident){
+		
+								 
+			idt   = $('idt'+ident).value;
+			nombre   = $('nombre'+ident).value;
+			logo = $('logo'+ident).value;
+			ancho    = $('ancho'+ident).value;
+			alto  = $('alto'+ident).value;
+			mostrar_logo  = $('mostrar_logo'+ident).value;
+			size  = $('size'+ident).value;
+			font  = $('font'+ident).value;
+			tipo_letra  = $('tipo_letra'+ident).value;
+			papel  = $('papel'+ident).value;
+			
+			parametros = "idt="+idt+"&nombre="+nombre+"&logo="+logo+"&ancho="+ancho+"&alto="+alto+"&mostrar_logo="+mostrar_logo;
+			parametros += "&size="+size+"&font="+font;
+			parametros += "&papel="+papel+"&tipo_letra="+tipo_letra;
+			
+			url = 	"<?php echo core::getInstancePath(); ?>tipo_documento/update/?"+parametros;
+			
+			
+				new Ajax.Updater('div_tipo_documento'
+							, url
+							, { method: 'get' 
+							, evalScripts: true
+							, encoding: 'ISO-8859-1'
+						});
+		
+		}	
+	
+	
+	function eliminar(ident){
+		
+								 
+			idt   = $('idt'+ident).value;
+
+			url = 	"<?php echo core::getInstancePath(); ?>tipo_documento/delete/?idt="+idt;
+			
+			
+				new Ajax.Updater('div_tipo_documento'
+							, url
+							, { method: 'get' 
+							, evalScripts: true
+							, encoding: 'ISO-8859-1'
+						});
+			
+	}	
+
+</script>
+
+<?php echo view::getContent(); ?>
+

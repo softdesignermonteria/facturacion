@@ -1,0 +1,25 @@
+<table border="0" cellpadding="1" id="remisiones" width="100%">
+   <tr>
+    <th><div align="center">CODIGO</div></th>
+    <th><div align="center">NOMBRE</div></th>
+    <th><div align="center">NOMBRE CORTO</div></th>
+    <th><div align="center">GRUPO</div></th>
+    <th><div align="center">COSTO</div></th>
+    <th><div align="center">UNIDADES DISPONIBLES</div></th>
+  </tr>
+        <?php 
+		 $i=0;	
+		 foreach($inventarios as $inv): ?>  
+          <tr>
+            <td><div align="center"><?php echo $inv->codigo ; ?></div></td>
+            <td><div align="center"><?php echo $inv->nombre_corto; ?></div></td>
+            <td><div align="center"><?php echo $inv->nombre_producto; ?></div></td>
+            <td><div align="center"><?php $grupo = new Grupos();
+		    $nom_grupo = $grupo->findFirst("id = '$inv->grupos_id'"); 
+		    echo $nom_grupo->nombre_grupo; ?></div></td>
+            <td><div align="center"><?php echo $inv->costo; ?></div></td>
+            <td><div align="center"><?php echo $inv->disponibles; ?></div></td>
+          </tr>
+        <?php $i++; endforeach; ?> 
+ </table>
+<div id="mensajes"></div>

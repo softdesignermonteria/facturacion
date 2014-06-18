@@ -1,0 +1,57 @@
+<table border="0" cellpadding="1"  width="100%" class="ui-widget ui-widget-content ui-corner-all">
+   <tr class="ui-jqgrid-titlebar ui-widget-header ui-corner-top">
+    <th>NUMERO</th>
+    <th>CLIENTE</th>
+    <th>FECHA</th>
+    <th>VENCIMIENTO</th>
+    <th>SUBTOTAL</th>
+    <th>DESCUENTO</th>
+    <th>IVA/th>
+    <th>TOTAL</th>
+    <th>&nbsp;</th>
+    <th>&nbsp;</th>
+    <th>&nbsp;</th>
+    <!--<th>&nbsp;</th>-->
+  </tr>
+        <?php 
+		 $i=1;	
+		 $cliente = new Clientes();
+		 $dir = new Direccion();
+		 $c1 = 0;
+		 $c2 = 0;
+		 $c3 = 0;
+		 $c4 = 0;
+		 $c5 = 0;
+		 // 1 - 
+		 // 2 - 
+		 foreach($facturas as $fac): ?>  
+          <tr>
+            <td><?php echo $fac->prefijo."-".intval($fac->consecutivo); ?></td>
+            <td><?php echo utf8_encode($fac->razon_social);  ?></td>
+            <td><?php echo $fac->fecha ; ?></td>
+            <td><?php echo $fac->vencimiento ; ?></td>
+            <td align="right">$<?php echo number_format($fac->subtotal,0);    $c1 += $fac->subtotal; ?></td>
+            <td align="right">$<?php echo number_format($fac->descuento);     $c2 += $fac->descuento; ?></td>
+            <td align="right">$<?php echo number_format($fac->iva,0);         $c3 += $fac->iva;?></td>
+            <td align="right">$<?php echo number_format($fac->total,0);       $c4 += $fac->total; ?></td>
+          	
+            <td><?php echo Tag::linkTo("facturacion/show/$fac->id", Tag::image("iconos/bd.png","width: 20"),"target: _blank") ?></td>
+            <td><?php echo Tag::linkTo("print/facturacion/$fac->id", Tag::image("iconos/impresora.png","width: 20"),"target: _blank") ?></td>
+            <td><?php echo Tag::linkTo("facturacion/modificar/$fac->id", Tag::image("iconos/pdf.png","width: 20"),"target: _blank") ?></td>
+            <td></td>
+          </tr>
+        <?php $i++; endforeach; ?> 
+         <tr>
+            <th colspan="4" align="right">TOTALES</th>
+            <td align="right">$<?php echo number_format($c1,0); ?></td>
+            <td align="right">$<?php echo number_format($c2,0); ?></td>
+            <td align="right">$<?php echo number_format($c3,0); ?></td>
+            <td align="right">$<?php echo number_format($c4,0); ?></td>
+            <td>&nbsp;</td>
+            <td>&nbsp;</td>
+            <td>&nbsp;</td>
+  		</tr>
+	 </table>
+<?php echo view::getContent(); ?>
+
+

@@ -1,0 +1,57 @@
+<table id="list2"></table>
+<div id="pager2"></div>
+<script>
+jQuery(document).ready(function(){
+
+		
+		jQuery("#list2").jqGrid(
+		{ 
+			ajaxGridOptions : {type:"POST"},
+			url:'<?php echo core::getInstancePath(); ?>departamentos/find_detalle_buscar', 
+			datatype: "json", 
+			colNames:['Id','Departamento'], 
+			colModel:[ 
+				{ name:'id',index:'id', width:20}, 
+				{ name:'departamento',index:'departamento', width:90}
+			], 
+			autoWidth:true,
+			width: 550,
+			height: 250,
+			rowNum:10, 
+			rowList:[10,20,30,40,50], 
+			pager: '#pager2', 
+			sortname: 'departamento', 
+			/*shrinkToFit :false,*/
+			viewrecords: true, 
+			sortorder: "asc", 
+			caption:"listado de Departamentos",
+			ondblClickRow:function(rowid,iRow,iCol,e){
+				
+				var fila = jQuery(this).jqGrid('getRowData',rowid);
+					
+					jQuery("#departamentos_id").val("");
+					jQuery("#departamento").val("");
+					jQuery("#municipios_id").val("");
+					jQuery("#nombre_mun").val("");
+					jQuery("#departamentos_id").removeAttr("disabled");
+					jQuery("#nombre_dpto").removeAttr("disabled");
+					jQuery("#municipios_id").removeAttr("disabled");
+					jQuery("#nombre_mun").removeAttr("disabled");
+					
+					
+					jQuery("#departamentos_id").val(fila['id']);
+					jQuery("#departamento").val(fila['departamento']);
+					
+					jQuery("#dialogo_departamentos").dialog("close");
+       		 }
+		}); 
+		jQuery("#list2").jqGrid('navGrid','#pager2',{edit:false,add:false,del:false}); 
+		jQuery("#list2").jqGrid('navButtonAdd','#pager2',{
+		caption: "Columnas",
+		title: "Reordena Columnas",
+		onClickButton : function (){
+			jQuery("#list2").jqGrid('columnChooser');
+		}
+	});
+});
+</script>

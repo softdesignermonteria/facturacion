@@ -1,0 +1,62 @@
+<?php 
+$path = $_SERVER['DOCUMENT_ROOT'];
+$path .= Core::getInstancePath()."public/graficos/";
+$id_encuesta=$_REQUEST['id_encuesta'];
+$id_pregunta=$_REQUEST['id_pregunta'];
+
+?>
+<h1>Resultados graficos Encuestas</h1>
+<br />
+<table width="100%" border="1" align="center">
+<tr>
+<td>Seleccione una pregunta para graficar</td>
+</tr>
+  <tr>
+    <td>
+	<?php 
+      $preguntas= new Preguntas();
+	  echo Tag::select('id',$preguntas->find('order: id'), 'using: id,texto_pregunta', 'useDummy: yes', 'onchange: graficar_pregunta(this.value);')
+    ?>
+    </td>
+  </tr>
+</table>
+<div id="graficas"></div>
+
+
+<script>
+
+function graficar_pregunta(id_pregunta){
+	
+		var jqXHR = jQuery.ajax({
+				type: "POST",
+				url: "<?php echo core::getInstancePath(); ?>graficosxml/graficas",
+				data: {
+						id_encuesta:      <?php echo $id_encuesta; ?>,
+						id_pregunta:      id_pregunta
+						/*id_tipo_pregunta: id_tipo_pregunta*/
+				},
+				success: function(data) {
+					jQuery( '#graficas' ).html("");
+					jQuery( '#graficas' ).html(data);
+				},
+				error: function(data) {
+					jQuery('#dialogo_mensajes').html("Error Enviando parametros....." + data);
+					jQuery('#dialogo_mensajes').dialog("open");
+				}
+	
+			});
+	
+			 jqXHR.done(function(data){
+				 
+				/* jQuery("#tr_"+id).fadeOut(600,function() { 
+					 jQuery("#tr_"+id).remove();
+					  quitar_mensajes();
+				 });*/
+				
+				//jQuery( "#progressbar" ).progressbar({ value: 0 });
+				   
+			});
+	
+	}
+	
+</script>

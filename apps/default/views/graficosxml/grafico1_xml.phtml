@@ -1,0 +1,99 @@
+
+<?php
+
+// $id_encuesta=$_REQUEST['id_encuesta'];
+// $id_pregunta=$_REQUEST['id_pregunta'];
+
+  
+  if($id_tipo_pregunta=='5'){
+	  
+	 $sql1="select 
+			count(*) as total_respuesta,
+			pr.texto_pregunta,
+			lm.valor,
+			lm.texto 
+			from resultados_encuestas re,encuesta en,preguntas pr,lista_menu lm 
+			where re.id_encuesta=en.id 
+			and re.id_pregunta=pr.id 
+			and lm.id_encuesta+lm.id_pregunta+lm.valor=re.id_encuesta+re.id_pregunta+re.respuesta
+			and lm.id_encuesta=en.id 
+			and lm.id_pregunta=pr.id 
+			and en.id='".$id_encuesta."'
+			and re.id_pregunta='".$id_pregunta."'
+			group by pr.texto_pregunta,lm.valor,lm.texto";
+			
+	  $db   = DbBase::rawConnect();
+
+      $r    =  mysql_query($sql1);
+      $fila = mysql_fetch_array($r);
+	
+      $resultado   = mysql_query($sql1);
+      $resultado2  = mysql_query($sql1);
+      $resultado3  = mysql_query($sql1);
+			
+
+     echo "<graph xaxisname='Encuesta' caption='Resultados Encuesta' xAxisName='' yAxisName='' formatNumberScale='0' \n hovercapborder='889E6D' rotateNames='0' numdivlines='9' divLineColor='CCCCCC' \n divLineAlpha='80' showAlternateHGridColor='1' AlternateHGridAlpha='30' AlternateHGridColor='CCCCCC' subcaption=''>";
+	 echo "<categories font='Arial' fontSize='11' fontColor='000000'>";
+	 while($fila1=mysql_fetch_array($resultado2)){ 
+		echo "<category name='".utf8_decode($fila1[texto])."'/>";
+	 }
+	 echo "</categories>";
+	 echo "<dataset seriesname='".utf8_decode($fila[texto_pregunta])."' color='FDC12E'>";
+	 while($fila2 = mysql_fetch_array($resultado3)){ 
+		echo "<set value='$fila2[total_respuesta]'/>";
+	 }
+	 echo "</dataset>";
+	 echo "</graph>";		
+	
+			
+  }elseif(($id_tipo_pregunta=='3')||($id_tipo_pregunta=='4')||($id_tipo_pregunta=='6')){
+	  
+	   $sql2="select 
+	   				count(respuesta) as total_respuesta,
+					pr.texto_pregunta,
+					re.respuesta,
+					re.respuesta as texto
+	   from resultados_encuestas re,preguntas pr, encuesta en
+	   where en.id=re.id_encuesta and pr.id=re.id_pregunta and 
+	   re.id_encuesta='".$id_encuesta."' and re.id_pregunta='".$id_pregunta."'
+	   group by pr.texto_pregunta,re.respuesta";
+	   
+	   
+	   //$db   = DbBase::rawConnect();
+
+      $r1    =  mysql_query($sql2);
+      $fila = mysql_fetch_array($r1);
+	
+      $resultado   = mysql_query($sql2);
+      $resultado2  = mysql_query($sql2);
+      $resultado3  = mysql_query($sql2);
+	  
+	  echo "<graph xaxisname='Encuesta' caption='Resultados Encuesta' xAxisName='' yAxisName='' formatNumberScale='0' \n hovercapborder='889E6D' rotateNames='0' numdivlines='9' divLineColor='CCCCCC' \n divLineAlpha='80' showAlternateHGridColor='1' AlternateHGridAlpha='30' AlternateHGridColor='CCCCCC' subcaption=''>";
+	  echo "<categories font='Arial' fontSize='11' fontColor='000000'>";
+	  while($fila1=mysql_fetch_array($resultado2)){ 
+		echo "<category name='".utf8_decode($fila1[texto])."'/>";
+	  }
+	  echo "</categories>";
+	  echo "<dataset seriesname='".utf8_decode($fila[texto_pregunta])."' color='FDC12E'>";
+	  while($fila2 = mysql_fetch_array($resultado3)){ 
+		echo "<set value='$fila2[total_respuesta]'/>";
+	  }
+	  echo "</dataset>";
+	  echo "</graph>";	
+	   
+	
+	  
+	  
+  } 
+  
+ 
+		 
+ 
+ 
+
+ 
+
+
+ 
+   
+?>

@@ -1,0 +1,18 @@
+<table border="0" cellpadding="1" id="lclientes" width="100%">
+   <tr>
+    <th>NIT</th>
+    <th>RAZON SOCIAL</th>
+    
+ 
+        <th title="KARDEX DE CLIENTE">KARDEX</th>
+  </tr>
+        <?php 
+		 $i=0;	
+		 foreach($detalles as $cli): ?>  
+          <tr>
+            <td><div align="left"><?php echo $cli->nit;?></div></td>
+            <td><div align="left"><?php echo utf8_encode($cli->razon_social);?></div></td>
+            <td><div align="center"><?php echo Tag::linkTo("inventario/inventario_cliente/$cli->id", Tag::image("64x64/Info.png","width: 20"),"target: _blank") ?></div></td>
+          </tr>
+        <?php $i++; endforeach; ?> 
+ </table>

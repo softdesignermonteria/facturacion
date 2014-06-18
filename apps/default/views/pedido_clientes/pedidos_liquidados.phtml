@@ -1,0 +1,175 @@
+<?php echo view::getContent(); ?>
+<br />
+<form id="liquidados" name="liquidados">
+<table width="100%" border="0" align="center" cellpadding="2" cellspacing="4">
+ <tr>
+            <th colspan="6" class="ui-jqgrid-titlebar ui-widget-header ui-corner-top ui-helper-clearfix" align="left">
+           		Listado de Pedidos Liquidados            </th>
+        </tr>
+  
+  <tr>
+    <td width="27%" align="right" valign="top">DESDE</td>
+    <td width="12%" ><input type="text" size="15" id="desde" name="desde" value="<?php echo Date::getFirstDayOfYear(); ?>" /></td>
+    <td width="10%" align="right" valign="top">HASTA</td>
+    <td width="51%" ><input type="text" size="15" id="hasta" name="hasta" value="<?php echo Date::getLastDayOfMonth(date("m"),date("Y")); ?>" /></td>
+  </tr>
+  <tr>
+    <td align="right" valign="top">CENTRO PRODUCCION </td>
+    <td colspan="3" ><?php echo Tag::textField("centro_produccion_id","size: 4","readOnly: readOnly","style: background: #cccccc;"); ?>
+			<?php echo Tag::textField("nombre_centro_produccion","size: 50","readOnly: readOnly","style: background: #cccccc;"); ?>
+            <button id="buscar_centro_produccion" type="button">Buscar</button>
+            <button id="quitar1" type="button" class="boton" >Quitar Seleccion</button></td>
+  </tr>
+  <tr>
+    <td align="right" valign="top">CLASE VEHICULO</td>
+    <td colspan="3" > <?php echo Tag::textField("clase_vehiculo_id","size: 4","readOnly: readOnly","style: background: #cccccc;"); ?>
+		<?php echo Tag::textField("nombre_clase_vehiculo","size: 20","readOnly: readOnly","style: background: #cccccc;"); ?>
+            <button id="buscar_clase_vehiculo" type="button">Buscar</button>
+            <button id="quitar2" type="button" class="boton">Quitar Seleccion</button>
+ 		</td>
+  </tr>
+
+  <tr>
+    <td colspan="4" align="center" valign="top"><button id="enviar">Enviar</button></td>
+  </tr>
+</table>
+</form>
+<br />
+<table id="grid_pedidos_liquidados" align="center"></table>
+<div id="pagpedidos_liquidados"></div>
+
+
+<script>
+jQuery(document).ready(function(){
+
+jQuery("#progressbar").attr('style','display:none;');
+jQuery("#progressbarWrapper").attr('style','display:none;');
+		
+		jQuery("#grid_pedidos_liquidados").jqGrid(
+		{ 
+			ajaxGridOptions : {	type:"POST"	},
+			url:'<?php echo core::getInstancePath(); ?>pedido_clientes/pedidos_liquidados_json/?desde='+jQuery("#desde").val()+"&hasta="+jQuery("#hasta").val(), 
+			datatype: "json", 
+			data: {
+					desde: jQuery("#desde").val(),
+					hasta: jQuery("#hasta").val()
+				   },
+			colNames:['Id','Prefijo','Consecutivo','Centro Produccion','Clase Vehiculo','Tipo Auto','Placa','Color','Hora Entrada','Hora Salida','Total'], 
+			colModel:[ 
+				
+				{ name:'id',index:'id'}, 
+				{ name:'prefijo',index:'prefijo'},
+				{ name:'consecutivo',index:'consecutivo'},
+				{ name:'centro_produccion',index:'centro_produccion'},
+				{ name:'clase_vehiculo',index:'clase_vehiculo'},
+				{ name:'tipo_auto',index:'tipo_auto'},
+				{ name:'placa',index:'placa'},
+				{ name:'color',index:'color'},
+				{ name:'hora_entrada',index:'hora_entrada'},
+				{ name:'hora_salida',index:'hora_salida'},
+				{ name:'total',index:'total' , align:"right", sorttype:'number',formatter:'number' }
+				
+			], 
+			autoWidth:true,
+			width:  1200,
+			height: 500,
+			rowNum: 100, 
+			gridview: true,
+			rowList:[500,1000,1500,2000],
+			pager: '#pagpedidos_liquidados', 
+			sortname: 'hora_salida', 
+			/*shrinkToFit :false,*/
+			rownumbers: true, /*numero de filas*/
+			viewrecords: true, 
+			footerrow : true,
+			userDataOnFooter : true, 
+			/*altRows : true,*/
+			sortorder: "desc", 
+			caption:"listado de Pedidos Liquidados",
+			ondblClickRow:function(rowid,iRow,iCol,e){
+				
+				var fila = jQuery(this).jqGrid('getRowData',rowid);
+					html = "<table>";
+					html += "<tr>";
+					html += "<td>";
+					html += '<a href="<?php echo core::getInstancePath(); ?>print/pedidos_clientes_html/'+ fila['id'] +'" target="_blank"><?php echo Tag::image("iconos/impresora.png"); ?></a>';
+					html += "</td>";
+					
+					html += "</tr>";
+					html += "<tr>";
+					html += "<td>";
+					html += '<a href="<?php echo core::getInstancePath(); ?>print/pedidos_clientes_html/'+ fila['id'] +'" target="_blank">IMPRIMIR</a>';
+					html += "</td>";
+					
+					html += "</tr>";
+					html += "<tr>";
+					html += "<td>PEDIDO ESCOGIDO:" + fila['prefijo']  + fila['consecutivo'] + "</td>";
+					html += "</tr>";
+					html += "</table>";
+					jQuery("#dialogo_mensajes").html("");
+					jQuery("#dialogo_mensajes").html(html);
+					jQuery("#dialogo_mensajes").dialog("open",{width: 400,heigth:400});
+				//alert(fila['factura'] + fila['concepto']);
+				//jQuery("#tmp_cxp_id").val(fila['id']);
+			//	jQuery("#tmp_factura").val(fila['prefijo'] + fila['consecutivo']);
+					/*if( jQuery("#tmp_idtemp")  ){jQuery("#tmp_idtemp").val(fila['idtemp']);}
+					if( jQuery("#tmp_cxp_id")  ){jQuery("#tmp_cxp_id").val(fila['id']);}
+					if( jQuery("#tmp_factura") ){jQuery("#tmp_factura").val(fila['factura']);}
+					if( jQuery("#tmp_valor") ){jQuery("#tmp_valor").val( fila['total'] );}
+					if( jQuery("#tmp_concepto") ){jQuery("#tmp_concepto").val( fila['concepto'] );}
+					//jQuery("#nombre_banco").val(fila['bancos']);
+					jQuery("#dialogo_cxp").dialog("close");*/
+       		 }
+		}); 
+		jQuery("#grid_pedidos_liquidados").jqGrid('navGrid','#pagpedidos_liquidados',{edit:false,add:false,del:false}); 
+		jQuery("#grid_pedidos_liquidados").jqGrid('navButtonAdd','#pagpedidos_liquidados',{
+		caption: "Columnas",
+	
+		title: "Reordena Columnas",
+		onClickButton : function (){
+			jQuery("#grid_pedidos_liquidados").jqGrid('columnChooser');
+		}
+	});
+	
+	
+	jQuery("#enviar").click(function(event){
+		event.preventDefault();
+		url1 = "<?php echo core::getInstancePath(); ?>pedido_clientes/pedidos_liquidados_json";
+		/*jQuery("#grid_pedidos_liquidados").jqGrid('setGridParam',
+			{ 	datatype: 'json'
+				,ajaxGridOptions : {	
+					type:"POST"
+					}
+				,url:'<?php // echo core::getInstancePath(); ?>pedido_clientes/pedidos_liquidados_json/?desde='+jQuery("#desde").val()+"&hasta="+jQuery("#hasta").val(), 
+			}).trigger("reloadGrid");*/
+		
+		jQuery("#grid_pedidos_liquidados").setGridParam(
+			{ datatype: 'json', 
+			 ajaxGridOptions : { type:"POST"}
+			 , page: 1
+			 , url: url1
+			 , postData:{
+				 		desde: jQuery("#desde").val()
+						,hasta: jQuery("#hasta").val()
+						,centro_produccion_id: jQuery("#centro_produccion_id").val()
+						,clase_vehiculo_id: jQuery("#clase_vehiculo_id").val()
+						
+				 	}  
+			 });
+		jQuery("#grid_pedidos_liquidados").trigger('reloadGrid');	
+
+	});
+	
+	jQuery("#quitar1").click(function(event){
+		event.preventDefault();
+		jQuery("#centro_produccion_id").val("");
+		jQuery("#nombre_centro_produccion").val("");
+	});
+	jQuery("#quitar2").click(function(event){
+		event.preventDefault();
+		jQuery("#clase_vehiculo_id").val("");
+		jQuery("#nombre_clase_vehiculo").val("");
+	});
+});
+
+</script>

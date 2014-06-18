@@ -1,0 +1,622 @@
+<link rel="stylesheet" type="text/css" href="<?php echo core::getInstancePath(); ?>css/error.css">
+<!--<link rel="stylesheet" href="<?php //echo core::getInstancePath(); ?>javascript/development-bundle/themes/start/jquery.ui.all.css">-->
+<!--<link rel="stylesheet" href="<?php echo core::getInstancePath(); ?>javascript/development-bundle/themes/blitzer/jquery.ui.all.css">-->
+<!--Css para cargar la webcam-->
+<!--<link rel="stylesheet" href="<?php echo core::getInstancePath(); ?>javascript/fotos/assets/css/styles.css">-->
+<link rel="stylesheet" href="<?php echo core::getInstancePath(); ?>javascript/development-bundle/themes/redmond/jquery.ui.all.css">
+<!--<link rel="stylesheet" href="<?php echo core::getInstancePath(); ?>javascript/development-bundle/themes/base/jquery.ui.all.css">-->
+<link rel="stylesheet" href="<?php echo core::getInstancePath(); ?>javascript/development-bundle/demos/demos.css">
+<!--<link rel="stylesheet" href="<?php echo core::getInstancePath(); ?>javascript/timepicker/jquery-ui-timepicker-addon.css">-->
+<link rel="stylesheet" href="<?php echo core::getInstancePath(); ?>javascript/timepicker/jquery-ui-timepicker-addon.css">
+<link rel="stylesheet" href="<?php echo core::getInstancePath(); ?>javascript/colorpicker/syronex-colorpicker.css">
+<link rel="stylesheet" type="text/css" media="screen" href="<?php echo core::getInstancePath(); ?>javascript/jqgrid/css/ui.jqgrid.css" />
+<style>
+.ui-autocomplete-loading { background: white url('<?php echo core::getInstancePath(); ?>/public/img/ui-anim_basic_16x16.gif') right center no-repeat; }
+</style>
+<style>
+.ui-progressbar .ui-progressbar-value { background-image: url('<?php echo core::getInstancePath(); ?>/public/img/pbar-ani.gif'); }
+</style>
+<?php  
+	Tag::addJavascript('core/base-source');
+	//Tag::addJavascript('core/calendar');
+	//Tag::addJavascript('core/calendar-source');
+	Tag::addJavascript('core/validator');
+	Tag::addJavascript('core/validations');
+	Tag::addJavascript('core/base');
+	Tag::addJavascriptFramework('scriptaculous');
+	Tag::addJavascript('development-bundle/jquery-1.9.1');
+	//Tag::addJavascriptFramework('prototype');
+	echo Tag::getJavascriptLocation();
+	echo Tag::javascriptSources();
+?>
+<script src="<?php echo core::getInstancePath(); ?>javascript/modernizr.js"></script>
+<script src="<?php echo core::getInstancePath(); ?>javascript/development-bundle/ui/minified/jquery-ui.custom.min.js"></script>
+<script src="<?php echo core::getInstancePath(); ?>javascript/development-bundle/ui/minified/jquery.ui.datepicker.min.js"></script>
+<script src="<?php echo core::getInstancePath(); ?>javascript/development-bundle/ui/minified/jquery.ui.accordion.min.js"></script>
+<script src="<?php echo core::getInstancePath(); ?>javascript/development-bundle/ui/minified/jquery.ui.autocomplete.min.js"></script>
+<script src="<?php echo core::getInstancePath(); ?>javascript/development-bundle/ui/minified/jquery.ui.button.min.js"></script>
+<script src="<?php echo core::getInstancePath(); ?>javascript/development-bundle/ui/minified/jquery.ui.core.min.js"></script>
+<script src="<?php echo core::getInstancePath(); ?>javascript/development-bundle/ui/minified/jquery.ui.dialog.min.js"></script>
+<script src="<?php echo core::getInstancePath(); ?>javascript/development-bundle/ui/minified/jquery.ui.draggable.min.js"></script>
+<script src="<?php echo core::getInstancePath(); ?>javascript/development-bundle/ui/minified/jquery.ui.droppable.min.js"></script>
+<script src="<?php echo core::getInstancePath(); ?>javascript/development-bundle/ui/minified/jquery.ui.mouse.min.js"></script>
+<script src="<?php echo core::getInstancePath(); ?>javascript/development-bundle/ui/minified/jquery.ui.position.min.js"></script>
+<script src="<?php echo core::getInstancePath(); ?>javascript/development-bundle/ui/minified/jquery.ui.progressbar.min.js"></script>
+<script src="<?php echo core::getInstancePath(); ?>javascript/development-bundle/ui/minified/jquery.ui.resizable.min.js"></script>
+<script src="<?php echo core::getInstancePath(); ?>javascript/development-bundle/ui/minified/jquery.ui.selectable.min.js"></script>
+<script src="<?php echo core::getInstancePath(); ?>javascript/development-bundle/ui/minified/jquery.ui.slider.min.js"></script>
+<script src="<?php echo core::getInstancePath(); ?>javascript/development-bundle/ui/minified/jquery.ui.sortable.min.js"></script>
+<script src="<?php echo core::getInstancePath(); ?>javascript/development-bundle/ui/minified/jquery.ui.tabs.min.js"></script>
+<script src="<?php echo core::getInstancePath(); ?>javascript/development-bundle/ui/minified/jquery.ui.widget.min.js"></script>
+<script  src="<?php echo core::getInstancePath(); ?>javascript/timepicker/jquery-ui-timepicker-addon.js"></script>
+<script  src="<?php echo core::getInstancePath(); ?>javascript/jqgrid/js/i18n/grid.locale-es.js" ></script>
+<script  src="<?php echo core::getInstancePath(); ?>javascript/jqgrid/js/jquery.jqGrid.min.js" ></script>
+<script  src="<?php echo core::getInstancePath(); ?>javascript/jqgrid/src/grid.celledit.js" > </script>
+<script src="<?php echo core::getInstancePath(); ?>javascript/colorpicker/syronex-colorpicker.js"></script>
+
+<script src="<?php echo core::getInstancePath(); ?>javascript/jstree-v.pre1.0/jquery.cookie.js"></script>
+<script src="<?php echo core::getInstancePath(); ?>javascript/jstree-v.pre1.0/jquery.hotkeys.js"></script>
+<script src="<?php echo core::getInstancePath(); ?>javascript/jstree-v.pre1.0/jquery.jstree.js"></script>
+
+<!--JS cargar webcam-->
+<!--<script  src="<?php //echo core::getInstancePath(); ?>javascript/fotos/assets/js/jquery.min.js"></script>-->
+<!--<script  src="<?php //echo core::getInstancePath(); ?>javascript/fotos/assets/fancybox/jquery.easing-1.3.pack.js" > </script>
+<script  src="<?php //echo core::getInstancePath(); ?>javascript/fotos/assets/fancybox/jquery.fancybox-1.3.4.pack.js" > </script>-->
+<script  src="<?php echo core::getInstancePath(); ?>javascript/webcam/webcam.js" > </script>
+<!--<script  src="<?php //echo core::getInstancePath(); ?>javascript/fotos/assets/js/script.js" > </script>-->
+
+<script>
+
+jQuery(document).ready(function(){
+
+	
+
+	jQuery(".content2").find("input,section,textarea").attr("class","ui-widget ui-widget-content ui-corner-all");
+
+	jQuery(".content2").find("input,section,textarea").css("height","25px");
+
+	jQuery(".content2").find("table").attr("cellpadding","2");
+
+	jQuery(".content2").find("table").attr("cellspacing","2");
+
+	jQuery(".content2").find("select").attr("class","ui-widget ui-widget-content ui-corner-all");
+
+	jQuery(".content2").find("table").attr("class","ui-widget ui-widget-content ui-corner-all");
+
+	
+
+	jQuery(".content2").find("td").css("height","25px");
+
+	jQuery(".content2").find("thead").attr("class","ui-widget ui-widget-content ui-corner-all ui-dialog-titlebar ui-widget-header ui-helper-clearfix ui-front");
+
+	//ui-widget ui-widget-content ui-corner-all ui-dialog-titlebar ui-widget-header ui-helper-clearfix ui-front
+
+	jQuery(".content2").find("th").css("height","30px");
+
+	//jQuery(".content2").find("select").attr("class","text ui-widget-content ui-corner-all");
+
+	jQuery(".content2").find("result").attr("class","ui-widget ui-widget-content ui-corner-all");
+
+	jQuery(".content2").find("h4").attr("class","ui-widget ui-widget-content ui-corner-all ui-widget-header ui-icon-circle-arrow-e");
+
+	jQuery(".content2").find("h1").attr("class","ui-widget ui-widget-content ui-corner-all ui-widget-header ui-icon-circle-arrow-e");
+
+	jQuery(".content2").find(".result").attr("style","width: 500px;");
+	
+
+});
+
+
+
+</script>
+
+
+
+<script>
+
+function redireccionar_action(url){
+
+		var url = "<?php echo core::getInstancePath(); ?>"+url; 
+
+		jQuery(location).attr('href',url); 
+
+	}
+	
+function lista_menu(){
+
+		var id_tipo_pregunta=jQuery("#id_tipo_pregunta").val();
+		
+		if(id_tipo_pregunta=='5'){
+			//jQuery('#lista').show();
+			jQuery("#dialogo_agregar_valor").dialog("open");
+			jQuery('#valor').val("0");
+			jQuery('#valor').attr("disabled", true);
+				
+		}else{
+			
+			jQuery('#valor').attr("disabled", false);
+			jQuery('#valor').val("0");
+			
+			
+		}
+			
+			
+}
+
+function cerrar_encuesta(path,url,id_encuesta){
+	
+		var server='<?php echo $_SERVER['SERVER_NAME'] ?>';
+		jQuery("#dialogo_cerrar_enc").dialog("open");
+		//alert(url+id_encuesta);
+		jQuery("#vinculo").val(server+path+url+id_encuesta);
+		jQuery("#vinculo").attr("readOnly","ReadOnly");
+	
+}
+
+function cambiar_fuente(fuente){
+	
+	if(jQuery("#fuente_id").val()=="@"){
+		
+			alert("Seleccione un tipo de fuente.");
+				
+	}else{
+		
+	  jQuery("#fuente_id").change(function() {
+			
+			var tamano= jQuery('#tamano').val();
+			var color=  jQuery('#color').val();
+			
+			/*Titulo de la encuesta*/
+			jQuery('#descripcion').css("font-family", fuente);
+			jQuery('#descripcion').css("font-size", tamano+'px');
+			jQuery('#descripcion').css("color","'"+color+"'");
+			/*Encabezado*/
+			jQuery('#encabezado').css("font-family", fuente);
+			jQuery('#encabezado').css("font-size", tamano+'px');
+			jQuery('#encabezado').css("color","'"+color+"'");
+					
+		
+	  });
+		
+	  }
+	
+	
+}
+
+function graficar_pregunta(id_pregunta){
+	
+	if(jQuery("#id").val()=="@"){
+		
+			alert("Seleccione un tipo de fuente.");
+				
+	}else{
+		
+	  jQuery("#id").change(function() {
+			
+			var tamano= jQuery('#tamano').val();
+			var color=  jQuery('#color').val();
+			
+			/*Titulo de la encuesta*/
+			jQuery('#descripcion').css("font-family", fuente);
+			jQuery('#descripcion').css("font-size", tamano+'px');
+			jQuery('#descripcion').css("color","'"+color+"'");
+			/*Encabezado*/
+			jQuery('#encabezado').css("font-family", fuente);
+			jQuery('#encabezado').css("font-size", tamano+'px');
+			jQuery('#encabezado').css("color","'"+color+"'");
+					
+		
+	  });
+		
+	  }
+	
+	
+}
+
+jQuery(document).ready(function(){
+
+var detalles = [];
+
+jQuery("#dialogo_agregar_valor").dialog(
+		{ 
+			
+			autoOpen:false
+			, width:450 
+			, heigth:200 
+			,modal: true
+			,buttons:[
+				{
+					text:  "Guardar"
+					,click: function(){
+							
+							var datos;
+							var jqXHR = jQuery.ajax({
+									url:"<?php echo core::getInstancePath(); ?>preguntas/add_valor_lista",
+									type:"POST",
+									//dataType:"json",
+									
+									data:{
+																
+										id:                  jQuery("#encuesta_id").val(),
+										id_pregunta:         jQuery("#preguntas_id").val(),
+										texto:               jQuery("#texto").val(),
+										valorlista:          jQuery("#valorlista").val(),
+										valor	 :          jQuery("#valor").val(),
+
+										}
+										,
+										fail:function(){
+											alert("error");
+										},
+										error:function(jqXHR,textStatus,errorThrown){
+											alert("error "+textStatus+"\n"+jqXHR+"\n"+errorThrown);
+											
+										}
+							});
+							
+							 jqXHR.done(function(data){
+								/*agregar_valor(data);*/
+								jQuery("#mensajes").html(data);
+								
+							});
+							
+							valorlista      :  jQuery("#valorlista").val("");
+							valor	       :  jQuery("#valor").val("0");
+							texto           :  jQuery("#texto").val("");
+													
+							//jQuery('#valor').attr("disabled", true);
+							//jQuery('#valor').val("");
+							//jQuery(this).dialog("close"); 
+
+							
+						}	
+				}
+			]
+		});
+
+
+jQuery("#dialogo_cerrar_enc").dialog(
+		{ 
+			
+			autoOpen:false
+			, width:450 
+			, heigth:200 
+			,modal: true
+
+});	
+		
+ /*jQuery("#agregar_valor").click(function(){
+		 	jQuery("#dialogo_agregar_valor").dialog("open");
+		 });*/
+});
+	
+function agregar_valor(data){
+
+	detalles.push(
+		{
+			id:             data["id"]
+			,id_pregunta:   data["preguntas_id"]
+			,valorlista:    data["valorlista"]
+			,texto:         data["texto"]
+			
+		}
+	);
+	
+}
+
+function vista_preliminar(){
+	
+	    if(jQuery("#encuesta_id").val()!=""){
+			
+		jQuery('#siguiente').click(function(){
+		  //window.open('show/'+jQuery("#id").val(), 'window name', 'window settings');
+		  //return false;
+		  //jQuery(this).attr('target', '_blank');
+		  window.open('show/'+jQuery("#encuesta_id").val(),'_blank');
+		}); 
+		}else{
+			
+			alert("Debe escoger una encuesta, antes de visualizarla");
+		}
+
+}
+	
+
+function doccancelar(v,p){
+
+		var url = v+p; 
+
+		jQuery(location).attr('href',url); 
+
+	}	
+
+function quitar_mensajes(){
+		jQuery(".kumbiaDisplay").fadeOut(2000, function () {
+		  jQuery(this).remove();
+		  jQuery('#fx').each (function(){
+			  this.reset();
+			});
+		});
+	}
+
+function aplicar_css(nombre){
+
+		jQuery("."+nombre).find("input,section,textarea").attr("class","ui-widget ui-widget-content ui-corner-all");
+
+		jQuery("."+nombre).find("input,section,textarea").css("height","25px");
+
+		jQuery("."+nombre).find("table").attr("cellpadding","2");
+
+		jQuery("."+nombre).find("table").attr("cellspacing","2");
+
+		jQuery("."+nombre).find("select").attr("class","ui-widget ui-widget-content ui-corner-all");
+
+		jQuery("."+nombre).find("table").attr("class","ui-widget ui-widget-content ui-corner-all");
+
+		jQuery("."+nombre).find("td").css("height","25px");
+
+		jQuery("."+nombre).find("thead").attr("class","ui-widget ui-widget-content ui-corner-all ui-dialog-titlebar ui-widget-header ui-helper-clearfix ui-front");
+
+		jQuery("."+nombre).find("th").css("height","30px");
+
+		jQuery("."+nombre).find("h4").attr("class","ui-widget ui-widget-content ui-corner-all ui-widget-header ui-icon-circle-arrow-e");
+
+		jQuery("."+nombre).find("h1").attr("class","ui-widget ui-widget-content ui-corner-all ui-widget-header ui-icon-circle-arrow-e");
+
+	
+
+	}	
+	
+
+
+
+	function buscar_dialogo(controlador,opc,valor){
+
+					jQuery("#dialogo_"+controlador).html("");
+					//alert(opc);
+					var datos = "";
+
+					jQuery.ajax({
+
+						type:"POST"
+
+						,url:"<?php echo core::getInstancePath(); ?>"+controlador+"/find_buscar/"
+
+						,async:true
+
+						,data:{
+								opcion: opc,
+								 valor: valor
+							}
+
+						,success: function(data){
+
+								jQuery("#dialogo_"+controlador).html(data);
+
+								jQuery("#dialogo_"+controlador).dialog("open");
+
+							}
+
+						,error: function(data){
+
+								jQuery("#dialogo_"+controlador).html("Error Cargando este Elemento" + data);
+
+								jQuery("#dialogo_"+controlador).dialog("open");
+
+							}	
+
+					});		
+
+
+		}
+		
+		function validar(controlador,opcion,valor){
+					jQuery("#dialogo_mensajes").html("");
+					var datos = "";
+					jQuery.ajax({
+						type:"POST"
+						,url:"<?php echo core::getInstancePath(); ?>"+controlador+"/validar/"+valor+"/"+opcion
+						,async:true
+						
+						,success: function(data){
+								jQuery("#mensajes").html(data);
+							  }
+						,error: function(data){
+								jQuery("#dialogo_mensajes").html("Error Cargando este Elemento" + data);
+								jQuery("#dialogo_mensajes").dialog("open");
+							  }	
+					});		
+		}
+		
+	
+		function buscar_imagenes(campo){
+					
+					controlador='imagen';
+					
+					jQuery("#dialogo_"+controlador).html("");
+					//alert(opc);
+					var datos = "";
+
+					jQuery.ajax({
+
+						type:"POST"
+
+						,url:"<?php echo core::getInstancePath(); ?>imagenes/buscar_imagenes/?campo="+campo
+
+						,async:true
+
+						,success: function(data){
+
+								jQuery("#dialogo_"+controlador).html(data);
+
+								jQuery("#dialogo_"+controlador).dialog("open");
+
+							}
+
+						,error: function(data){
+
+								jQuery("#dialogo_"+controlador).html("Error Cargando este Elemento");
+
+								jQuery("#dialogo_"+controlador).dialog("open");
+
+							}	
+
+					});		
+
+
+		}
+		
+	
+		
+function tableToJson(table) {
+    var data = [];
+
+    // first row needs to be headers
+    var headers = [];
+    for (var i=0; i<table.rows[0].cells.length; i++) {
+        headers[i] = table.rows[0].cells[i].innerHTML.toLowerCase().replace(/ /gi,'');
+    }
+
+    // go through cells
+    for (var i=1; i<table.rows.length; i++) {
+
+        var tableRow = table.rows[i];
+        var rowData = {};
+
+        for (var j=0; j<tableRow.cells.length; j++) {
+
+            rowData[ headers[j] ] = tableRow.cells[j].innerHTML;
+
+        }
+
+        data.push(rowData);
+    }       
+
+    return data;
+}
+
+
+
+function solonumeros(obj){
+	patron = /[^0-9]/;
+	var s = obj.value;
+	obj.value = s.replace(patron,'');
+}
+
+
+function validar_cliente(){
+		
+		jQuery("#clientes_id").val();
+		controlador = "mensajes";
+		
+		var datos = "";
+
+					jQuery.ajax({
+
+						type:"POST"
+
+						,url:"<?php echo core::getInstancePath(); ?>solicitud/validar/"+jQuery("#clientes_id").val()
+
+						,async:true
+
+						,data:{
+								opcion: true
+							}
+
+						,success: function(data){
+
+								jQuery("#dialogo_"+controlador).html(data);
+
+								jQuery("#dialogo_"+controlador).dialog("open");
+
+							}
+
+						,error: function(data){
+
+								jQuery("#dialogo_"+controlador).html("Error Cargando este Elemento" + data);
+
+								jQuery("#dialogo_"+controlador).dialog("open");
+
+							}	
+
+					});		
+
+		
+	}
+	
+	
+	function valor_credito(){
+		    
+			var numero_cuotas=jQuery("#numero_cuotas").val();
+			var valor_cuota=jQuery("#valor_cuota").val();
+			
+			if(numero_cuotas=='' || valor_cuota==''){
+					
+					jQuery("#error").css("display","inline");
+					jQuery(".kumbiaDisplay").fadeOut(7000, function () {
+					jQuery(this).remove();
+					
+					jQuery('#loader').each (function(){
+						
+					});
+				});
+					
+				}else{
+					jQuery("#loader").css("display","inline");
+			
+					  jQuery(".kumbiaDisplay").fadeOut(5000, function () {
+					  jQuery(this).remove();
+					  
+					  jQuery('#loader').each (function(){
+					  
+					  });
+					});
+					
+					var total_credito=numero_cuotas*valor_cuota;
+			        jQuery("#total_credito").val(total_credito);
+					
+				}
+	}
+	
+	
+	function capturar_huella(){
+		jQuery("#dialogo_huellas").html("");
+			jQuery.ajax({
+
+						type:"POST"
+
+						,url:"<?php echo core::getInstancePath(); ?>huellas/"
+
+						,async:true
+
+						,data:{
+								opcion: true
+							}
+
+						,success: function(data){
+								
+								jQuery("#dialogo_huellas").html(data);
+
+								jQuery("#dialogo_huellas").dialog("open");
+
+							}
+
+						,error: function(data){
+
+								jQuery("#dialogo_"+controlador).html("Error Cargando este Elemento" + data);
+
+								//jQuery("#dialogo_"+controlador).dialog("open");
+
+							}	
+
+					});		
+
+		
+	}
+
+
+</script>
+
+	
+
+    

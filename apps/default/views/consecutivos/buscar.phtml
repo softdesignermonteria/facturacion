@@ -1,0 +1,70 @@
+<?php 
+	if(isset($_REQUEST["opcion"])){
+		Flash::notice("Doble Click en la Fila para ".$_REQUEST["opcion"]); 
+	}
+?>
+<table id="tabla<?php echo Router::getController(); ?>"></table>
+<div id="pager<?php echo Router::getController(); ?>"></div>
+<script>
+jQuery(document).ready(function(){
+
+		
+		jQuery("#tabla<?php echo Router::getController(); ?>").jqGrid(
+		{ 
+			ajaxGridOptions : {type:"POST"},
+			url:'<?php echo core::getInstancePath().Router::getController(); ?>/find_detalle_buscar', 
+			datatype: "json", 
+			colNames:['Id','Prefijo','Desde','Hasta','Fecha','Estado','Tipo Documento','Descripción'], 
+			colModel:[ 
+				{ name:'id',index:'id', width:50},
+				{ name:'prefijo',index:'prefijo', width:50}, 
+				{ name:'desde',index:'desde', width:50},
+				{ name:'hasta',index:'hasta', width:100}, 
+				{ name:'fecha',index:'fecha', width:100}, 
+				{ name:'activo',index:'activo', width:50}, 
+				{ name:'tipo_documento_id',index:'tipo_documento_id', width:50},
+				{ name:'descripcion',index:'descripcion', width:200}
+			], 
+			autoWidth:true,
+			width: 850,
+			height: 250,
+			rowNum:50, 
+			/*rowList:[10,20,30,40,50], */
+			pager: '#pager<?php echo Router::getController(); ?>', 
+			sortname: 'id', 
+			/*shrinkToFit :false,*/
+			viewrecords: true, 
+			sortorder: "asc", 
+			caption:"LISTADO DE CONSECUTIVOS",
+			ondblClickRow:function(rowid,iRow,iCol,e){
+				
+				var fila = jQuery(this).jqGrid('getRowData',rowid);
+					
+					if( jQuery("#id")    ){ jQuery("#id").val(fila['id']); }
+					if( jQuery("#prefijo") ){ jQuery("#prefijo").val(fila['prefijo']); } 
+					if( jQuery("#desde") ){ jQuery("#desde").val(fila['desde']); } 
+					if( jQuery("#hasta") ){ jQuery("#hasta").val(fila['hasta']); } 
+					if( jQuery("#fecha") ){ jQuery("#fecha").val(fila['fecha']); } 
+					if( jQuery("#activo") ){ jQuery("#activo").val(fila['activo']); } 
+					if( jQuery("#tipo_documento_id") ){ jQuery("#tipo_documento_id").val(fila['tipo_documento_id']); } 
+					if( jQuery("#descripcion") ){ jQuery("#descripcion").val(fila['descripcion']); } 
+
+					<?php if(isset($_REQUEST["opcion"]) ){ ?>
+					redireccionar_action("<?php echo Router::getController(); ?>/<?php echo $_REQUEST["opcion"]; ?>/"+fila['id'] );
+					<?php }else{?>	
+						jQuery("#dialogo_<?php echo Router::getController(); ?>").dialog("close");
+					<?php } ?>
+						
+				}
+		});
+		 
+		/*jQuery("#tabla<?php //echo Router::getController(); ?>").jqGrid('navGrid','#pager<?php //echo Router::getController(); ?>',{edit:false,add:false,del:false}); 
+		jQuery("#tabla<?php //echo Router::getController(); ?>").jqGrid('navButtonAdd','#pager<?php //echo Router::getController(); ?>',{
+		caption: "Columnas",
+		title: "Reordena Columnas",
+		onClickButton : function (){
+			jQuery("#tabla<?php //echo Router::getController(); ?>").jqGrid('columnChooser');
+		
+	});}*/
+});
+</script>

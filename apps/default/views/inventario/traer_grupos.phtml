@@ -1,0 +1,7 @@
+<td width="15%"><div align="right">
+  <?php $grupos = new Grupos();
+      echo Tag::select('grupos',$grupos->find("order: nombre_grupo"), 'using: id,nombre_grupo','useDummy=yes'); 
+	  echo Tag::hiddenField('campo',"value:1");
+	  ?>
+     </div>
+</td>

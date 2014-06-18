@@ -1,0 +1,100 @@
+<?php 
+	 
+	 $id_encuesta=$_REQUEST['id_encuesta'];
+	 $id_pregunta=$_REQUEST['id_pregunta'];
+	 
+	 $sql2="select id_tipo_pregunta from resultados_encuestas where id_encuesta='".$id_encuesta."' and id_pregunta='".$id_pregunta."'"; 
+ 
+	 $r2    =  mysql_query($sql2);
+	 $fila2= mysql_fetch_array($r2);
+	 
+	 $id_tipo_pregunta=$fila2['id_tipo_pregunta'];
+	 
+	 if(($id_tipo_pregunta=='3')||($id_tipo_pregunta=='4')||($id_tipo_pregunta=='5')||($id_tipo_pregunta=='6')){
+		 
+?>
+<table width="586" height="475" border="0">
+  <tr>
+    <td height="377">
+      <object classid="clsid:D27CDB6E-AE6D-11cf-96B8-444553540000" 
+                    codebase="http://download.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=6,0,0,0" 
+                    width="550" height="413" align="right" id="Column3D" >
+              <param name="movie" value="<?php echo core::getInstancePath()."public/graficos/"; ?>FCF_MSColumn3D.swf" />
+        <param name="FlashVars" value="&dataURL=<?php echo core::getInstancePath()."graficosxml/grafico1_xml/$id_encuesta/$id_pregunta/$id_tipo_pregunta"; ?>&chartWidth=250&chartHeight=309" />
+              <param name="quality" value="high" />
+        <embed src="<?php echo core::getInstancePath()."public/graficos/"; ?>FCF_MSColumn3D.swf" width="550" height="413" align="right" 
+                     flashvars="&dataURL=<?php echo core::getInstancePath()."graficosxml/grafico1_xml/$id_encuesta/$id_pregunta/$id_tipo_pregunta"; ?>&chartWidth=550&chartHeight=390" 
+                     quality="high" name="FCF_MSColumn3D.swf" 
+                     type="application/x-shockwave-flash" 
+                     pluginspage="http://www.macromedia.com/go/getflashplayer" />    
+      </object>
+    </td>
+  </tr>
+    </table>
+    
+<?php
+
+	$path = core::getInstancePath();
+	include_once($_SERVER['DOCUMENT_ROOT'].Core::getInstancePath()."public/graficos/FusionCharts_Gen.php");
+	# Add category names
+	$FC = new FusionCharts($_SERVER['DOCUMENT_ROOT'].Core::getInstancePath()."public/graficos/FCF_MSColumn3D.swf","100","50");
+	# Set the relative path of the swf file
+	$FC->setSWFPath($_SERVER['DOCUMENT_ROOT'].Core::getInstancePath()."public/graficos/");
+	# Store chart attributes in a variable
+	$strParam="caption=Detalle de Tecnicos;subcaption=Comparacion;xAxisName=Examen;YAxisName=Resultados;formatNumberScale=0";
+	$FC->setChartParams($strParam);
+	
+	}else{
+		
+	   $sql2="select 
+	   				count(respuesta) as total_respuesta,
+					pr.texto_pregunta,
+					re.respuesta,
+					re.respuesta as texto
+	   from resultados_encuestas re,preguntas pr, encuesta en
+	   where en.id=re.id_encuesta and pr.id=re.id_pregunta and 
+	   re.id_encuesta='".$id_encuesta."' and re.id_pregunta='".$id_pregunta."'
+	   group by pr.texto_pregunta,re.respuesta";
+	   
+	   //$db   = DbBase::rawConnect();
+
+        $resultado  = mysql_query($sql2);
+	
+	/*   
+		echo "<table width='100%' border='1' id='mytable'>";
+		echo   "<tr>";
+		echo	"<td>Exportar Preguntas de Respuesta Abierta</td>";
+		echo   "</tr>";
+		echo  "</table>";*/
+		
+		echo "<table width='100%' border='1' id='mytable'>";
+		echo "<tr>";
+		echo "<td><div align='center'>Texto Pregunta</div></td>";
+		echo "<td><div align='center'>Respuesta</div></td>";
+		echo "<td><div align='center'>Total Respuesta</div></td>";
+		echo "</tr>";
+		  while($fila=mysql_fetch_array($resultado)){ 
+		echo "<tr>";
+		echo "<td><div align='center'>$fila[texto_pregunta]</div></td>";
+		echo "<td><div align='center'>$fila[respuesta]</div></td>";
+		echo "<td><div align='center'>$fila[total_respuesta]</div></td>";
+		echo "</tr>";
+		  }
+		echo "</table>";
+		
+		echo"<form action='../exportar' method='post' id='fx1' name='fx1' target='_blank'>";
+		echo "<input type='hidden' id='id_pregunta' name='id_pregunta' value='$id_pregunta'/>";
+	    echo "<input type='hidden' id='datos_a_enviar' name='datos_a_enviar' />";
+        echo "<button id='exportar_excel' name='exportar_excel' type='submit' class='boton'>Exportar a Excel</button>";
+     	
+	}
+?>	
+<script type="application/javascript">
+
+jQuery(document).ready(function(e) {
+	
+	jQuery("#datos_a_enviar").val( jQuery("<div>").append( 
+	jQuery("#mytable").eq(0).clone()).html());
+	
+});
+</script>

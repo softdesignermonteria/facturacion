@@ -1,0 +1,100 @@
+<?php if($_REQUEST["tipo_centro_produccion_id"]==1){ ?>
+<?php 
+
+	
+	//tipo_centro_produccion_id
+	// 1 habitaciones
+	// 2 kioscos
+	
+    //$hostname = gethostbyaddr($_SERVER['REMOTE_ADDR']);
+    //echo $hostname;
+	$emp = new Empresa(); 
+	$kd = new Kardex();
+	$emp = $emp->findFirst("id = '".Session::get("id_empresa")."'");
+	$kd = $kd->findFirst("id = '$emp->kardex_id_default'");
+
+?>
+    <table width="70%" cellpadding="2" cellspacing="2" align="center">
+        <tr>
+   	       <td>Referencia</td>
+            <td>
+            <input type="text" readonly="readonly" size="2" id="tmp_kardex_id2" name="tmp_kardex_id2" value="<?php echo $kd->id; ?>" /></td>
+            <input type="hidden"  id="tmp_referencia" name="tmp_referencia2"  value="<?php echo $kd->codigo; ?>" />
+            <td><input type="text"  id="tmp_nombre2" name="tmp_nombre2"  readonly="readonly" value="<?php echo $kd->nombre_producto; ?>"  /></td>
+        </tr>
+        <tr>
+        	<td>Hora de Salida</td>
+            <td colspan="2">
+                <input type="text" size="20" id="hora_salida" name="hora_salida" readonly="readonly" style="background: #cccccc;" value="<?php echo date("Y-m-d H:i:s"); ?>" />
+                <span class="ui-icon ui-icon-calendar" style="float:left;"></span>
+                <div id="mensaje_hora"></div>
+                <button id="calc_fechas">...</button>
+     		 </td>
+        </tr>
+       
+        <tr>
+       	    <td>Cantidad(Und)</td>
+            <td colspan="2"><input type="text"  id="tmp_cantidad2" value="1" name="tmp_cantidad2" readonly="readonly" style="background: #cccccc;" /></td>
+        </tr>
+        <tr>
+       	    <td>Valor</td>
+            <td colspan="2"><input type="text"  id="tmp_valor2"  name="tmp_valor2" readonly="readonly" style="background: #cccccc;" value="0"  /></td>
+        </tr>
+         <tr>
+       	    <td>Total</td>
+            <td colspan="2"><input type="text"  id="tmp_total2"  name="tmp_total2" readonly="readonly"  style="background: #cccccc;" value="0" /></td>
+        </tr>
+    </table>
+<?php }else{ ?>
+		
+        <table width="70%" cellpadding="2" cellspacing="2" align="center">
+        
+        <tr>
+        	<td>Hora de Salida</td>
+            <td colspan="2">
+                <input type="text" size="20" id="hora_salida" name="hora_salida" readonly="readonly" style="background: #cccccc;" value="<?php echo date("Y-m-d H:i:s"); ?>" />
+                <span class="ui-icon ui-icon-calendar" style="float:left;"></span>
+     		 </td>
+        </tr>
+       
+    </table>
+
+<?php } ?>
+
+<script>
+
+<?php if(Session::get("role")=="superadministrador" || Session::get("role")=="administrador"){ ?>
+	if( jQuery( "#hora_salida"       ) ){ jQuery( "#hora_salida"       ).datetimepicker({ dateFormat: "yy-mm-dd" });   }
+	<?php } ?>
+
+<?php if($_REQUEST["tipo_centro_produccion_id"]==1){ ?>	
+jQuery("#calc_fechas").click(function(){
+		var datos = "";
+		jQuery( '#mensaje_hora' ).html("Recalculando Costo Habitacion");
+					
+			
+					var jqXHR = jQuery.ajax({
+					type: "POST",
+					url: "<?php echo core::getInstancePath(); ?>pedido_clientes/calc_fechas",
+					data: {
+							hora_entrada:         jQuery("#hora_entrada").val(),
+							hora_salida:          jQuery("#hora_salida").val(),
+							valor:         		  jQuery("#tmp_valor2").val(),
+							centro_produccion:    jQuery("#centro_produccion_id").val(),
+							tipo_habitacion:    jQuery("#tipo_habitacion_id").val(),
+							liquidar:             "1"
+					},
+					success: function(data) {
+						jQuery( '#mensajes' ).html("");
+						jQuery( '#mensaje_hora' ).html("");
+						jQuery( '#mensajes' ).html(data);
+					},
+					error: function(data) {
+						jQuery('#dialogo_mensajes').html("Error Enviando parametros.....");
+						jQuery('#dialogo_mensajes').dialog("open");
+					}
+				});
+		
+	});	
+	<?php } ?>
+</script>	

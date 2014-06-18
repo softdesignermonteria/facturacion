@@ -1,0 +1,37 @@
+
+<br />
+<table  align="center" cellpadding="2" cellspacing="2" width="100%" class="ui-widget ui-widget-content ui-corner-all">
+ <tr>
+    <th colspan="6" class="ui-jqgrid-titlebar ui-widget-header ui-corner-top ui-helper-clearfix" align="left">
+   		 detalles de Alertas
+    </th>
+</tr>
+<tr>
+	<th>Id</th>
+    <th>Fecha</th>
+    <th>placa</th>
+
+    <th>observacion</th>
+    <th>Activo</th>
+    <th>Modificar</th>
+    
+</tr>
+
+<?php 
+$emp = new Empleado();
+
+foreach($detalles as $detalles): ?>
+ 	<tr>
+    	<td><?php echo $detalles->id; ?></td>
+        <td><?php echo $detalles->fecha; ?></td>
+        <td align="center"><?php echo $detalles->placa; ?></td>
+        <td><?php echo $detalles->observacion; ?></td>
+        <td align="center"><?php if( $detalles->anulado == 1 ){ echo "SI"; }else{ echo "NO"; } ?></td>
+        <td align="center"><?php echo Tag::linkTo("alertas/agregar/?id=$detalles->id", Tag::image("iconos/bd.png","width: 25"),"target: _blank") ?></td> 
+       
+	</tr>
+ <?php endforeach; ?>
+</table>
+
+
+

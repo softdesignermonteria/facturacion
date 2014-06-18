@@ -1,0 +1,295 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="recibos_caja" language="groovy" pageWidth="612" pageHeight="792" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="bc14518a-2d81-4ec0-8457-4a8458411524">
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<parameter name="recibos_caja_id" class="java.lang.Integer">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="empresa_id" class="java.lang.Integer">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[SELECT
+     recibos_caja.`id` AS recibos_caja_id,
+     recibos_caja.`prefijo` AS recibos_caja_prefijo,
+     recibos_caja.`consecutivo` AS recibos_caja_consecutivo,
+     recibos_caja.`clientes_id` AS recibos_caja_clientes_id,
+     recibos_caja.`tipo_documento_id` AS recibos_caja_tipo_documento_id,
+     recibos_caja.`creditos_id` AS recibos_caja_creditos_id,
+     recibos_caja.`fecha` AS recibos_caja_fecha,
+     recibos_caja.`fecha_act` AS recibos_caja_fecha_act,
+     recibos_caja.`hora_act` AS recibos_caja_hora_act,
+     recibos_caja.`activo` AS recibos_caja_activo,
+     recibos_caja.`anulado` AS recibos_caja_anulado,
+     recibos_caja.`observaciones` AS recibos_caja_observaciones,
+     recibos_caja.`cheque` AS recibos_caja_cheque,
+     recibos_caja.`banco` AS recibos_caja_banco,
+     recibos_caja.`empresa_id` AS recibos_caja_empresa_id,
+     detalle_recibos_caja.`id` AS detalle_recibos_caja_id,
+     detalle_recibos_caja.`detalle_cxc_id` AS detalle_recibos_caja_detalle_cxc_id,
+     detalle_recibos_caja.`recibos_caja_id` AS detalle_recibos_caja_recibos_caja_id,
+     detalle_recibos_caja.`descripcion` AS detalle_recibos_caja_descripcion,
+     detalle_recibos_caja.`valor` AS detalle_recibos_caja_valor,
+     detalle_recibos_caja.`descuento` AS detalle_recibos_caja_descuento,
+     detalle_recibos_caja.`anulado` AS detalle_recibos_caja_anulado,
+     clientes.`id` AS clientes_id,
+     clientes.`nit` AS clientes_nit,
+     clientes.`nombre1` AS clientes_nombre1,
+     clientes.`nombre2` AS clientes_nombre2,
+     clientes.`apellido1` AS clientes_apellido1,
+     clientes.`apellido2` AS clientes_apellido2,
+     clientes.`foto` AS clientes_foto,
+     clientes.`url` AS clientes_url,
+     clientes.`razon_social` AS clientes_razon_social,
+     clientes.`direccion_casa` AS clientes_direccion_casa,
+     clientes.`direccion_oficina` AS clientes_direccion_oficina,
+     clientes.`telefono1` AS clientes_telefono1,
+     clientes.`telefono2` AS clientes_telefono2,
+     clientes.`sueldo` AS clientes_sueldo,
+     clientes.`otros_ingresos` AS clientes_otros_ingresos,
+     clientes.`eps` AS clientes_eps,
+     clientes.`casa` AS clientes_casa,
+     clientes.`vehiculos` AS clientes_vehiculos,
+     clientes.`celular` AS clientes_celular,
+     clientes.`departamentos_id` AS clientes_departamentos_id,
+     clientes.`municipios_id` AS clientes_municipios_id,
+     clientes.`activo` AS clientes_activo,
+     clientes.`correo` AS clientes_correo,
+     clientes.`web` AS clientes_web,
+     empresa.`id` AS empresa_id,
+     empresa.`nombre_corto` AS empresa_nombre_corto,
+     empresa.`nombre_empresa` AS empresa_nombre_empresa,
+     empresa.`nit` AS empresa_nit,
+     empresa.`direccion` AS empresa_direccion,
+     empresa.`logo` AS empresa_logo,
+     empresa.`regimen_id` AS empresa_regimen_id,
+     empresa.`telefonos` AS empresa_telefonos,
+     empresa.`celular` AS empresa_celular,
+     empresa.`web` AS empresa_web,
+     empresa.`correo` AS empresa_correo,
+     empresa.`activo` AS empresa_activo,
+     empresa.`kardex_id_default` AS empresa_kardex_id_default,
+     empresa.`tipo_costeo` AS empresa_tipo_costeo,
+     empresa.`valor_caja_defecto` AS empresa_valor_caja_defecto,
+     empresa.`cobro_tarifa` AS empresa_cobro_tarifa,
+     empresa.`porcentaje` AS empresa_porcentaje
+FROM
+     `recibos_caja` recibos_caja INNER JOIN `detalle_recibos_caja` detalle_recibos_caja ON recibos_caja.`id` = detalle_recibos_caja.`recibos_caja_id`
+     INNER JOIN `clientes` clientes ON recibos_caja.`clientes_id` = clientes.`id`
+     INNER JOIN `empresa` empresa ON recibos_caja.`empresa_id` = empresa.`id`
+WHERE
+     recibos_caja.id = $P{recibos_caja_id}
+     empresa.id = $P{empresa_id}
+GROUP BY
+     detalle_recibos_caja.`id`]]>
+	</queryString>
+	<field name="recibos_caja_id" class="java.lang.Long"/>
+	<field name="recibos_caja_prefijo" class="java.lang.String"/>
+	<field name="recibos_caja_consecutivo" class="java.lang.Long"/>
+	<field name="recibos_caja_clientes_id" class="java.lang.Integer"/>
+	<field name="recibos_caja_tipo_documento_id" class="java.lang.Long"/>
+	<field name="recibos_caja_creditos_id" class="java.lang.Integer"/>
+	<field name="recibos_caja_fecha" class="java.sql.Date"/>
+	<field name="recibos_caja_fecha_act" class="java.sql.Timestamp"/>
+	<field name="recibos_caja_hora_act" class="java.sql.Time"/>
+	<field name="recibos_caja_activo" class="java.lang.Boolean"/>
+	<field name="recibos_caja_anulado" class="java.lang.Boolean"/>
+	<field name="recibos_caja_observaciones" class="java.lang.String"/>
+	<field name="recibos_caja_cheque" class="java.lang.String"/>
+	<field name="recibos_caja_banco" class="java.lang.String"/>
+	<field name="recibos_caja_empresa_id" class="java.lang.Integer"/>
+	<field name="detalle_recibos_caja_id" class="java.lang.Long"/>
+	<field name="detalle_recibos_caja_detalle_cxc_id" class="java.lang.Long"/>
+	<field name="detalle_recibos_caja_recibos_caja_id" class="java.lang.Long"/>
+	<field name="detalle_recibos_caja_descripcion" class="java.lang.String"/>
+	<field name="detalle_recibos_caja_valor" class="java.lang.Double"/>
+	<field name="detalle_recibos_caja_descuento" class="java.lang.Double"/>
+	<field name="detalle_recibos_caja_anulado" class="java.lang.Boolean"/>
+	<field name="clientes_id" class="java.lang.Integer"/>
+	<field name="clientes_nit" class="java.lang.String"/>
+	<field name="clientes_nombre1" class="java.lang.String"/>
+	<field name="clientes_nombre2" class="java.lang.String"/>
+	<field name="clientes_apellido1" class="java.lang.String"/>
+	<field name="clientes_apellido2" class="java.lang.String"/>
+	<field name="clientes_foto" class="java.lang.Object"/>
+	<field name="clientes_url" class="java.lang.String"/>
+	<field name="clientes_razon_social" class="java.lang.String"/>
+	<field name="clientes_direccion_casa" class="java.lang.String"/>
+	<field name="clientes_direccion_oficina" class="java.lang.String"/>
+	<field name="clientes_telefono1" class="java.lang.String"/>
+	<field name="clientes_telefono2" class="java.lang.String"/>
+	<field name="clientes_sueldo" class="java.lang.Double"/>
+	<field name="clientes_otros_ingresos" class="java.lang.Double"/>
+	<field name="clientes_eps" class="java.lang.String"/>
+	<field name="clientes_casa" class="java.lang.String"/>
+	<field name="clientes_vehiculos" class="java.lang.String"/>
+	<field name="clientes_celular" class="java.lang.String"/>
+	<field name="clientes_departamentos_id" class="java.lang.Integer"/>
+	<field name="clientes_municipios_id" class="java.lang.Long"/>
+	<field name="clientes_activo" class="java.lang.Boolean"/>
+	<field name="clientes_correo" class="java.lang.String"/>
+	<field name="clientes_web" class="java.lang.String"/>
+	<field name="empresa_id" class="java.lang.Integer"/>
+	<field name="empresa_nombre_corto" class="java.lang.String"/>
+	<field name="empresa_nombre_empresa" class="java.lang.String"/>
+	<field name="empresa_nit" class="java.lang.String"/>
+	<field name="empresa_direccion" class="java.lang.String"/>
+	<field name="empresa_logo" class="java.lang.String"/>
+	<field name="empresa_regimen_id" class="java.lang.Boolean"/>
+	<field name="empresa_telefonos" class="java.lang.String"/>
+	<field name="empresa_celular" class="java.lang.String"/>
+	<field name="empresa_web" class="java.lang.String"/>
+	<field name="empresa_correo" class="java.lang.String"/>
+	<field name="empresa_activo" class="java.lang.Boolean"/>
+	<field name="empresa_kardex_id_default" class="java.lang.Integer"/>
+	<field name="empresa_tipo_costeo" class="java.lang.String"/>
+	<field name="empresa_valor_caja_defecto" class="java.lang.Double"/>
+	<field name="empresa_cobro_tarifa" class="java.lang.String"/>
+	<field name="empresa_porcentaje" class="java.lang.Integer"/>
+	<variable name="valor_total" class="java.math.BigDecimal" calculation="Sum">
+		<variableExpression><![CDATA[$F{detalle_recibos_caja_valor}]]></variableExpression>
+		<initialValueExpression><![CDATA[0]]></initialValueExpression>
+	</variable>
+	<variable name="total_pagina" class="java.lang.Float" resetType="Page" incrementType="Report" calculation="Sum"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="31" splitType="Stretch">
+			<staticText>
+				<reportElement uuid="de295a0d-8c6e-4f57-9364-bf1dca8cd5ef" x="175" y="2" width="199" height="29"/>
+				<textElement textAlignment="Center">
+					<font size="14" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Recibo De Caja ]]></text>
+			</staticText>
+		</band>
+	</title>
+	<pageHeader>
+		<band height="56" splitType="Stretch">
+			<textField>
+				<reportElement uuid="86c47855-811b-4826-81bf-5a2d580d6ade" x="389" y="28" width="183" height="27"/>
+				<box>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{recibos_caja_prefijo}+$F{recibos_caja_consecutivo}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement uuid="8855e6a0-01a0-4a94-988a-70bf68d20fda" x="389" y="1" width="183" height="28"/>
+				<box>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="16" isBold="true"/>
+				</textElement>
+				<text><![CDATA[NUMERO]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="3317256a-509f-4d8c-8b07-efa649ee9ec5" x="1" y="1" width="101" height="27"/>
+				<textElement verticalAlignment="Middle">
+					<font size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[CLIENTE]]></text>
+			</staticText>
+			<textField>
+				<reportElement uuid="98fa1c01-3615-4176-a08d-55fb2bc70927" x="101" y="1" width="289" height="27"/>
+				<textElement verticalAlignment="Middle">
+					<font size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{clientes_razon_social}]]></textFieldExpression>
+			</textField>
+			<textField pattern="dd/MM/yyyy h.mm a">
+				<reportElement uuid="bb87e849-8e27-4eb6-9dbd-89ac7be749bb" x="100" y="28" width="290" height="27"/>
+				<textElement verticalAlignment="Middle">
+					<font size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[new java.util.Date()]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement uuid="ebcb3a39-1f3e-4985-a265-848bbd47c828" x="0" y="27" width="100" height="28"/>
+				<textElement verticalAlignment="Middle">
+					<font size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[FECHA PAGO]]></text>
+			</staticText>
+		</band>
+	</pageHeader>
+	<columnHeader>
+		<band height="30" splitType="Stretch">
+			<staticText>
+				<reportElement uuid="cfad0d57-3fc6-4955-91de-704b322a34ac" x="3" y="10" width="127" height="20"/>
+				<textElement>
+					<font size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[CONSECUTIVO]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="3acc9270-c14b-40d1-bf46-c7cb89720598" x="131" y="10" width="298" height="20"/>
+				<textElement>
+					<font size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[DESCRIPCION]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="2f9f7b7b-99cf-4b00-9757-0a20b558e439" x="428" y="10" width="144" height="20"/>
+				<textElement>
+					<font size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[VALOR]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="21" splitType="Stretch">
+			<textField>
+				<reportElement uuid="4aa5d1d7-3f51-42f2-a10b-7a4a2c5ed050" x="0" y="0" width="131" height="20"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{detalle_recibos_caja_id}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="b1565b4c-7520-4c8a-9a0c-30e6a8163403" x="130" y="0" width="299" height="20"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{detalle_recibos_caja_descripcion}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="0f979149-d590-40b5-b4fc-391deb57cfa9" x="428" y="0" width="144" height="20"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{detalle_recibos_caja_valor}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<columnFooter>
+		<band height="27" splitType="Stretch"/>
+	</columnFooter>
+	<pageFooter>
+		<band height="27" splitType="Stretch"/>
+	</pageFooter>
+	<summary>
+		<band height="21" splitType="Stretch">
+			<textField evaluationTime="Report">
+				<reportElement uuid="3e6e01c0-ca75-4b48-a725-6130611c5119" x="362" y="0" width="210" height="20"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font size="12" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{valor_total}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement uuid="58105627-51d1-484a-94ac-f985a7a474ac" x="132" y="1" width="231" height="20"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[TOTAL RECIBO DE CAJA]]></text>
+			</staticText>
+		</band>
+	</summary>
+</jasperReport>

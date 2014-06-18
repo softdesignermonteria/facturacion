@@ -1,0 +1,306 @@
+
+<?php echo Tag::formRemote("salidas_especiales/update", "update: mensajes", "id: salidas_especiales_add","name: salidas_especiales_add"); ?>
+
+<h1>SALIDAS ESPECIALES</h1>
+
+
+<table width="100%" border="0" align="center" cellpadding="0" cellspacing="0" id="f1">
+  <tr>
+    <th colspan="4">SALIDA ESPECIAL NUMERO: <?php echo Tag::hiddenField("numero_remision","size: 30","readOnly: readOnly","style: background: #cccccc;"); ?></th>
+  </tr>
+  <tr>
+    <td colspan="4" align="right"><div id="datos_config" class="datos_config"></div></td>
+  </tr>
+  <tr>
+    <td width="25%" align="right"><div align="right">EMPRESA</div></td>
+    <td colspan="3">
+		<?php echo Tag::hiddenField("id","value: $id_rem"); ?>
+        <?php echo Tag::hiddenField("id_unico"); ?>
+        <?php echo Tag::hiddenField("prefijo"); ?>
+        <?php echo Tag::hiddenField("consecutivo"); ?> 
+        <?php echo Tag::hiddenField("tipo_documento"); ?> 
+
+        <?php echo Tag::hiddenField("empresa_id","value: ".Session::get('id_empresa').""); ?> 
+		<?php echo Tag::textField("nombre_empresa","value: ".Session::get('nombre_empresa')."","size: 30","readOnly: readOnly","style: background: #cccccc;"); ?></td>
+  </tr>
+   <tr>
+    <td align="right"><div align="right">PROVEEDOR:</div></td>
+    <td colspan="3" align="left" valign="middle" id="aclientes">
+		<?php echo Tag::textField("nombre_proveedores","size: 50","readOnly: readOnly","style: background: #cccccc;"); ?>
+        <?php echo Tag::hiddenField("proveedores_id","size: 12"); ?>
+        <?php //echo "<a href='javascript:void(0);' id='buscar_proveedores' name='buscar_proveedores'>".Tag::image("iconos/buscar.png",'width: 20px')."</a>"; ?>                
+		<?php //echo "<a href='javascript:void(0);' id='agregar_proveedores' name='agregar_proveedores'>".Tag::image("64x64/Add.png",'width: 20px')."</a>"; ?>    </td>
+  </tr>
+  <tr>
+    <td align="right" valign="top">FECHA</td>
+    <td width="24%">
+		<?php echo Tag::dateFieldMod("fecha","value: ".date("Y-m-d"),"size: 10"); ?><?php //echo Tag::datePickerField("fecha","'calendar: true'"); ?></td>
+    <td width="8%" align="right" valign="top">HORA: </td>
+    <td width="43%"><?php echo Tag::timeField("hora","active: true"); ?></td>
+  </tr>
+  
+  <tr>
+    <td align="right">OBSERVACION:</td>
+    <td colspan="3"><?php echo Tag::textField("observacion","size: 50","maxlength: 50"); ?></td>
+  </tr>
+</table>
+
+
+<br />
+
+<div id="detalles">
+
+<table width="100%" border="0" align="center" cellpadding="0" cellspacing="0">
+  <tr>
+    <th>REFERENCIA</th>
+    <th>DESCRIPCION</th>
+    <th>DISPONIBLE</th>
+    <th>CANTIDAD</th>
+    <th>COSTO</th>
+    
+    <th>MODIFICAR</th>
+    <th>ELIMINAR</th>
+  </tr>
+
+
+<?php 
+$i=1;
+$k = new Kardex();
+foreach($detalles as $det):
+$k->findFirst("id = $det->kardex_id");
+?>
+
+ <tr>
+    <td><?php echo Tag::hiddenField("it_kardex_id".$i,"size: 3","value: $det->kardex_id"); ?>
+        <?php echo Tag::hiddenField("it_idt".$i,"size: 3","value: $det->id"); ?>
+		<?php echo $k->codigo; ?>    </td>
+    <td><?php echo $k->nombre_producto; ?></td>
+    <td><?php echo $k->disponibles; ?></td>
+    <td><?php echo Tag::textField("it_cantidad".$i,"size: 5","value: $det->cantidad"); ?></td>
+    <td><?php echo Tag::textField("it_valor".$i,"size: 10","value: ".Utils::dropDecimals($det->costo)); ?></td>
+    <td align="center" valign="middle"><a href="javascript: void(0);"  onClick="modificar_detalle_producto('<?php echo $i?>');" id='bt<?php echo $i?>' name='bt<?php echo $i?>'> <?php echo Tag::image("64x64/Edit.png",'width: 20px'); ?> </a></td>
+    <td align="center" valign="middle"><a href="javascript: void(0);"  onClick="eliminar_detalle_producto('<?php echo $i?>');" id='bt<?php echo $i?>' name='bt<?php echo $i?>'> <?php echo Tag::image("64x64/Stop.png",'width: 20px'); ?> </a></td>
+  </tr>
+
+<?php $i++; endforeach; ?>
+
+</table>
+
+</div>
+<br />
+<div align="center"><?php echo Tag::button("Agregar Productos","id: add_product","name: add_product"); ?></div>
+<table width="100%" border="0" align="center" cellpadding="0" cellspacing="0" id="f3">
+  <tr>
+    <td width="50%">&nbsp;</td>
+    <th align="right">CANTIDAD TOTAL </th>
+    <td><?php echo Tag::textField("total","size: 12"); ?></td>
+  </tr>
+
+</table>
+<div align="center"><?php echo Tag::submitButton("Guardar","id: factura","name: factura"); ?><?php echo Tag::button("Cancelar","id: cancelar","name: cancelar"); ?></div>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+
+
+<?php echo Tag::endForm(); ?>
+
+
+
+<div id="mensajes"></div>
+
+
+<?php 
+//cargar formulario de modificar factura
+foreach($remision as $rem):
+?>
+
+<script>
+
+
+$('numero_remision').value = '<?php echo $rem->prefijo.$rem->consecutivo; ?>';
+$('tipo_documento').value  = '<?php echo $rem->tipo_documento_id; ?>';
+$('id_unico').value        = '<?php echo $rem->id_unico; ?>';
+$('prefijo').value         = '<?php echo $rem->prefijo; ?>';
+$('consecutivo').value     = '<?php echo $rem->consecutivo; ?>';
+$('empresa_id').value      = '<?php echo $rem->empresa_id; ?>';
+$('nombre_empresa').value  = '<?php echo $rem->nombre_empresa; ?>';
+$('proveedores_id').value     = '<?php echo $rem->proveedores_id; ?>';
+$('nombre_proveedores').value  = '<?php echo $rem->razon_social; ?>';
+//$('direccion').value       = '<?php //echo $rem->direccion; ?>';
+//$('direccion_id').value    = '<?php //echo $rem->direccion_id; ?>';
+$('fecha').value           = '<?php echo $rem->fecha; ?>';
+$('hora').value            = '<?php echo $rem->hora; ?>';
+//$('telefono1').value       = '<?php //echo $rem->telefono1; ?>';
+//$('telefono2').value       = '<?php //echo $rem->telefono2; ?>';
+$('observacion').value     = '<?php echo $rem->observaciones; ?>';
+
+$('datos_config').innerHTML = 'Codigo: <?php echo $rem->tipo_documento_id; echo " Nombre Documento "; echo $rem->nombre;  ?> ';
+
+</script>
+
+<?php
+endforeach;
+
+?>
+
+<script text="text/javascript">
+
+//traer clientes
+ /*new Event.observe("buscar_proveedores", "click", function(){
+
+		 Dialog.alert(
+		 	{
+				url: "<?php echo core::getInstancePath(); ?>salidas_especiales/trae_proveedores", 
+				options: {method: 'get'
+				, evalScripts: true}
+			}, 
+			{
+				className: "mac_os_x", width:900,height:600 ,
+				okLabel: "..Cerrar Esta Ventana.."}
+			);
+		
+ });*/
+ 
+ 
+ 
+ 
+//agregar productos
+ new Event.observe("add_product", "click", function(){
+		
+		 
+		  if($('id_unico').value!=''){
+		
+			 Dialog.alert(
+				{
+					url: "<?php echo core::getInstancePath(); ?>salidas_especiales/trae_productos/?id_unico="+$('id_unico').value, 
+					options: {method: 'get'
+					, evalScripts: true
+					}
+				}, 
+				{
+					className: "mac_os_x", width:900, height:600 ,
+					okLabel: "..Cerrar Esta Ventana.."}
+				);
+			
+		 
+	}else{
+		alert('ERROR CARGANDO ESTE FORMULARIO POR FAVOR ACTUALIZAR LA PAGINA');
+	}	
+	
+	
+ });
+ 
+ 
+</script>
+
+
+
+
+<script>
+
+
+function agregar_detalle_producto(ident){
+
+				 
+codtmp = $('id_unico').value;
+cantidad = $('cantidad'+ident).value;
+valor    = $('valor'+ident).value;
+kardex_id  = $('kardex_id'+ident).value;
+id  = $('id').value;
+
+url = 	"<?php echo core::getInstancePath(); ?>salidas_especiales/add_detalle_producto_mod/?id="+id+"&cantidad="+cantidad+"&valor="+valor+"&kardex_id="+kardex_id+"&id_unico="+codtmp;
+
+
+	new Ajax.Updater('detalles'
+				, url
+				, { method: 'get' 
+				, evalScripts: true
+				, encoding: 'ISO-8859-1'
+			});
+			
+	
+}
+
+
+
+function modificar_detalle_producto(ident){
+
+				 
+codtmp = $('id_unico').value;
+cantidad = $('it_cantidad'+ident).value;
+valor    = $('it_valor'+ident).value;
+kardex_id  = $('it_kardex_id'+ident).value;
+idt  = $('it_idt'+ident).value;
+id  = $('id').value;
+
+url = 	"<?php echo core::getInstancePath(); ?>salidas_especiales/update_detalle_producto_mod/?id="+id+"&cantidad="+cantidad+"&valor="+valor+"&kardex_id="+kardex_id+"&id_unico="+codtmp+"&idt="+idt;
+
+
+	new Ajax.Updater('detalles'
+				, url
+				, { method: 'get' 
+				, evalScripts: true
+				, encoding: 'ISO-8859-1'
+			});
+			
+	
+}
+
+
+function eliminar_detalle_producto(ident){
+				 
+idt  = $('it_idt'+ident).value;
+codtmp = $('id_unico').value;
+id  = $('id').value;
+url = 	"<?php echo core::getInstancePath(); ?>salidas_especiales/anular_detalle_producto_mod/?id="+id+"&idt="+idt+"&id_unico="+codtmp+"&vacio=";
+
+
+	new Ajax.Updater('detalles'
+				, url
+				, { method: 'get' 
+				, evalScripts: true
+				, encoding: 'ISO-8859-1'
+			});
+			
+	
+}
+
+
+function valid_dt_prod(ident) {
+
+		if($('cantidad'+ident).value < 0){
+				$('cantidad'+ident).value = 0;
+		}
+		
+		if($('valor'+ident).value < 0){
+				$('valor'+ident).value = 0;
+		}
+		
+}
+
+
+
+
+
+
+function escoger_direccion(id,dir){
+	
+	$('direccion_id').value = id;
+	$('direccion').value = dir;
+	
+	Dialog.okCallback();
+}
+
+
+
+function escoger_cliente(id,dir){
+	
+	$('proveedores_id').value = id;
+	$('nombre_proveedores').value = dir;
+	
+	
+	Dialog.okCallback();
+}
+
+</script>

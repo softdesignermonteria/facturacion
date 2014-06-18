@@ -1,0 +1,94 @@
+<?php 
+	if(isset($_REQUEST["opcion"])){
+		Flash::notice("Doble Click en la Fila para ".$_REQUEST["opcion"]); 
+	}
+?>
+<table width="900px" align="center" cellpadding="2" cellspacing="2">
+	<tr>
+    	<th colspan="4" align="center">Filtros</th>
+    </tr>
+    <tr>
+        <td align="right">REFERENCIA</td>
+        <td colspan="3"><input type="text" id="codigo" name="codigo" /></td>
+	</tr>
+     <tr>
+        <td align="right">Nombre Producto:</td>
+        <td colspan="3"><input type="text" id="nombre" name="nombre" /></td>
+	</tr>
+  <tr>
+    	<td colspan="4" align="center"><button type="button" id="buscar_item" name="buscar_item" >Buscar</button></td>
+    </tr>
+</table>
+
+<br />
+<table id="tabla<?php echo Router::getController(); ?>"></table>
+<div id="pager<?php echo Router::getController(); ?>"></div>
+<script>
+jQuery(document).ready(function(){
+	
+		jQuery("#buscar_item").click(function() {
+			//alert("entro");
+            jQuery("#tabla<?php echo Router::getController(); ?>").jqGrid('setGridParam',{ 
+				postData:{ 
+							codigo:       jQuery("#codigo").val(),
+							nombre:       jQuery("#nombre").val()
+						 } 
+			}).trigger('reloadGrid');
+        });
+
+		
+		jQuery("#tabla<?php echo Router::getController(); ?>").jqGrid(
+		{ 
+			ajaxGridOptions : {type:"POST"},
+			url:'<?php echo core::getInstancePath().Router::getController(); ?>/find_detalle_buscar', 
+			datatype: "json", 
+			colNames:['Id','codigo','Nombre','valor','Stock Minimo','Stock Maximo','Garantia'], 
+			colModel:[ 
+				{ name:'id'              ,index:'id'           , width:50},
+				{ name:'codigo'          ,index:'codigo'          , width:50}, 
+				{ name:'nombre_producto' ,index:'nombre_producto' , width:150},
+				{ name:'valor'           ,index:'valor'      , width:50}, 
+				{ name:'stock_minimo'    ,index:'stock_minimo'  , width:50}, 
+				{ name:'stock_maximo'    ,index:'stock_maximo'        , width:50},
+				{ name:'garantia'        ,index:'garantia'  , width:50}
+			], 
+			autoWidth:true,
+			width: 900,
+			height: 250,
+			rowNum:100, 
+			/*rowList:[10,20,30,40,50], */
+			pager: '#pager<?php echo Router::getController(); ?>', 
+			sortname: 'id', 
+			/*shrinkToFit :false,*/
+			viewrecords: true, 
+			sortorder: "asc", 
+			caption:"LISTADO DE KADEX DE INVENTARIO",
+			ondblClickRow:function(rowid,iRow,iCol,e){
+				
+				var fila = jQuery(this).jqGrid('getRowData',rowid);
+					
+					/*if( jQuery("#nit")    ){ jQuery("#nit").val(fila['nit']); }
+					if( jQuery("#nombre1") ){ jQuery("#nombre1").val(fila['nombre1']); } 
+					if( jQuery("#nombre2") ){ jQuery("#nombre2").val(fila['nombre2']); } 
+					if( jQuery("#apellido1") ){ jQuery("#apellido1").val(fila['apellido1']); } 
+					if( jQuery("#apellido2") ){ jQuery("#apellido2").val(fila['apellido2']); } */
+					
+					<?php if(isset($_REQUEST["opcion"]) ){ ?>
+					redireccionar_action("<?php echo Router::getController(); ?>/<?php echo $_REQUEST["opcion"]; ?>/?id="+fila['id'] );
+					<?php }else{?>	
+						jQuery("#dialogo_<?php echo Router::getController(); ?>").dialog("close");
+					<?php } ?>
+					
+       		 }
+		});
+		 
+		/*jQuery("#tabla<?php //echo Router::getController(); ?>").jqGrid('navGrid','#pager<?php //echo Router::getController(); ?>',{edit:false,add:false,del:false}); 
+		jQuery("#tabla<?php //echo Router::getController(); ?>").jqGrid('navButtonAdd','#pager<?php //echo Router::getController(); ?>',{
+		caption: "Columnas",
+		title: "Reordena Columnas",
+		onClickButton : function (){
+			jQuery("#tabla<?php //echo Router::getController(); ?>").jqGrid('columnChooser');
+		
+	});}*/
+});
+</script>

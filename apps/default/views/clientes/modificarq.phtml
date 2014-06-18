@@ -1,0 +1,134 @@
+<h1>FORMULARIO PARA MODIFICAR DATOS DEL CLIENTE</h1>
+
+<?php foreach($clientes as $cli): ?>
+
+
+<?php echo Tag::formRemote("clientes/actualizar", "update: mensajes", "id: clientes_update","name: clientes_update"); ?>
+
+<table border="0" cellpadding="1" cellspacing="0" width="100%">
+    <tr>
+   	 <th colspan="3" scope="col">FORMULARIO ACTUALIZAR CLIENTES</th>
+    </tr>
+  <tr>
+    <th width="18%" align="right"  >IDENTIFICACION (NIT/CEDULA)</th>
+    <td width="16%" align="left" scope="col">
+		<?php echo Tag::textField("nit", "size: 30","maxlength: 20","value: $cli->nit") ?>
+
+	<?php echo Tag::hiddenField("dptos","value: 23") ?><?php echo Tag::hiddenField("municipios","value: 23") ?>        </td>
+    <td width="16%" align="left" scope="col">&nbsp;</td>
+  </tr>
+  <!--<tr>
+    <th align="right" ><strong>PRIMER NOMBRE</strong></th>
+    <td align="left" ><?php echo Tag::textUpperField("pn", "size: 30","maxlength: 20","value: $cli->nombre1") ?></td>
+    <th align="right"><strong>SEGUNDO NOMBRE</strong></th>
+    <td align="left"><?php echo Tag::textUpperField("sn", "size: 30","maxlength: 20","value: $cli->nombre2") ?></td>
+    </tr>
+  <tr>
+    <th align="right" ><strong>PRIMER APELLIDO</strong></th>
+    <td align="left" ><?php echo Tag::textUpperField("pa", "size: 30","maxlength: 20","value: $cli->apellido1") ?></td>
+    <th align="right"><strong>SEGUNDO APELLIDO</strong></th>
+    <td align="left"><?php echo Tag::textUpperField("sa", "size: 30","maxlength: 20","value: $cli->apellido2") ?></td>
+    </tr>-->
+  <tr>
+    <th align="right" ><strong>RAZ&Oacute;N SOCIAL</strong></th>
+    <td  colspan="2" align="left"><?php echo Tag::textUpperField("rs", "size: 50","maxlength: 200","value: $cli->razon_social") ?></td>
+    </tr>
+  <tr>
+    <th align="right" ><strong>DIRECCION CASA</strong></th>
+    <td align="left" ><?php echo Tag::textUpperField("dc", "size: 40","maxlength: 100","value: $cli->direccion_casa") ?></td>
+    <td align="left">&nbsp;</td>
+    </tr>
+  <tr>
+    <th align="right" ><strong>DIRECCION OFICINA</strong></th>
+    <td align="left" ><?php echo Tag::textUpperField("dof", "size: 40","maxlength: 100","value: $cli->direccion_oficina") ?></td>
+    <td align="left">&nbsp;</td>
+    </tr>
+  <tr>
+    <th align="right" ><div align="right"><strong>TELEFONO FIJO(1)</strong></div></th>
+    <td align="left" ><?php echo Tag::numericField("tf1", "size: 10","maxlength: 20","value: $cli->telefono1") ?></td>
+    <td align="left">&nbsp;</td>
+  </tr>
+  <tr>
+    <th align="right" ><div align="right"><strong>TELEFONO FIJO(2)</strong></div></th>
+    <td align="left" ><?php echo Tag::numericField("tf2", "size: 10","maxlength: 20","value: $cli->telefono2") ?></td>
+    <td align="left">&nbsp;</td>
+  </tr>
+  <tr>
+    <th align="right" ><strong>CELULAR</strong></th>
+    <td align="left" ><?php echo Tag::numericField("celular", "size: 15","maxlength: 20","value: $cli->celular") ?></td>
+    <td align="left">&nbsp;</td>
+    </tr>
+  <!--<tr>
+    <th align="right" ><strong>DEPARTAMENTOS</strong></th>
+    <td align="left" ><?php $departamento = new Departamentos();
+      echo Tag::select('dptos',$departamento->find(), 'using: id,departamento','useDummy=yes'); 
+	  ?>
+      <script>$('dptos').value = '<?php echo $cli->departamentos_id; ?>';</script>      </td>
+    <th align="right"><strong>MUNICIPIOS</strong></th>
+    <td align="left">
+    <div align="left" id="traer_municipios2">
+    	<?php $mun = new Municipios();
+			$nombre_mun = $mun->findFirst("id = '$cli->municipios_id'")->municipio;
+		 ?>
+    	<select id="municipios" name="municipios" >
+        	<option value="<?php echo $cli->municipios_id; ?>"><?php echo $nombre_mun; ?></option></select></div>      </td>
+    </tr>-->
+  <tr>
+    <th align="right" ><strong>EMAIL</strong></th>
+    <td align="left" ><?php echo Tag::textUpperField("email", "size: 50","maxlength: 25","value: $cli->correo") ?></td>
+    <td align="left">&nbsp;</td>
+    </tr>
+  <tr>
+    <th align="right" ><strong>PAGINA WEB</strong></th>
+    <td align="left" ><?php echo Tag::textUpperField("web", "size: 50","maxlength: 20","value: $cli->web") ?></td>
+    <td align="left">&nbsp;</td>
+  </tr>
+  <tr>
+    <th height="0" align="right" valign="middle"><strong>ACTIVO</strong></th>
+    <td height="0" align="left" valign="middle">
+	<?php echo Tag::selectStatic('activo',array("0"=>"ACTIVO","1"=>"INACTIVO"),'useDummy=yes');  ?>
+     <script>$('activo').value='<?php echo $cli->activo; ?>';</script>
+      </td>
+    <td height="0">&nbsp;</td>
+  </tr>
+  <tr>
+    <td colspan="3" ><div align="center"><?php echo Tag::submitButton('Modificar', 'id: modificar', 'name: modificar') ?><?php echo Tag::button("Cancelar","id: cancelar","name: cancelar","onClick: doccancelar(".core::getInstancePath().");"); ?></div></td>
+    </tr>
+</table>
+
+<div id="mensaje"><?php echo View::getContent(); ?></div>
+
+<?php echo Tag::endForm() ?>
+
+<div id="mensajes"></div>
+
+<?php endforeach; ?>
+
+<div align="center">
+  <table border="0" cellpadding="2" id="remisiones"  cellspacing="2">
+    <tr>
+      <td align="center"><?php echo Tag::linkTo("#", Tag::image("64x64/Back.png",'width: 32px'),"onClick: window.close();") ?></td>
+      <td align="center"><?php echo Tag::linkTo("menu/", Tag::image("iconos/inicio.png",'width: 32px'),"tittle: Regresar al Menu"); ?></td>
+    </tr>
+    <tr>
+      <td align="center">Regresar</td>
+      <td align="center">Inicio</td>
+    </tr>
+  </table>
+</div>
+
+<script>
+
+jQuery(document).ready(function(){
+   jQuery("#dptos").change(function(evento){
+      //elimino el comportamiento por defecto del enlace
+  	 evento.preventDefault();
+      //Aquí pondría el código de la llamada a Ajax
+	 	url = 	"<?php echo core::getInstancePath(); ?>clientes/traer_municipios/"+$('dptos').value; 
+		jQuery("#traer_municipios2").load(url);
+			  
+   });
+   
+}); 
+
+</script>

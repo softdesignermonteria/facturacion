@@ -1,0 +1,438 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="facturacion" language="groovy" pageWidth="612" pageHeight="792" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="182f7a25-6d37-46f7-8441-b41d693d3dd7">
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<parameter name="id" class="java.lang.Integer">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[SELECT
+     compras.`id` AS compras_id,
+     compras.`empresa_id` AS compras_empresa_id,
+     compras.`prefijo` AS compras_prefijo,
+     compras.`consecutivo` AS compras_consecutivo,
+     compras.`tipo_documento_id` AS compras_tipo_documento_id,
+     compras.`proveedores_id` AS compras_proveedores_id,
+     compras.`bodegas_id` AS compras_bodegas_id,
+     compras.`fecha` AS compras_fecha,
+     compras.`vencimiento` AS compras_vencimiento,
+     compras.`factura` AS compras_factura,
+     compras.`incluye_iva` AS compras_incluye_iva,
+     compras.`anulado` AS compras_anulado,
+     compras.`admin_id` AS compras_admin_id,
+     compras.`ip` AS compras_ip,
+     compras.`fecha_registro` AS compras_fecha_registro,
+     compras.`subtotal` AS compras_subtotal,
+     compras.`descuento` AS compras_descuento,
+     compras.`iva` AS compras_iva,
+     compras.`total` AS compras_total,
+     empresa.`id` AS empresa_id,
+     empresa.`nombre_corto` AS empresa_nombre_corto,
+     empresa.`nombre_empresa` AS empresa_nombre_empresa,
+     empresa.`nit` AS empresa_nit,
+     empresa.`direccion` AS empresa_direccion,
+     empresa.`logo` AS empresa_logo,
+     empresa.`regimen_id` AS empresa_regimen_id,
+     empresa.`telefonos` AS empresa_telefonos,
+     empresa.`celular` AS empresa_celular,
+     empresa.`web` AS empresa_web,
+     empresa.`correo` AS empresa_correo,
+     empresa.`activo` AS empresa_activo,
+     empresa.`kardex_id_default` AS empresa_kardex_id_default,
+     empresa.`tipo_costeo` AS empresa_tipo_costeo,
+     empresa.`valor_caja_defecto` AS empresa_valor_caja_defecto,
+     empresa.`cobro_tarifa` AS empresa_cobro_tarifa,
+     empresa.`plantilla` AS empresa_plantilla,
+     proveedores.`id` AS proveedores_id,
+     proveedores.`nit` AS proveedores_nit,
+     proveedores.`nombre1` AS proveedores_nombre1,
+     proveedores.`nombre2` AS proveedores_nombre2,
+     proveedores.`apellido1` AS proveedores_apellido1,
+     proveedores.`apellido2` AS proveedores_apellido2,
+     proveedores.`razon_social` AS proveedores_razon_social,
+     proveedores.`direccion_casa` AS proveedores_direccion_casa,
+     proveedores.`direccion_oficina` AS proveedores_direccion_oficina,
+     proveedores.`telefono1` AS proveedores_telefono1,
+     proveedores.`telefono2` AS proveedores_telefono2,
+     proveedores.`celular` AS proveedores_celular,
+     proveedores.`departamentos_id` AS proveedores_departamentos_id,
+     proveedores.`municipios_id` AS proveedores_municipios_id,
+     proveedores.`activo` AS proveedores_activo,
+     proveedores.`correo` AS proveedores_correo,
+     proveedores.`web` AS proveedores_web,
+     detalle_compras.`id` AS detalle_compras_id,
+     detalle_compras.`kardex_id` AS detalle_compras_kardex_id,
+     detalle_compras.`compras_id` AS detalle_compras_compras_id,
+     detalle_compras.`tarifa_iva_id` AS detalle_compras_tarifa_iva_id,
+     detalle_compras.`cantidad` AS detalle_compras_cantidad,
+     detalle_compras.`valor` AS detalle_compras_valor,
+     detalle_compras.`descuento` AS detalle_compras_descuento,
+     detalle_compras.`total_descuento` AS detalle_compras_total_descuento,
+     detalle_compras.`iva` AS detalle_compras_iva,
+     detalle_compras.`total` AS detalle_compras_total,
+     detalle_compras.`anulado` AS detalle_compras_anulado,
+     kardex.`id` AS kardex_id,
+     kardex.`empresa_id` AS kardex_empresa_id,
+     kardex.`codigo` AS kardex_codigo,
+     kardex.`nombre_producto` AS kardex_nombre_producto,
+     kardex.`nombre_corto` AS kardex_nombre_corto,
+     kardex.`grupos_id` AS kardex_grupos_id,
+     kardex.`proveedores_id` AS kardex_proveedores_id,
+     kardex.`valor` AS kardex_valor,
+     kardex.`stock_minimo` AS kardex_stock_minimo,
+     kardex.`stock_maximo` AS kardex_stock_maximo,
+     kardex.`aviso` AS kardex_aviso,
+     kardex.`visible_pos` AS kardex_visible_pos,
+     kardex.`tipo_kardex_id` AS kardex_tipo_kardex_id,
+     kardex.`iva_compra` AS kardex_iva_compra,
+     kardex.`iva_venta` AS kardex_iva_venta,
+     kardex.`tiempo_garantia_id` AS kardex_tiempo_garantia_id,
+     kardex.`valor_tiempo` AS kardex_valor_tiempo
+FROM
+     `empresa` empresa INNER JOIN `compras` compras ON empresa.`id` = compras.`empresa_id`
+     INNER JOIN `proveedores` proveedores ON compras.`proveedores_id` = proveedores.`id`
+     INNER JOIN `detalle_compras` detalle_compras ON compras.`id` = detalle_compras.`compras_id`
+     INNER JOIN `kardex` kardex ON empresa.`id` = kardex.`empresa_id`
+WHERE
+     compras.id = $P{id}
+ AND detalle_compras.anulado = 0
+     and compras.anulado = 0]]>
+	</queryString>
+	<field name="compras_id" class="java.lang.Long"/>
+	<field name="compras_empresa_id" class="java.lang.Integer"/>
+	<field name="compras_prefijo" class="java.lang.String"/>
+	<field name="compras_consecutivo" class="java.lang.Long"/>
+	<field name="compras_tipo_documento_id" class="java.lang.Long"/>
+	<field name="compras_proveedores_id" class="java.lang.Long"/>
+	<field name="compras_bodegas_id" class="java.lang.Integer"/>
+	<field name="compras_fecha" class="java.sql.Date"/>
+	<field name="compras_vencimiento" class="java.sql.Date"/>
+	<field name="compras_factura" class="java.lang.String"/>
+	<field name="compras_incluye_iva" class="java.lang.Boolean"/>
+	<field name="compras_anulado" class="java.lang.Boolean"/>
+	<field name="compras_admin_id" class="java.lang.Integer"/>
+	<field name="compras_ip" class="java.lang.String"/>
+	<field name="compras_fecha_registro" class="java.sql.Timestamp"/>
+	<field name="compras_subtotal" class="java.lang.Double"/>
+	<field name="compras_descuento" class="java.lang.Double"/>
+	<field name="compras_iva" class="java.lang.Double"/>
+	<field name="compras_total" class="java.lang.Double"/>
+	<field name="empresa_id" class="java.lang.Integer"/>
+	<field name="empresa_nombre_corto" class="java.lang.String"/>
+	<field name="empresa_nombre_empresa" class="java.lang.String"/>
+	<field name="empresa_nit" class="java.lang.String"/>
+	<field name="empresa_direccion" class="java.lang.String"/>
+	<field name="empresa_logo" class="java.lang.String"/>
+	<field name="empresa_regimen_id" class="java.lang.Boolean"/>
+	<field name="empresa_telefonos" class="java.lang.String"/>
+	<field name="empresa_celular" class="java.lang.String"/>
+	<field name="empresa_web" class="java.lang.String"/>
+	<field name="empresa_correo" class="java.lang.String"/>
+	<field name="empresa_activo" class="java.lang.Boolean"/>
+	<field name="empresa_kardex_id_default" class="java.lang.Integer"/>
+	<field name="empresa_tipo_costeo" class="java.lang.String"/>
+	<field name="empresa_valor_caja_defecto" class="java.lang.Double"/>
+	<field name="empresa_cobro_tarifa" class="java.lang.String"/>
+	<field name="empresa_plantilla" class="java.lang.String"/>
+	<field name="proveedores_id" class="java.lang.Long"/>
+	<field name="proveedores_nit" class="java.lang.String"/>
+	<field name="proveedores_nombre1" class="java.lang.String"/>
+	<field name="proveedores_nombre2" class="java.lang.String"/>
+	<field name="proveedores_apellido1" class="java.lang.String"/>
+	<field name="proveedores_apellido2" class="java.lang.String"/>
+	<field name="proveedores_razon_social" class="java.lang.String"/>
+	<field name="proveedores_direccion_casa" class="java.lang.String"/>
+	<field name="proveedores_direccion_oficina" class="java.lang.String"/>
+	<field name="proveedores_telefono1" class="java.lang.String"/>
+	<field name="proveedores_telefono2" class="java.lang.String"/>
+	<field name="proveedores_celular" class="java.lang.String"/>
+	<field name="proveedores_departamentos_id" class="java.lang.Integer"/>
+	<field name="proveedores_municipios_id" class="java.lang.Long"/>
+	<field name="proveedores_activo" class="java.lang.Boolean"/>
+	<field name="proveedores_correo" class="java.lang.String"/>
+	<field name="proveedores_web" class="java.lang.String"/>
+	<field name="detalle_compras_id" class="java.lang.Integer"/>
+	<field name="detalle_compras_kardex_id" class="java.lang.Long"/>
+	<field name="detalle_compras_compras_id" class="java.lang.Long"/>
+	<field name="detalle_compras_tarifa_iva_id" class="java.lang.Integer"/>
+	<field name="detalle_compras_cantidad" class="java.lang.Integer"/>
+	<field name="detalle_compras_valor" class="java.lang.Double"/>
+	<field name="detalle_compras_descuento" class="java.lang.Integer"/>
+	<field name="detalle_compras_total_descuento" class="java.lang.Double"/>
+	<field name="detalle_compras_iva" class="java.lang.Double"/>
+	<field name="detalle_compras_total" class="java.lang.Double"/>
+	<field name="detalle_compras_anulado" class="java.lang.Boolean"/>
+	<field name="kardex_id" class="java.lang.Long"/>
+	<field name="kardex_empresa_id" class="java.lang.Integer"/>
+	<field name="kardex_codigo" class="java.lang.String"/>
+	<field name="kardex_nombre_producto" class="java.lang.String"/>
+	<field name="kardex_nombre_corto" class="java.lang.String"/>
+	<field name="kardex_grupos_id" class="java.lang.Long"/>
+	<field name="kardex_proveedores_id" class="java.lang.Integer"/>
+	<field name="kardex_valor" class="java.lang.Double"/>
+	<field name="kardex_stock_minimo" class="java.lang.Integer"/>
+	<field name="kardex_stock_maximo" class="java.lang.Integer"/>
+	<field name="kardex_aviso" class="java.lang.Boolean"/>
+	<field name="kardex_visible_pos" class="java.lang.Boolean"/>
+	<field name="kardex_tipo_kardex_id" class="java.lang.Boolean"/>
+	<field name="kardex_iva_compra" class="java.lang.Integer"/>
+	<field name="kardex_iva_venta" class="java.lang.Integer"/>
+	<field name="kardex_tiempo_garantia_id" class="java.lang.Long"/>
+	<field name="kardex_valor_tiempo" class="java.lang.Integer"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<pageHeader>
+		<band height="167" splitType="Stretch">
+			<rectangle radius="10">
+				<reportElement uuid="dc9e1128-5efa-47b7-8658-e77ebcfc737e" x="0" y="62" width="572" height="102"/>
+			</rectangle>
+			<staticText>
+				<reportElement uuid="be6c62ca-1976-424e-aab6-cc804d22ddf3" x="0" y="84" width="85" height="20"/>
+				<textElement verticalAlignment="Middle"/>
+				<text><![CDATA[PROVEEDORES]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="d0c2319b-32f6-4eaf-a2c1-f65ceb2d7134" x="0" y="104" width="85" height="20"/>
+				<textElement verticalAlignment="Middle"/>
+				<text><![CDATA[IDENTIFICACION]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="09875cc7-2521-4ef8-b9e9-04a846f62e52" x="0" y="124" width="85" height="20"/>
+				<textElement verticalAlignment="Middle"/>
+				<text><![CDATA[DIRECCION]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="65ffb307-d18a-4b19-8744-9711ef83a018" x="0" y="144" width="85" height="20"/>
+				<textElement verticalAlignment="Middle"/>
+				<text><![CDATA[TELEFONO]]></text>
+			</staticText>
+			<textField>
+				<reportElement uuid="bb6987a5-3cff-4161-b813-e5e3d5d79098" x="85" y="84" width="259" height="20"/>
+				<textElement verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{proveedores_razon_social}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="07933435-2e61-46cf-bcf6-35d5a5e7fc01" x="85" y="104" width="259" height="20"/>
+				<textElement verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{proveedores_nit}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="d1c9ac0b-039b-473e-a17b-b79e528b33c5" x="85" y="144" width="209" height="20"/>
+				<textElement verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{proveedores_telefono1}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="a87dc076-521a-495e-aa18-fbba9f475f64" x="85" y="124" width="259" height="20"/>
+				<textElement verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{proveedores_direccion_oficina}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement uuid="d1485f81-4295-460e-b881-b7928d5b5e5f" x="344" y="84" width="79" height="20"/>
+				<textElement/>
+				<text><![CDATA[FECHA]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="43ea3621-c3ef-43dc-9dd9-34108017838f" x="344" y="104" width="79" height="20"/>
+				<textElement/>
+				<text><![CDATA[VENCIMIENTO]]></text>
+			</staticText>
+			<textField>
+				<reportElement uuid="668a7b7d-27f6-449e-9ec4-ed8599e74cd5" x="294" y="64" width="100" height="20"/>
+				<textElement verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{compras_prefijo}+$F{compras_consecutivo}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement uuid="9969fb61-9dfb-4c5a-bf05-3bd23dc7825b" x="133" y="64" width="161" height="20"/>
+				<textElement verticalAlignment="Middle"/>
+				<text><![CDATA[FACTURA DE VENTA NUMERO:]]></text>
+			</staticText>
+			<textField pattern="dd/MM/yyyy" isBlankWhenNull="false">
+				<reportElement uuid="01bc72c2-c00e-4298-8a38-76b694484203" x="423" y="84" width="149" height="20"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{compras_fecha}]]></textFieldExpression>
+			</textField>
+			<textField pattern="dd/MM/yyyy">
+				<reportElement uuid="bda10215-b07b-4cb4-af29-c9881954eef4" x="423" y="104" width="149" height="20"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{compras_vencimiento}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="4f6f29e2-9ccb-4ea5-931c-5203399a8877" x="144" y="0" width="301" height="20"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{empresa_nombre_empresa}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="2e91a39a-0ad5-4288-915e-15a338813525" x="144" y="20" width="301" height="20"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{empresa_nit}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="d869f9d2-e44f-4b1f-9e7d-85c4a1f99392" x="144" y="39" width="301" height="20"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{empresa_telefonos}]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageHeader>
+	<columnHeader>
+		<band height="23" splitType="Stretch">
+			<rectangle>
+				<reportElement uuid="48691d1c-4742-45ab-9098-d645a67d8de2" x="0" y="1" width="572" height="20"/>
+			</rectangle>
+			<staticText>
+				<reportElement uuid="c42259fd-75de-4d8c-88eb-299b41829c53" x="0" y="2" width="100" height="20"/>
+				<box topPadding="2" leftPadding="2" bottomPadding="2" rightPadding="2">
+					<rightPen lineWidth="1.0" lineStyle="Dashed"/>
+				</box>
+				<textElement verticalAlignment="Middle"/>
+				<text><![CDATA[REFERENCIA]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="ad296e49-651a-4edc-a91f-9db6e81fe23b" x="100" y="2" width="216" height="20"/>
+				<box topPadding="2" leftPadding="2" bottomPadding="2" rightPadding="2">
+					<rightPen lineWidth="1.0" lineStyle="Dashed"/>
+				</box>
+				<textElement verticalAlignment="Middle"/>
+				<text><![CDATA[DESCRIPCION]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="579a5ebd-d32b-439c-99d5-94dd2c81a5e8" x="316" y="2" width="56" height="20"/>
+				<box topPadding="2" leftPadding="2" bottomPadding="2" rightPadding="2">
+					<rightPen lineWidth="1.0" lineStyle="Dashed"/>
+				</box>
+				<textElement textAlignment="Right" verticalAlignment="Middle"/>
+				<text><![CDATA[CANTIDAD]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="0f121b02-5f1f-4c4c-9859-0f4a3253d613" x="472" y="2" width="100" height="20"/>
+				<box topPadding="2" leftPadding="2" bottomPadding="2" rightPadding="2">
+					<rightPen lineWidth="1.0" lineStyle="Dashed"/>
+				</box>
+				<textElement textAlignment="Right" verticalAlignment="Middle"/>
+				<text><![CDATA[TOTAL]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="453dbc1f-48ff-4b87-a17f-3ee5a6e53222" x="372" y="2" width="100" height="20"/>
+				<box topPadding="2" leftPadding="2" bottomPadding="2" rightPadding="2">
+					<rightPen lineWidth="1.0" lineStyle="Dashed"/>
+				</box>
+				<textElement textAlignment="Right" verticalAlignment="Middle"/>
+				<text><![CDATA[VALOR]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="21" splitType="Stretch">
+			<textField>
+				<reportElement uuid="82eb9ad9-8696-4080-8c00-e80ead0eb276" x="0" y="0" width="100" height="20"/>
+				<box topPadding="2" leftPadding="2" bottomPadding="2" rightPadding="2">
+					<rightPen lineWidth="1.0" lineStyle="Dashed"/>
+				</box>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{kardex_codigo}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="b1ef8187-58cf-4588-8bcc-8d0c980efb9e" x="99" y="0" width="217" height="20"/>
+				<box topPadding="2" leftPadding="2" bottomPadding="2" rightPadding="2">
+					<rightPen lineWidth="1.0" lineStyle="Dashed"/>
+				</box>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{kardex_nombre_corto}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0" isBlankWhenNull="true">
+				<reportElement uuid="e76e370c-b8c5-4158-82cd-dd0af09b1363" x="315" y="0" width="58" height="20"/>
+				<box topPadding="2" leftPadding="2" bottomPadding="2" rightPadding="2">
+					<rightPen lineWidth="1.0" lineStyle="Dashed"/>
+				</box>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{detalle_compras_cantidad}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0">
+				<reportElement uuid="e64b77c5-2657-4cbf-bcf6-85a77f23bcd2" x="472" y="0" width="100" height="20"/>
+				<box topPadding="2" leftPadding="2" bottomPadding="2" rightPadding="2">
+					<rightPen lineWidth="1.0" lineStyle="Dashed"/>
+				</box>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{detalle_compras_valor}*$F{detalle_compras_cantidad}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0">
+				<reportElement uuid="478d895c-683f-4b2f-a36c-e078a123eb74" x="373" y="0" width="100" height="20"/>
+				<box topPadding="2" leftPadding="2" bottomPadding="2" rightPadding="2">
+					<rightPen lineWidth="1.0" lineStyle="Dashed"/>
+				</box>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{detalle_compras_valor}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<columnFooter>
+		<band height="10" splitType="Stretch"/>
+	</columnFooter>
+	<pageFooter>
+		<band height="98" splitType="Stretch">
+			<rectangle radius="10">
+				<reportElement uuid="e4143e87-bb12-4dda-b5fe-9334e6cab156" x="294" y="8" width="278" height="80"/>
+			</rectangle>
+			<textField pattern="#,##0">
+				<reportElement uuid="e9328c00-b173-497b-83a5-ce6aacf29040" x="416" y="8" width="149" height="20"/>
+				<box topPadding="2" leftPadding="2" bottomPadding="2" rightPadding="2"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{compras_subtotal}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0">
+				<reportElement uuid="f680b002-bcfd-487b-834f-3b5b259f7202" x="416" y="28" width="149" height="20"/>
+				<box topPadding="2" leftPadding="2" bottomPadding="2" rightPadding="2"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{compras_descuento}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0">
+				<reportElement uuid="bd7bc12c-6919-4ae6-9db4-681ac7e14049" x="416" y="48" width="149" height="20"/>
+				<box topPadding="2" leftPadding="2" bottomPadding="2" rightPadding="2"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{compras_iva}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0">
+				<reportElement uuid="509e60fe-8080-4bde-8795-4232a2b696ce" x="416" y="68" width="149" height="20"/>
+				<box topPadding="2" leftPadding="2" bottomPadding="2" rightPadding="2"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{compras_total}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement uuid="eab490f4-90e5-4a7c-87d1-9efb04be6d1c" x="316" y="8" width="100" height="20"/>
+				<box topPadding="2" leftPadding="2" bottomPadding="2" rightPadding="2">
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Right" verticalAlignment="Middle"/>
+				<text><![CDATA[SUBTOTAL]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="1560c521-bb59-4baf-82d0-b06a416a87f9" x="316" y="28" width="100" height="20"/>
+				<box topPadding="2" leftPadding="2" bottomPadding="2" rightPadding="2">
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Right" verticalAlignment="Middle"/>
+				<text><![CDATA[DESCUENTO]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="89ccf672-8475-4eb2-a1a3-28da51e410c6" x="316" y="48" width="100" height="20"/>
+				<box topPadding="2" leftPadding="2" bottomPadding="2" rightPadding="2">
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Right" verticalAlignment="Middle"/>
+				<text><![CDATA[IVA]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="26a4acbb-e60c-414b-a218-52f9bb15a5db" x="316" y="68" width="100" height="20"/>
+				<box topPadding="2" leftPadding="2" bottomPadding="2" rightPadding="2">
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Right" verticalAlignment="Middle"/>
+				<text><![CDATA[TOTAL]]></text>
+			</staticText>
+		</band>
+	</pageFooter>
+	<summary>
+		<band height="16" splitType="Stretch"/>
+	</summary>
+</jasperReport>

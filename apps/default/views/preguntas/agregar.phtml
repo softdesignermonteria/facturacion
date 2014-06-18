@@ -1,0 +1,22 @@
+<h4>FORMULARIO AGREGAR PREGUNTAS</h4>
+
+<?php echo Tag::formRemote(Router::getController()."/add", "update: mensajes", "id: fx","name: fx"); ?>
+
+<table width="80%" border="0" align="center" cellpadding="1">
+  <tr>
+    <td  align="right" valign="middle">TEXTO DE LA PREGUNTA<?php echo Tag::hiddenField("usuarios_id","value: ".Session::get("usuarios_id")); ?> </td>
+    <td align="left" valign="middle"><textarea name="texto_pregunta" id="texto_pregunta" cols="80" rows="1" style="width: 637px; height: 17px;"></textarea></td>
+  </tr>
+  <tr>
+         <td colspan="3" align="center" >
+                <button type="submit" id="guardar" name="guardar">Guardar</button>
+                <button type="button" id="cancelar" name="cancelar" onclick="doccancelar('<?php echo core::getInstancePath(); ?>','<?php echo Router::getController(); ?>');">Cancelar</button>
+         </td>
+    </tr> 
+</table>
+<?php echo Tag::endForm() ?>
+
+
+<div id="mensajes"></div>
+<br />
+

@@ -1,0 +1,66 @@
+<?php 
+	if(isset($_REQUEST["opcion"])){
+		Flash::notice("Doble Click en la Fila para ".$_REQUEST["opcion"]); 
+	}
+?>
+<table id="tabla<?php echo Router::getController(); ?>"></table>
+<div id="pager<?php echo Router::getController(); ?>"></div>
+<script>
+jQuery(document).ready(function(){
+
+		
+		jQuery("#tabla<?php echo Router::getController(); ?>").jqGrid(
+		{ 
+			ajaxGridOptions : {type:"POST"},
+			url:'<?php echo core::getInstancePath().Router::getController(); ?>/find_detalle_buscar', 
+			datatype: "json", 
+			colNames:['Id','Encabezado','Descripcion','Fecha Creación','Fecha Cierre','Estado'], 
+			colModel:[ 
+				{ name:'id'               ,index:'id'                 },
+				{ name:'encabezado'       ,index:'encabezado'         },
+				{ name:'descripcion'      ,index:'descripcion'        },
+				{ name:'fecha_creacion'   ,index:'fecha_creacion'     }, 
+				{ name:'fecha_cierre'     ,index:'fecha_cierre'       },
+				{ name:'estado'     	   ,index:'estado'             }
+				],				
+				autoWidth:true,
+				width: 550,
+				height: 250,
+				rowNum:50, 
+				/*rowList:[10,20,30,40,50], */
+				pager: '#pager<?php echo Router::getController(); ?>', 
+				sortname: 'id', 
+				/*shrinkToFit :false,*/
+				viewrecords: true, 
+				sortorder: "asc", 
+				caption:"LISTADO DE ENCUESTAS",
+				ondblClickRow:function(rowid,iRow,iCol,e){
+				
+				var fila = jQuery(this).jqGrid('getRowData',rowid);
+					
+					if( jQuery("#id")    ){ jQuery("#id").val(fila['id']); }
+					if( jQuery("#encabezado") ){ jQuery("#encabezado").val(fila['encabezado']); } 
+					if( jQuery("#descripcion") ){ jQuery("#descripcion").val(fila['descripcion']); } 
+					if( jQuery("#fecha_creacion") ){ jQuery("#fecha_creacion").val(fila['fecha_creacion']); } 
+					if( jQuery("#fecha_cierre") ){ jQuery("#fecha_cierre").val(fila['fecha_cierre']); } 
+					if( jQuery("#estado") ){ jQuery("#estado").val(fila['estado']); } 
+					
+					<?php if(isset($_REQUEST["opcion"]) ){ ?>
+					redireccionar_action("<?php echo Router::getController(); ?>/<?php echo $_REQUEST["opcion"]; ?>/"+fila['id'] );
+					<?php }else{?>	
+						jQuery("#dialogo_<?php echo Router::getController(); ?>").dialog("close");
+					<?php } ?>
+					
+       		 }
+		});
+		 
+		/*jQuery("#tabla<?php //echo Router::getController(); ?>").jqGrid('navGrid','#pager<?php //echo Router::getController(); ?>',{edit:false,add:false,del:false}); 
+		jQuery("#tabla<?php //echo Router::getController(); ?>").jqGrid('navButtonAdd','#pager<?php //echo Router::getController(); ?>',{
+		caption: "Columnas",
+		title: "Reordena Columnas",
+		onClickButton : function (){
+			jQuery("#tabla<?php //echo Router::getController(); ?>").jqGrid('columnChooser');
+		
+	});}*/
+});
+</script>

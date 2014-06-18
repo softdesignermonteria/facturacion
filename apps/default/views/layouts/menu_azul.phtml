@@ -1,0 +1,38 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<title>Paraiso</title>
+
+<?php echo view::renderPartial('menu_azul_encabezado'); ?>
+<?php echo view::renderPartial('javascript'); ?>
+
+</head>
+<body style="background-image:url(<?php echo core::getInstancePath(); ?>img/blue1.jpg)">
+<!--<body background="<?php echo core::getInstancePath(); ?>/img/negro_azul.jpg" >-->
+<?php echo view::renderPartial('body'); ?>
+
+<div align="center"><?php //echo Tag::image("logo_rotado.png");?></div>
+    <div class="wrapper1" >
+        <div class="wrapper">
+                <?php echo view::renderPartial('menu_azul_menu'); ?>
+            
+            <div class="content2">
+             <!--<div class="content2" style="background-image:url(<?php //echo core::getInstancePath(); ?>img/blue1.jpg)">-->
+                <?php View::getcontent(); ?>
+   				
+                 <div align="center" id="progressbarWrapper" style="height:30px; width:100% " class="ui-widget-default">
+                    <div id="progressbar" style="height:100%;"></div>
+                 </div>
+            </div>
+            
+          <div >	
+          		
+                
+		  		<?php echo view::renderPartial('menu_azul_pie'); ?>
+          </div>
+        </div>
+    </div>
+
+</body>
+</html>
+<?php echo view::renderPartial('javascript2'); ?>

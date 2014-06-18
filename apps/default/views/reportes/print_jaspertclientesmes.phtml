@@ -1,0 +1,51 @@
+<?php
+$path = $_SERVER['DOCUMENT_ROOT'];
+$path .= Core::getInstancePath()."public/reportes";
+//$path_class = $path."/phpjasperxml_0.8c/";
+$path_class = $path."/PHPJasperXML-master/";
+//echo $path."<br>";
+//echo $path_class;
+
+$config = CoreConfig::readEnviroment();
+		//print_r(CoreConfig::readEnviroment());
+
+$host = "";
+$user = "";
+$psw  = "";
+$bd   = "";
+
+ini_set("memory_limit","156M");
+
+foreach($config->development as $key=>$val):
+		if($key == "database.host"     ){ $host = $val; }
+		if($key == "database.username" ){ $user = $val; }
+		if($key == "database.password" ){ $psw  = $val; }
+		if($key == "database.name"     ){ $bd   = $val; }
+endforeach;
+
+$server = $host;
+$pass   = $psw;
+$db     = $bd;
+	
+include_once($path_class."class/tcpdf/tcpdf.php");
+include_once($path_class."class/PHPJasperXML.inc.php");
+//error_reporting(E_ERROR | E_WARNING | E_PARSE | E_NOTICE);
+
+$fecha=$_REQUEST['fecha'];
+$limite=$_REQUEST['limite'];
+
+
+$xml  = simplexml_load_file($path."/clientes/"."clientesdelmes.jrxml");
+
+$PHPJasperXML = new PHPJasperXML("en","TCPDF");
+$PHPJasperXML->debugsql=false;
+
+$PHPJasperXML->arrayParameter=array("fecha"=>"'".$fecha."'","limite"=>$limite);
+
+
+$PHPJasperXML->xml_dismantle($xml);
+//$PHPJasperXML->connect($server,$user,$pass,$db);
+$PHPJasperXML->transferDBtoArray($server,$user,$pass,$db);
+$PHPJasperXML->outpage("I");
+//print_r($PHPJasperXML);
+?>

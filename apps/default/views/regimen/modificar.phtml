@@ -1,0 +1,19 @@
+<?php foreach($regimen as $reg): ?>
+
+<?php echo Tag::form("regimen/actualizar","id: regimen") ?>
+
+<table border="0" cellpadding="1">
+    <tr>
+   	 <th colspan="4" scope="col">CONFIGURE REGIMEN</th>
+    </tr>
+  <tr>
+    <td width="19%" height="30" >REGIMEN</td>
+    <td width="43%" scope="col"><?php echo Tag::textField("descripcion", "size: 30","maxlength: 20","value: $reg->descripcion") ?></td>
+  </tr>
+  <tr>
+    <td height="30" colspan="4"><?php echo Tag::submitButton('Agregar', 'id: guardar', 'name: guardar') ?></tr>
+</table>
+
+<?php echo Tag::endForm() ?>
+
+<?php endforeach; ?>

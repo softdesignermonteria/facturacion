@@ -1,0 +1,40 @@
+<table width="100%"  cellpadding="0" cellspacing="0" border="0">
+<thead>
+<tr>
+	<th colspan="7">LISTADO DE COPIAS DE SEGURIDAD</th>
+</tr>    
+<tr>
+	<th>DISCO</th>
+    <th align="center">RUTA</th>
+    <th>FECHA</th>
+    <th>HORA</th>
+    <th>ARCHIVO</th>
+    <th>IMPORTAR</th>
+    <th>BORRAR</th>
+</tr>	
+</thead>
+<tbody>
+<?php 
+$url = $_SERVER['DOCUMENT_ROOT'].core::getInstancePath().'public/files';
+//echo $url;
+?>
+
+	<?php foreach(Utils::scandirRecursive_sql($url,'.sql') as $files): ?>
+    <tr>
+    <?php $bk = explode("/",$files); ?>
+    <?php $arc = explode("_",$files); ?>
+    <?php $arc2 = explode(".",$arc[6]); ?>    
+          
+        <td><?php echo $bk[0]; ?></td>
+        <td><?php echo $bk[1]."/".$bk[2]."/".$bk[3]."/".$bk[5]; ?></td>
+        <td><?php echo $arc[1]."-".$arc[2]."-".$arc[3]; ?></td>
+        <td><?php echo $arc[4].":".$arc[5].":".$arc2[0]; ?></td>
+        <td><?php echo $bk[6]; ?></td>
+        <td><?php echo Tag::linkTo("backup/importar3/?archivo=".$bk[6],Tag::image("iconos/actualizar.png","width: 32px"),"target: _blank"); ?></td>
+        <td><?php echo Tag::linkTo("backup/borrar/?archivo=".$bk[6],Tag::image("iconos/borrar.png","width: 32px")); ?></td>   
+     </tr>    
+    <?php endforeach; ?>
+</tbody>
+</table>
+
+<?php echo View::getContent(); ?>

@@ -1,0 +1,27 @@
+<h4>INFORMACIÓN DETALLADA DEL USUARIO</h4>
+<?php foreach($admin as $usuario): ?>
+<table border="0" cellpadding="1" width="100%">
+    <tr>
+   	 <th scope="col">USUARIO AGREGADO</th>
+   	 <th scope="col">&nbsp;</th>
+    </tr>
+  <tr>
+    <td width="50%" height="30" ><div align="right">Nombre Usuario:</div></td>
+    <td width="50%" scope="col">&nbsp;<?php echo $usuario->username; ?></td>
+    </tr>
+  <tr>
+    <td height="30"><div align="right"><strong>Clave:</strong></div></td>
+    <td height="30"><?php echo Tag::PasswordField("password", "size: 15","maxlength: 20","value: $usuario->password","readonly: true") ?> Nota: La clave no se visualiza por motivos de seguridad</td>
+    </tr>
+  <tr>
+    <td height="30"><div align="right">Nombre Completo:</div></td>
+    <td height="30">&nbsp;<?php echo $usuario->nombre_completo; ?></td>
+    </tr>
+  <tr>
+    <td height="30"><div align="right"><strong>Tipo de Usuario:</strong></div></td>
+    <td height="30">&nbsp;<?php echo $usuario->role; ?></td>
+    </tr>
+</table>
+<?php endforeach; ?>
+
+<?php echo View::getContent(); ?>

@@ -1,0 +1,40 @@
+<?php 
+		$url = $_SERVER['DOCUMENT_ROOT'].core::getInstancePath().'public/files';
+		$archivo = $_REQUEST["archivo"];
+		$archivo= $url."/".$archivo;
+		
+		$path = $_SERVER['DOCUMENT_ROOT'].core::getInstancePath().'public/files/';
+		$path_system = $_SERVER['DOCUMENT_ROOT'];
+		$path_system = str_replace("htdocs","mysql/bin",$path_system);
+		
+		$config = CoreConfig::readEnviroment();
+		//print_r(CoreConfig::readEnviroment());
+		
+		$host = "";
+		$user = "";
+		$psw  = "";
+		$bd   = "";
+ 
+ 		foreach($config->development as $key=>$val):
+				if($key == "database.host"     ){ $host = $val; }
+				if($key == "database.username" ){ $user = $val; }
+				if($key == "database.password" ){ $psw  = $val; }
+				if($key == "database.name"     ){ $bd   = $val; }
+		endforeach;
+		
+		$dbarg = $backupall ? '-A' : $_REQUEST['backupwhichdb'];
+ 
+		// formamos el comando a ejecutar
+		//$command = "$path_system/mysqldump --extended-insert --comments=0 --disable-keys ".$dbarg." -a -u ".$_REQUEST['mysqluser']." -p".$_REQUEST['mysqlpass']."  -r \"".$path.$_REQUEST['filename']."\" 2>&1";
+		$command  ="$path_system/mysql -u" .$user ." -p" .$psw ." " .$bd ." < " .$archivo;
+		//echo $command;
+		system($command);
+		// OK, terminamos. Digale al usuario lo que ha pasado.
+		// Si ocurrio algun error, se muestran en la llamada a system()
+?>
+
+<h2>Comando ejecutado. Si hubo errores, Se mostrarán arriba.</h2>
+
+
+<?php echo View::renderPartial("listar_copias"); ?>
+<?php echo View::getContent(); ?>

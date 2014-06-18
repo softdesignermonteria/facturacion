@@ -1,0 +1,26 @@
+<table border="0" cellpadding="2" cellspacing="2" width="100%" class="ui-widget ui-widget-content ui-corner-all">
+  <tr class="ui-jqgrid-titlebar ui-widget-header ui-corner-top ">
+    <th>NUMERO</th>
+    <th>PROVEEDOR</th>
+    <th>FECHA</th>
+    <th>FACTURA</th>
+    <th>MODIFICAR</th>
+    <th>VER</th>
+  </tr>
+        <?php 
+		 $i=0;	
+		 $p = new Proveedores();
+		 $dir = new Direccion();
+		 foreach($detalles as $detalles): ?>  
+              <tr>
+                <td><?php echo $detalles->prefijo.$detalles->consecutivo; ?></td>
+                <td><?php echo utf8_encode($p->findFirst(" id = '$detalles->proveedores_id' ")->razon_social);  ?></td>
+                <td><?php echo $detalles->fecha; ?></td>
+                <td><?php echo $detalles->factura; ?></td>
+                <td><?php echo Tag::linkTo("compras/agregar/?id=$detalles->id", Tag::image("iconos/bd.png","width: 25"),"target: _self") ?></td>
+                <td align="center"><?php echo Tag::linkTo("print/compras/$detalles->id", Tag::image("iconos/buscar.png","width: 25"),"target: _blank") ?></td>
+              </tr>
+        <?php $i++; endforeach; ?> 
+ </table>
+
+<?php echo View::getContent(); ?>

@@ -1,0 +1,25 @@
+<table width="100%">
+    	<tr>
+            <th>CODIGO</th>
+            <th>NOMBRE DEL BANCO</th>
+            <th>MODIFICAR</th>
+            <th>ELIMINAR</th>
+        </tr>
+<?php 
+$i=1;
+$bancos = new Bancos();
+foreach($bancos->find("id") as $ban):
+?>        
+        <tr>
+        	
+            <td><?php echo Tag::hiddenField("id$ban->id","value: $ban->id"); ?><?php echo $ban->id; ?></td>
+            <td><?php echo Tag::textField("banco$ban->id","value: $ban->descripcion"); ?></td>
+            <td><a href="javascript: void(0);"  onClick="modificar('<?php echo $ban->id; ?>');" id='bt<?php echo $ban->id; ?>' name='bt<?php echo  $ban->id; ?>'> <?php echo Tag::image("64x64/Edit.png",'width: 20px'); ?> </a></td>
+            <td><a href="javascript: void(0);"  onClick="eliminar('<?php echo $ban->id; ?>');" id='bt<?php echo $ban->id; ?>' name='bt<?php echo $ban->id; ?>'> <?php echo Tag::image("64x64/Stop.png",'width: 20px'); ?> </a></td>
+        <tr>
+<?php 
+$i++; endforeach;
+?>        
+</table>
+
+<?php echo View::getContent(); ?>

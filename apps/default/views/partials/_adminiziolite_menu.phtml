@@ -1,0 +1,42 @@
+<?php if(Session::get("usuario_autenticado")==true){ ?>
+
+<div id='cssmenu' class="t-rigth" align="right">
+    <ul>
+       <li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</li>	
+       <li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</li>	
+       <li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</li>	
+        <li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</li>	
+       <li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</li>	
+       <li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</li>	
+        <li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</li>	
+       <li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</li>	
+       <li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</li>	
+       <li><a href="<?php echo core::getInstancePath();  ?>menu/"><span>Inicio</span></a></li>
+       <?php 
+        $menu = new Menu();
+        $s_menu = new Menu();
+        
+        foreach($menu->find("posicion_x<>0","order: orden") as $menu):
+        
+        echo "<li class='has-sub '>
+                <a href='".core::getInstancePath()."$menu->url' title='$menu->tittle'><span>$menu->descripcion</span></a>
+                    <ul>";
+                    if($s_menu->count("posicion_y='$menu->posicion_x'")){			
+                            foreach($s_menu->find("posicion_y='$menu->posicion_x'","order: orden") as $s_menu):
+                            echo "<li>";
+                                echo "<span><a href='".core::getInstancePath()."$s_menu->url' title='$s_menu->tittle'>$s_menu->descripcion</a></span>";
+                            echo "</li>";
+                            endforeach;
+                    }
+                echo "</ul>";
+        echo "</li>";
+        endforeach;
+        
+      ?>		
+      <li><a href="<?php echo core::getInstancePath(); ?>login/salir/"><span>Cerrar</span></a></li>
+    </ul>
+</div>
+
+   
+
+<?php } ?>

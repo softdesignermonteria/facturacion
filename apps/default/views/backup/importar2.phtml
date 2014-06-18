@@ -1,0 +1,86 @@
+<?php 
+		$url = $_SERVER['DOCUMENT_ROOT'].core::getInstancePath().'public/files';
+		$archivo = $_REQUEST["archivo"];
+		$archivo= $url."/".$archivo;
+		
+		$path = $_SERVER['DOCUMENT_ROOT'].core::getInstancePath().'public/files/';
+		$path_system = $_SERVER['DOCUMENT_ROOT'];
+		$path_system = str_replace("htdocs","mysql/bin",$path_system);
+		
+		$config = CoreConfig::readEnviroment();
+		//print_r(CoreConfig::readEnviroment());
+		
+		$host = "";
+		$user = "";
+		$psw  = "";
+		$bd   = "";
+ 
+ 		foreach($config->development as $key=>$val):
+				if($key == "database.host"     ){ $host = $val; }
+				if($key == "database.username" ){ $user = $val; }
+				if($key == "database.password" ){ $psw  = $val; }
+				if($key == "database.name"     ){ $bd   = $val; }
+		endforeach;
+		//echo $host;
+		//echo $user;
+		//echo $psw;
+		//echo $bd;
+			
+		//DONT EDIT BELOW THIS LINE
+		//Export the database and output the status to the page
+		//$command='$path_system/mysqldump -h' .$host .' -u' .$user .' -p' .$psw .' ' .$bd .' < ' .$archivo;
+		//system($command);
+		
+		
+		
+				
+		
+		/*REALIZAR IMPORTAR BD OPCION 1*/
+		
+		// let's pretend that connection to server is established
+		// and database chosen...
+		//echo $archivo;
+		$sql = explode(';', str_replace("*/;;","$",str_replace("DELIMITER ;;","DELIMITER $",file_get_contents ($archivo)  ))); 
+		//print_r($sql);
+		$n = count($sql) - 1;
+		//cogiendo el mismo hilo de la conexion
+		$db = DbBase::rawConnect();
+		//Flash::notice("numero de lienas: $n");
+		
+		for ($i = 0; $i < $n; $i++) {	
+			
+			//echo despues;
+			
+			if(trim($query) != "" && strpos($query, "--") == true)
+			{        
+				$sql2 = explode("--",$sql[$i]);
+				$query = $sql2[4];
+				
+				$result = mysql_query($query);
+				if($result){
+						Flash::success("LIENA AGREGADA: ".$query);
+					}else{
+						Flash::error("ERROR EN LINEA: ".$query);
+					}
+				
+			}else{
+				$query = $sql[$i];
+				if(trim($query)!=''){
+					
+					$result = mysql_query($query);
+						//or die ('<p>Query: <br><tt>' . $query .'</tt><br>failed. MySQL error: ' . mysql_error());
+					//Flash::notice($query);
+						if($result){
+							Flash::success("LIENA AGREGADA: ".$query);
+						}else{
+							Flash::error("ERROR EN LINEA: ".$query);
+						}
+				}
+			}
+				
+				
+		}
+		/*FIN REALIZAR IMPORTAR BD OPCION 1*/
+?>
+<?php echo View::renderPartial("listar_copias"); ?>
+<?php echo View::getContent(); ?>
