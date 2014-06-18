@@ -23,7 +23,7 @@
 
 //define('KEF_ABS_PATH', getcwd().'/');
 
-define('KEF_ABS_PATH', $_SERVER['DOCUMENT_ROOT']."/factutesis/");
+define('KEF_ABS_PATH', $_SERVER['DOCUMENT_ROOT']."/facturacion/");
 
 //Indica si se debe usar el framework rápido ó el de debug
 define('KEF_OFAST', false);
